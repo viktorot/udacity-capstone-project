@@ -4,6 +4,7 @@
     package="io.viktorot.notefy">
 
     <application
+        android:name=".NotefyApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
