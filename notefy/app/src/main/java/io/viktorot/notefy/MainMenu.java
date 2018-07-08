@@ -14,6 +14,11 @@ public class MainMenu extends BottomSheetDialogFragment {
 
     public static final String TAG = MainMenu.class.getSimpleName();
 
+    @Override
+    public int getTheme() {
+        return R.style.BottomSheetDialogTheme;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
