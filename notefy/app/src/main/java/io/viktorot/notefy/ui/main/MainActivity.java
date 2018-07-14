@@ -81,12 +81,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openLoginMenu() {
-        MainMenuDialog.Builder.create()
+        LoginMenuDialog.Builder.create()
                 .setCallback(vm::login)
                 .show(getSupportFragmentManager());
     }
 
     private void openAppMenu() {
-
+        AppMenuDialog.Builder.create()
+                .setCallback(vm::logout)
+                .show(getSupportFragmentManager());
     }
 }

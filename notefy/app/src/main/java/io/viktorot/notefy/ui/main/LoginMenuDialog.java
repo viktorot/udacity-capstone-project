@@ -13,14 +13,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import io.viktorot.notefy.R;
 
-public class MainMenuDialog extends BottomSheetDialogFragment {
+public class LoginMenuDialog extends BottomSheetDialogFragment {
 
-    private static final String TAG = MainMenuDialog.class.getSimpleName();
+    private static final String TAG = LoginMenuDialog.class.getSimpleName();
 
     @Nullable
-    private MainMenuDialog.Callback callback;
+    private LoginMenuDialog.Callback callback;
 
-    private void setCallback(@NonNull MainMenuDialog.Callback callback) {
+    private void setCallback(@NonNull LoginMenuDialog.Callback callback) {
         this.callback = callback;
     }
 
@@ -33,7 +33,7 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_menu_main, container, false);
+        View view = inflater.inflate(R.layout.dialog_login_menu, container, false);
 
         Button loginBtn = view.findViewById(R.id.login);
         loginBtn.setOnClickListener(view1 -> onLoginClick());
@@ -48,14 +48,14 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
     }
 
     private void onLoginClick() {
-        if (MainMenuDialog.this.callback != null) {
-            MainMenuDialog.this.callback.login();
+        if (LoginMenuDialog.this.callback != null) {
+            LoginMenuDialog.this.callback.login();
         }
         dismiss();
     }
 
     public static class Builder {
-        private MainMenuDialog.Callback callback;
+        private LoginMenuDialog.Callback callback;
 
         private Builder() {
         }
@@ -64,13 +64,13 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
             return new Builder();
         }
 
-        Builder setCallback(@NonNull MainMenuDialog.Callback callback) {
+        Builder setCallback(@NonNull LoginMenuDialog.Callback callback) {
             this.callback = callback;
             return this;
         }
 
         public void show(@NonNull FragmentManager fragmentManager) {
-            MainMenuDialog dialog = new MainMenuDialog();
+            LoginMenuDialog dialog = new LoginMenuDialog();
             dialog.setCallback(this.callback);
             dialog.show(fragmentManager, TAG);
         }

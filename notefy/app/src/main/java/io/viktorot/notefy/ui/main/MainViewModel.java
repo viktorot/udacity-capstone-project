@@ -6,8 +6,7 @@ import com.google.auto.value.AutoValue;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
+import io.reactivex.disposables.Disposable;
 import io.viktorot.notefy.Navigator;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.repo.AuthRepo;
@@ -37,12 +36,7 @@ class MainViewModel extends AndroidViewModel {
 
     final SingleLiveEvent<Action> actions = new SingleLiveEvent<>();
 
-    private final Observer<Boolean> sessionObserver = hasSession -> {
-        if (hasSession == null) {
-            return;
-        }
-        onSessionStatusChanged(hasSession);
-    };
+    private Disposable sessionDisposable;
 
     MainViewModel(@NonNull Application application) {
         super(application);
@@ -50,7 +44,7 @@ class MainViewModel extends AndroidViewModel {
         navigator = NotefyApplication.get(application).getNavigator();
 
         authRepo = NotefyApplication.get(application).getAuthRepo();
-        authRepo.session.observeForever(this::onSessionStatusChanged);
+        sessionDisposable = authRepo.session.subscribe(this::onSessionStatusChanged);
     }
 
     private void dispatchAction(@NonNull Action action) {
@@ -69,6 +63,10 @@ class MainViewModel extends AndroidViewModel {
         navigator.navigateToLogin();
     }
 
+    void logout() {
+        authRepo.logout();
+    }
+
     void newNote() {
         // TODO: navigate to new note
     }
@@ -79,7 +77,9 @@ class MainViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        authRepo.session.removeObserver(sessionObserver);
+        if (sessionDisposable != null) {
+            sessionDisposable.dispose();
+        }
         super.onCleared();
     }
 }
