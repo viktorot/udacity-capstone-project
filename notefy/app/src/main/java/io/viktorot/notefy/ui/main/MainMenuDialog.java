@@ -1,4 +1,4 @@
-package io.viktorot.notefy;
+package io.viktorot.notefy.ui.main;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,15 +10,17 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import io.viktorot.notefy.R;
 
 public class MainMenuDialog extends BottomSheetDialogFragment {
 
-    public static final String TAG = MainMenuDialog.class.getSimpleName();
+    private static final String TAG = MainMenuDialog.class.getSimpleName();
 
     @Nullable
     private MainMenuDialog.Callback callback;
 
-    public void setCallback(@NonNull MainMenuDialog.Callback callback) {
+    private void setCallback(@NonNull MainMenuDialog.Callback callback) {
         this.callback = callback;
     }
 
@@ -50,6 +52,28 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
             MainMenuDialog.this.callback.login();
         }
         dismiss();
+    }
+
+    public static class Builder {
+        private MainMenuDialog.Callback callback;
+
+        private Builder() {
+        }
+
+        static Builder create() {
+            return new Builder();
+        }
+
+        Builder setCallback(@NonNull MainMenuDialog.Callback callback) {
+            this.callback = callback;
+            return this;
+        }
+
+        public void show(@NonNull FragmentManager fragmentManager) {
+            MainMenuDialog dialog = new MainMenuDialog();
+            dialog.setCallback(this.callback);
+            dialog.show(fragmentManager, TAG);
+        }
     }
 
     public interface Callback {
