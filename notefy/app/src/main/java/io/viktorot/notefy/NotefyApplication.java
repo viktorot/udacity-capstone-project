@@ -4,9 +4,11 @@ import android.app.Application;
 import android.content.Context;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.annotation.NonNull;
 import io.viktorot.notefy.repo.AuthRepo;
+import io.viktorot.notefy.repo.NotesRepo;
 import timber.log.Timber;
 
 public class NotefyApplication extends Application {
@@ -18,6 +20,7 @@ public class NotefyApplication extends Application {
     private Navigator navigator;
 
     private AuthRepo authRepo;
+    private NotesRepo notesRepo;
 
     @Override
     public void onCreate() {
@@ -28,12 +31,17 @@ public class NotefyApplication extends Application {
         }
 
         authRepo = new AuthRepo(FirebaseAuth.getInstance());
+        notesRepo = new NotesRepo(FirebaseDatabase.getInstance());
 
         navigator = new Navigator();
     }
 
     public AuthRepo getAuthRepo() {
         return this.authRepo;
+    }
+
+    public NotesRepo getNotesRepo() {
+        return this.notesRepo;
     }
 
     public Navigator getNavigator() {

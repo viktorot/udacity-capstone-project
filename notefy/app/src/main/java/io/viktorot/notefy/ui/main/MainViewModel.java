@@ -9,7 +9,9 @@ import androidx.lifecycle.AndroidViewModel;
 import io.reactivex.disposables.Disposable;
 import io.viktorot.notefy.Navigator;
 import io.viktorot.notefy.NotefyApplication;
+import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.repo.AuthRepo;
+import io.viktorot.notefy.repo.NotesRepo;
 import io.viktorot.notefy.util.SingleLiveEvent;
 import timber.log.Timber;
 
@@ -32,6 +34,8 @@ class MainViewModel extends AndroidViewModel {
     }
 
     private final AuthRepo authRepo;
+    private final NotesRepo notesRepo;
+
     private final Navigator navigator;
 
     final SingleLiveEvent<Action> actions = new SingleLiveEvent<>();
@@ -44,6 +48,8 @@ class MainViewModel extends AndroidViewModel {
         navigator = NotefyApplication.get(application).getNavigator();
 
         authRepo = NotefyApplication.get(application).getAuthRepo();
+        notesRepo = NotefyApplication.get(application).getNotesRepo();
+
         sessionDisposable = authRepo.session.subscribe(this::onSessionStatusChanged);
     }
 
@@ -68,7 +74,7 @@ class MainViewModel extends AndroidViewModel {
     }
 
     void newNote() {
-        // TODO: navigate to new note
+        notesRepo.save(new Note("title", "content"));
     }
 
     private void onSessionStatusChanged(@NonNull Boolean hasSession) {
