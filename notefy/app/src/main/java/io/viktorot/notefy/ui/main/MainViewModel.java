@@ -39,7 +39,8 @@ class MainViewModel extends AndroidViewModel {
         authRepo = NotefyApplication.get(application).getAuthRepo();
         notesRepo = NotefyApplication.get(application).getNotesRepo();
 
-        sessionDisposable = authRepo.session.subscribe(this::onSessionStatusChanged);
+        sessionDisposable = authRepo.getSessionObservable()
+                .subscribe(this::onSessionStatusChanged);
     }
 
     private void dispatchAction(@NonNull Action action) {

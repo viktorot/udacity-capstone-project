@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.jakewharton.rxrelay2.BehaviorRelay;
 
-import androidx.lifecycle.MutableLiveData;
+import io.reactivex.Observable;
 import timber.log.Timber;
 
 public class AuthRepo {
@@ -12,7 +12,7 @@ public class AuthRepo {
     private final FirebaseAuth auth;
     private final FirebaseAuth.AuthStateListener listener;
 
-    public final BehaviorRelay<Boolean> session = BehaviorRelay.create();
+    private final BehaviorRelay<Boolean> session = BehaviorRelay.create();
     //public final MutableLiveData<Boolean> session = new MutableLiveData<>();
 
     public AuthRepo(FirebaseAuth auth) {
@@ -30,6 +30,10 @@ public class AuthRepo {
 
     public void logout() {
         this.auth.signOut();
+    }
+
+    public Observable<Boolean> getSessionObservable() {
+        return session.distinctUntilChanged();
     }
 
     public boolean hasSession() {
