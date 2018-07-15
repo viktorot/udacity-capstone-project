@@ -17,20 +17,25 @@ import timber.log.Timber;
 
 class MainViewModel extends AndroidViewModel {
 
-    static abstract class Action {
-        @AutoValue
-        abstract static class ShowLoginMenu extends Action {
-            static Action.ShowLoginMenu create() {
-                return new AutoValue_MainViewModel_Action_ShowLoginMenu();
-            }
-        }
+//    static abstract class Action {
+//        @AutoValue
+//        abstract static class ShowLoginMenu extends Action {
+//            static Action.ShowLoginMenu create() {
+//                return new AutoValue_MainViewModel_Action_ShowLoginMenu();
+//            }
+//        }
+//
+//        @AutoValue
+//        abstract static class ShowAppMenu extends Action {
+//            static Action.ShowAppMenu create() {
+//                return new AutoValue_MainViewModel_Action_ShowAppMenu();
+//            }
+//        }
+//    }
 
-        @AutoValue
-        abstract static class ShowAppMenu extends Action {
-            static Action.ShowAppMenu create() {
-                return new AutoValue_MainViewModel_Action_ShowAppMenu();
-            }
-        }
+    enum Action {
+        ShowLoginMenu,
+        ShowAppMenu
     }
 
     private final AuthRepo authRepo;
@@ -59,9 +64,9 @@ class MainViewModel extends AndroidViewModel {
 
     void menu() {
         if (authRepo.hasSession()) {
-            dispatchAction(Action.ShowAppMenu.create());
+            dispatchAction(Action.ShowAppMenu);
         } else {
-            dispatchAction(Action.ShowLoginMenu.create());
+            dispatchAction(Action.ShowLoginMenu);
         }
     }
 
@@ -73,12 +78,20 @@ class MainViewModel extends AndroidViewModel {
         authRepo.logout();
     }
 
+    private int count = 0;
+
     void newNote() {
-        notesRepo.save(new Note("title", "content"));
+        count++;
+        notesRepo.save(new Note("title " + count, "content"));
+        Timber.d("adding note => %d", count);
     }
 
     private void onSessionStatusChanged(@NonNull Boolean hasSession) {
-        Timber.v("--- => %b", hasSession);
+        if (hasSession) {
+            navigator.navigateToNoteList();
+        } else {
+            // TODO: clear & show 'login required' screen
+        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.util.List;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
+import io.viktorot.notefy.ui.list.NoteListFragment;
 import io.viktorot.notefy.ui.main.MainActivity;
 
 public class Navigator {
@@ -41,6 +42,14 @@ public class Navigator {
                         .setAvailableProviders(providers)
                         .build(),
                 RESULT_CODE_LOGIN);
+    }
+
+    public void navigateToNoteList() {
+        NoteListFragment fragment = NoteListFragment.newInstance();
+
+        fragmentManager.beginTransaction()
+                .replace(container, fragment, NoteListFragment.TAG)
+                .commit();
     }
 
 }

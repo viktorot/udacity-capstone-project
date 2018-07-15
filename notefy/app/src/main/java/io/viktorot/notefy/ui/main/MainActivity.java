@@ -72,10 +72,10 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    private void onViewModelAction(@NonNull MainViewModel.Action action) {
-        if (action instanceof MainViewModel.Action.ShowLoginMenu) {
+    private void onViewModelAction(MainViewModel.Action action) {
+        if (action == MainViewModel.Action.ShowLoginMenu) {
             openLoginMenu();
-        } else if (action instanceof MainViewModel.Action.ShowAppMenu) {
+        } else if (action == MainViewModel.Action.ShowAppMenu) {
             openAppMenu();
         }
     }
