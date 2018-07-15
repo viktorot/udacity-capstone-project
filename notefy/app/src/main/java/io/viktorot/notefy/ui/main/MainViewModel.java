@@ -17,22 +17,6 @@ import timber.log.Timber;
 
 class MainViewModel extends AndroidViewModel {
 
-//    static abstract class Action {
-//        @AutoValue
-//        abstract static class ShowLoginMenu extends Action {
-//            static Action.ShowLoginMenu create() {
-//                return new AutoValue_MainViewModel_Action_ShowLoginMenu();
-//            }
-//        }
-//
-//        @AutoValue
-//        abstract static class ShowAppMenu extends Action {
-//            static Action.ShowAppMenu create() {
-//                return new AutoValue_MainViewModel_Action_ShowAppMenu();
-//            }
-//        }
-//    }
-
     enum Action {
         ShowLoginMenu,
         ShowAppMenu

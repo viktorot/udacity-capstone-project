@@ -1,5 +1,6 @@
 package io.viktorot.notefy.repo;
 
+import com.google.auto.value.AutoValue;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,11 +19,43 @@ public class NotesRepo {
 
     private static final String NODE_NOTES = "notes";
 
+    public static abstract class Event {
+        @AutoValue
+        public abstract static class Added extends Event {
+
+            public abstract Note data();
+
+            static Event.Added create(@NonNull Note data) {
+                return new AutoValue_NotesRepo_Event_Added(data);
+            }
+        }
+
+        @AutoValue
+        public abstract static class Changed extends Event {
+
+            public abstract Note data();
+
+            static Event.Changed create(@NonNull Note data) {
+                return new AutoValue_NotesRepo_Event_Changed(data);
+            }
+        }
+
+        @AutoValue
+        public abstract static class Removed extends Event {
+
+            public abstract Note data();
+
+            static Event.Removed create(@NonNull Note data) {
+                return new AutoValue_NotesRepo_Event_Removed(data);
+            }
+        }
+    }
+
     private final FirebaseDatabase db;
     private final DatabaseReference ref;
     private final ChildEventListener listener;
 
-    public PublishRelay<Note> notes = PublishRelay.create();
+    public PublishRelay<NotesRepo.Event> notes = PublishRelay.create();
 
     public NotesRepo(@NonNull FirebaseDatabase db) {
         this.db = db;
@@ -31,19 +64,26 @@ public class NotesRepo {
         this.listener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Note note = dataSnapshot.getValue(Note.class);
-                Objects.requireNonNull(note);
+                Note note = parseSnapshot(dataSnapshot);
 
-                Timber.d("added => %s", note.getTitle());
-                notes.accept(note);
+                Timber.d("added => %s", note.getKey());
+                notes.accept(Event.Added.create(note));
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Note note = parseSnapshot(dataSnapshot);
+
+                Timber.d("changed => %s", note.getKey());
+                notes.accept(Event.Changed.create(note));
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                Note note = parseSnapshot(dataSnapshot);
+
+                Timber.d("removed => %s", note.getKey());
+                notes.accept(Event.Removed.create(note));
             }
 
             @Override
@@ -56,6 +96,16 @@ public class NotesRepo {
         };
 
         this.ref.addChildEventListener(this.listener);
+    }
+
+    @NonNull
+    private Note parseSnapshot(@NonNull DataSnapshot dataSnapshot) {
+        Note note = dataSnapshot.getValue(Note.class);
+        Objects.requireNonNull(note);
+
+        note.setKey(dataSnapshot.getKey());
+
+        return note;
     }
 
     public void save(@NonNull Note note) {
