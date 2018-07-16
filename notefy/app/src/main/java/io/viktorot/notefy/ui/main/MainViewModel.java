@@ -29,8 +29,6 @@ class MainViewModel extends AndroidViewModel {
 
     final SingleLiveEvent<Action> actions = new SingleLiveEvent<>();
 
-    private Disposable sessionDisposable;
-
     MainViewModel(@NonNull Application application) {
         super(application);
 
@@ -38,9 +36,6 @@ class MainViewModel extends AndroidViewModel {
 
         authRepo = NotefyApplication.get(application).getAuthRepo();
         notesRepo = NotefyApplication.get(application).getNotesRepo();
-
-        sessionDisposable = authRepo.getSessionObservable()
-                .subscribe(this::onSessionStatusChanged);
     }
 
     private void dispatchAction(@NonNull Action action) {
@@ -71,19 +66,8 @@ class MainViewModel extends AndroidViewModel {
         Timber.d("adding note => %d", count);
     }
 
-    private void onSessionStatusChanged(@NonNull Boolean hasSession) {
-        if (hasSession) {
-            navigator.navigateToNoteList();
-        } else {
-            // TODO: clear & show 'login required' screen
-        }
-    }
-
     @Override
     protected void onCleared() {
-        if (sessionDisposable != null) {
-            sessionDisposable.dispose();
-        }
         super.onCleared();
     }
 }

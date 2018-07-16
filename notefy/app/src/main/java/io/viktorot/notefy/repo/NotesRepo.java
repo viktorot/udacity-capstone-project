@@ -6,6 +6,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.jakewharton.rxrelay2.PublishRelay;
 
 import java.util.Objects;
@@ -94,9 +95,16 @@ public class NotesRepo {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         };
+    }
 
+    public void attachListener() {
         this.ref.addChildEventListener(this.listener);
     }
+
+    public void detachListener() {
+        this.ref.removeEventListener(this.listener);
+    }
+
 
     @NonNull
     private Note parseSnapshot(@NonNull DataSnapshot dataSnapshot) {

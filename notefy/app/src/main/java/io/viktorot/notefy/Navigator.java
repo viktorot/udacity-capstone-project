@@ -44,12 +44,12 @@ public class Navigator {
                 RESULT_CODE_LOGIN);
     }
 
-    public void navigateToNoteList() {
-        NoteListFragment fragment = NoteListFragment.newInstance();
-
-        fragmentManager.beginTransaction()
-                .replace(container, fragment, NoteListFragment.TAG)
-                .commit();
-    }
+//    public void navigateToNoteList() {
+//        NoteListFragment fragment = NoteListFragment.newInstance();
+//
+//        fragmentManager.beginTransaction()
+//                .replace(container, fragment, NoteListFragment.TAG)
+//                .commit();
+//    }
 
 }
