@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 
 public class NoteFragment extends Fragment {
 
+    public static final String TAG = NoteFragment.class.getSimpleName();
+
     public static NoteFragment newInstance() {
         Bundle args = new Bundle();
 

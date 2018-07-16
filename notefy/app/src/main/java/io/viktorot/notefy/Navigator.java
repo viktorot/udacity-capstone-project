@@ -7,9 +7,12 @@ import java.util.List;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import io.viktorot.notefy.ui.list.NoteListFragment;
 import io.viktorot.notefy.ui.main.MainActivity;
+import io.viktorot.notefy.ui.note.NoteFragment;
 
 public class Navigator {
 
@@ -44,12 +47,21 @@ public class Navigator {
                 RESULT_CODE_LOGIN);
     }
 
-//    public void navigateToNoteList() {
-//        NoteListFragment fragment = NoteListFragment.newInstance();
-//
-//        fragmentManager.beginTransaction()
-//                .replace(container, fragment, NoteListFragment.TAG)
-//                .commit();
-//    }
+    public void navigateToDetails() {
+        NoteFragment fragment = NoteFragment.newInstance();
 
+        fragmentManager.beginTransaction()
+                .add(container, fragment, NoteFragment.TAG)
+                .commit();
+    }
+
+    public void back() {
+        Fragment fragment = fragmentManager.findFragmentByTag(NoteFragment.TAG);
+        if (fragment != null) {
+            fragmentManager.beginTransaction()
+                    .remove(fragment)
+                    .commit();
+        }
+        fragmentManager.popBackStack();
+    }
 }
