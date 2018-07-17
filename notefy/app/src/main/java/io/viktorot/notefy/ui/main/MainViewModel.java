@@ -61,9 +61,10 @@ public class MainViewModel extends AndroidViewModel {
     private int count = 0;
 
     void newNote() {
-        count++;
-        notesRepo.save(new Note("title " + count, "content"));
-        Timber.d("adding note => %d", count);
+//        count++;
+//        notesRepo.save(new Note("title " + count, "content"));
+//        Timber.d("adding note => %d", count);
+        navigator.navigateToDetails();
     }
 
     @Override

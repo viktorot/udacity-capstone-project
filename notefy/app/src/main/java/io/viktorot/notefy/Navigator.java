@@ -9,10 +9,8 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import io.viktorot.notefy.ui.list.NoteListFragment;
 import io.viktorot.notefy.ui.main.MainActivity;
-import io.viktorot.notefy.ui.note.NoteFragment;
+import io.viktorot.notefy.ui.details.NoteDetailsFragment;
 
 public class Navigator {
 
@@ -48,15 +46,15 @@ public class Navigator {
     }
 
     public void navigateToDetails() {
-        NoteFragment fragment = NoteFragment.newInstance();
+        NoteDetailsFragment fragment = NoteDetailsFragment.newInstance();
 
         fragmentManager.beginTransaction()
-                .add(container, fragment, NoteFragment.TAG)
+                .add(container, fragment, NoteDetailsFragment.TAG)
                 .commit();
     }
 
     public void back() {
-        Fragment fragment = fragmentManager.findFragmentByTag(NoteFragment.TAG);
+        Fragment fragment = fragmentManager.findFragmentByTag(NoteDetailsFragment.TAG);
         if (fragment != null) {
             fragmentManager.beginTransaction()
                     .remove(fragment)

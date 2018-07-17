@@ -19,4 +19,22 @@
 
     <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
 
+
+    <style name="TextViewSingleLine">
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="NoteTitle" parent="TextViewSingleLine">
+        <item name="android:textSize">26sp</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="NoteContent">
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+
 </resources>
