@@ -15,7 +15,7 @@ import io.viktorot.notefy.repo.AuthRepo;
 import io.viktorot.notefy.repo.NotesRepo;
 import timber.log.Timber;
 
-class NoteListViewModel extends AndroidViewModel {
+public class NoteListViewModel extends AndroidViewModel {
 
     enum State {
         Unauthorized, Loading, Empty, Data

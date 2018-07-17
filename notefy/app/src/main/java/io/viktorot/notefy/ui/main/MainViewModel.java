@@ -15,7 +15,7 @@ import io.viktorot.notefy.repo.NotesRepo;
 import io.viktorot.notefy.util.SingleLiveEvent;
 import timber.log.Timber;
 
-class MainViewModel extends AndroidViewModel {
+public class MainViewModel extends AndroidViewModel {
 
     enum Action {
         ShowLoginMenu,
@@ -29,7 +29,7 @@ class MainViewModel extends AndroidViewModel {
 
     final SingleLiveEvent<Action> actions = new SingleLiveEvent<>();
 
-    MainViewModel(@NonNull Application application) {
+    public MainViewModel(@NonNull Application application) {
         super(application);
 
         navigator = NotefyApplication.get(application).getNavigator();
