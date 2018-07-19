@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import io.viktorot.notefy.navigator.NavEvent;
 import io.viktorot.notefy.repo.AuthRepo;
 import io.viktorot.notefy.repo.NotesRepo;
+import io.viktorot.notefy.util.IconRepo;
 import timber.log.Timber;
 
 public class NotefyApplication extends Application {
@@ -26,6 +27,8 @@ public class NotefyApplication extends Application {
     private AuthRepo authRepo;
     private NotesRepo notesRepo;
 
+    private final IconRepo iconsRepo = new IconRepo();
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -38,6 +41,10 @@ public class NotefyApplication extends Application {
         notesRepo = new NotesRepo(FirebaseDatabase.getInstance());
 
         navigator = new Navigator();
+    }
+
+    public IconRepo getIconsRepo() {
+        return this.iconsRepo;
     }
 
     public AuthRepo getAuthRepo() {

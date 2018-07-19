@@ -9,10 +9,13 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
+import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.ui.details.icons.IconDialog;
 
 public class NoteDetailsFragment extends Fragment {
@@ -39,6 +42,13 @@ public class NoteDetailsFragment extends Fragment {
         onViewModelAction(action);
     };
 
+    private final Observer<Note> dataObserver = data -> {
+        if (data == null) {
+            return;
+        }
+        onDataChanged(data);
+    };
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +61,7 @@ public class NoteDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_note_details, container, false);
 
         vm.action.observe(getViewLifecycleOwner(), actionObserver);
+        vm.data.observe(getViewLifecycleOwner(), dataObserver);
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back);
@@ -70,6 +81,12 @@ public class NoteDetailsFragment extends Fragment {
         if (action == NoteDetailsViewModel.Action.SelectIcon) {
             openIconMenu();
         }
+    }
+
+    private void onDataChanged(@NonNull Note note) {
+        int iconResId = NotefyApplication.get(requireContext())
+                .getIconsRepo().getIconRes(note.getIconId());
+        imgIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), iconResId));
     }
 
     private void openIconMenu() {

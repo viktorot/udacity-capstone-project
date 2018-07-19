@@ -11,6 +11,8 @@ public class Note {
     private String title;
     private String content;
 
+    private int iconId;
+
     public Note() {
     }
 
@@ -45,6 +47,14 @@ public class Note {
 
     public void setContent(@NonNull String content) {
         this.content = content;
+    }
+
+    public int getIconId() {
+        return iconId;
+    }
+
+    public void setIconId(int iconId) {
+        this.iconId = iconId;
     }
 
     @Override
