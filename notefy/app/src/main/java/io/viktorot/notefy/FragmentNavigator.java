@@ -1,17 +1,14 @@
 package io.viktorot.notefy;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Objects;
-import java.util.Timer;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import io.viktorot.notefy.navigator.Command;
+import io.viktorot.notefy.navigator.NavEvent;
 import io.viktorot.notefy.navigator.Pop;
 import io.viktorot.notefy.navigator.Push;
 import timber.log.Timber;
@@ -26,7 +23,7 @@ public abstract class FragmentNavigator {
 
     protected LinkedList<String> localStackCopy;
 
-    private LinkedList<Command[]> pendingCommands = new LinkedList<>();
+    private LinkedList<NavEvent[]> pendingCommands = new LinkedList<>();
 
     public FragmentNavigator(@NonNull FragmentManager fragmentManager, @IdRes int containerId) {
         this.fragmentManager = fragmentManager;
@@ -47,11 +44,11 @@ public abstract class FragmentNavigator {
     }
 
 
-    public void applyCommand(Command command) {
-        applyCommands(new Command[] { command });
+    public void applyCommand(NavEvent command) {
+        applyCommands(new NavEvent[] { command });
     }
 
-    public void applyCommands(Command[] commands) {
+    public void applyCommands(NavEvent[] commands) {
         if (!attached) {
             pendingCommands.add(commands);
             return;
@@ -61,12 +58,12 @@ public abstract class FragmentNavigator {
 
         copyStackToLocal();
 
-        for (Command command : commands) {
+        for (NavEvent command : commands) {
             _applyCommand(command);
         }
     }
 
-    protected void _applyCommand(Command command) {
+    protected void _applyCommand(NavEvent command) {
         if (command instanceof Push) {
              push((Push) command);
         } else if (command instanceof Pop) {

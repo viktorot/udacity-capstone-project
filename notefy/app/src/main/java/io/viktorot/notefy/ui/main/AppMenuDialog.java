@@ -6,24 +6,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
+import io.viktorot.notefy.NotefyBottomSheetDialogFragment;
 import io.viktorot.notefy.R;
 
-public class AppMenuDialog extends BottomSheetDialogFragment {
+public class AppMenuDialog extends NotefyBottomSheetDialogFragment {
 
     private static final String TAG = AppMenuDialog.class.getSimpleName();
 
     @Nullable
     private AppMenuDialog.Callback callback;
-
-    @Override
-    public int getTheme() {
-        return R.style.BottomSheetDialogTheme;
-    }
 
     private void setCallback(@NonNull AppMenuDialog.Callback callback) {
         this.callback = callback;
@@ -47,8 +41,8 @@ public class AppMenuDialog extends BottomSheetDialogFragment {
     }
 
     private void onLogoutClick() {
-        if (AppMenuDialog.this.callback != null) {
-            AppMenuDialog.this.callback.logout();
+        if (callback != null) {
+            callback.logout();
         }
         dismiss();
     }

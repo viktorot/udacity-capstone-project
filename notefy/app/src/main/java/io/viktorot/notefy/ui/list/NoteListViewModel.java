@@ -37,25 +37,23 @@ public class NoteListViewModel extends AndroidViewModel {
         notesRepo = NotefyApplication.get(application).getNotesRepo();
         authRepo = NotefyApplication.get(application).getAuthRepo();
 
-        setState(State.Loading);
-
-//        dataDisposable = authRepo.getSessionObservable()
-//                .doOnSubscribe(disposable -> {
-//                    setState(State.Loading);
-//                })
-//                .doOnNext(auth -> {
-//                    if (!auth) {
-//                        _notes.clear();
-//                        notesRepo.detachListener();
-//                        setState(State.Unauthorized);
-//                    } else {
-//                        notesRepo.attachListener();
-//                        setState(State.Empty);
-//                    }
-//                })
-//                .filter(auth -> auth)
-//                .switchMap(auth -> notesRepo.notes)
-//                .subscribe(this::onNoteEvent);
+        dataDisposable = authRepo.getSessionObservable()
+                .doOnSubscribe(disposable -> {
+                    setState(State.Loading);
+                })
+                .doOnNext(auth -> {
+                    if (!auth) {
+                        _notes.clear();
+                        notesRepo.detachListener();
+                        setState(State.Unauthorized);
+                    } else {
+                        notesRepo.attachListener();
+                        setState(State.Empty);
+                    }
+                })
+                .filter(auth -> auth)
+                .switchMap(auth -> notesRepo.notes)
+                .subscribe(this::onNoteEvent);
     }
 
     private void setState(State state) {

@@ -2,7 +2,7 @@ package io.viktorot.notefy.navigator;
 
 import androidx.fragment.app.Fragment;
 
-public class Push implements Command {
+public class Push implements NavEvent {
 
     private final Fragment fragment;
     private final String tag;
