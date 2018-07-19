@@ -9,10 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import io.viktorot.notefy.FragmentNavigator;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
 
 public class MainActivity extends AppCompatActivity {
+
+    private FragmentNavigator fragmentNavigator;
 
     private MainViewModel vm;
 
@@ -27,6 +30,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        fragmentNavigator = new FragmentNavigator(getSupportFragmentManager(), R.id.fragment_container) {
+            @Override
+            public void exit() {
+                finish();
+            }
+        };
 
         vm = ViewModelProviders.of(this).get(MainViewModel.class);
         vm.actions.observe(this, this.actionsObserver);
@@ -45,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
+        fragmentNavigator.attach();
+
         NotefyApplication.get(this).getNavigator()
                 .attach(this, getSupportFragmentManager(), R.id.fragment_container);
     }
@@ -57,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        NotefyApplication.get(this).getAuthRepo().detachListener();
+        //NotefyApplication.get(this).getAuthRepo().detachListener();
+        fragmentNavigator.detach();
         super.onPause();
     }
 
