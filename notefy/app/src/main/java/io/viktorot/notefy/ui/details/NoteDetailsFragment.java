@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -90,10 +91,13 @@ public class NoteDetailsFragment extends Fragment {
 
     private void onDataChanged(@NonNull Note note) {
         int iconResId = NotefyApplication.get(requireContext())
-                .getIconsRepo().getIconRes(note.getIconId());
+                .getIconRepo().getIconRes(note.getIconId());
         imgIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), iconResId));
 
-        toolbar.setBackgroundColor(Color.parseColor(note.getColor()));
+        int color = Color.parseColor(note.getColor());
+        toolbar.setBackgroundColor(color);
+        Window window = requireActivity().getWindow();
+        window.setStatusBarColor(color);
     }
 
     private void openIconMenu() {

@@ -23,6 +23,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
     private final Navigator navigator;
 
     private final IconRepo iconRepo;
+    private final ColorRepo colorRepo;
 
     SingleLiveEvent<Action> action = new SingleLiveEvent<>();
     MutableLiveData<Note> data = new MutableLiveData<>();
@@ -32,11 +33,12 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
         navigator = NotefyApplication.get(application).getNavigator();
 
-        iconRepo = NotefyApplication.get(application).getIconsRepo();
+        iconRepo = NotefyApplication.get(application).getIconRepo();
+        colorRepo = NotefyApplication.get(application).getColorRepo();
 
         Note note = new Note();
         note.setIconId(iconRepo.getDefaultIconId());
-        note.setColor(ColorRepo.getDefaultColor());
+        note.setColor(colorRepo.getDefaultColor());
 
         data.setValue(note);
     }

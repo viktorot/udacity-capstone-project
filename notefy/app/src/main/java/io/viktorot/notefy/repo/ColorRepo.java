@@ -26,8 +26,14 @@ public class ColorRepo {
             "#ff5722"
     );
 
+    public static final List<String> PAIR_COLOR = Arrays.asList(
+            "707070",
+            "ba000d",
+            "b0003a"
+    );
+
     @NonNull
-    public static String getDefaultColor() {
+    public String getDefaultColor() {
         return COLORS.get(0);
     }
 }
