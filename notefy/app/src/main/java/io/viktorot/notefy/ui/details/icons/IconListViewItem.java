@@ -38,7 +38,7 @@ public class IconListViewItem extends Item<IconListViewItem.ViewHolder> {
 
     @Override
     public int getSpanSize(int spanCount, int position) {
-        return spanCount / 2;
+        return 1;
     }
 
     @DrawableRes

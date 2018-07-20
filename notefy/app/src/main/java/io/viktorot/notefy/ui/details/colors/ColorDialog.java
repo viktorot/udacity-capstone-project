@@ -24,7 +24,7 @@ public class ColorDialog extends NotefyBottomSheetDialogFragment {
 
     private static final String TAG = ColorDialog.class.getSimpleName();
 
-    private static final int COLUMN_COUNT = 2;
+    private static final int COLUMN_COUNT = 4;
 
     @Nullable
     private ColorDialog.Callback callback;

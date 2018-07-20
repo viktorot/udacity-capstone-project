@@ -74,8 +74,8 @@ public class NoteDetailsFragment extends Fragment {
 
         imgIcon = view.findViewById(R.id.icon);
         imgIcon.setOnClickListener(view1 -> {
-            //vm.selectIcon();
-            vm.selectColor();
+            vm.selectIcon();
+//            vm.selectColor();
         });
 
         return view;

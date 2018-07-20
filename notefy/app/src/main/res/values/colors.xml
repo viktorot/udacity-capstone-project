@@ -8,4 +8,6 @@
     <color name="black">#000</color>
     <color name="transparent">@android:color/transparent</color>
 
+    <color name="icon">#aaa</color>
+
 </resources>

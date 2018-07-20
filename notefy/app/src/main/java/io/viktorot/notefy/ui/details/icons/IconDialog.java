@@ -28,7 +28,7 @@ public class IconDialog extends NotefyBottomSheetDialogFragment {
 
     private static final String TAG = IconDialog.class.getSimpleName();
 
-    private static final int COLUMN_COUNT = 2;
+    private static final int COLUMN_COUNT = 4;
 
     private final List<Integer> ICON_IDS = Arrays.asList(
             R.drawable.ic_android,

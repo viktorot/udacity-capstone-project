@@ -1,18 +1,20 @@
 package io.viktorot.notefy.ui.details.colors;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import com.xwray.groupie.Item;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
 import io.viktorot.notefy.R;
 
 public class ColorListViewItem extends Item<ColorListViewItem.ViewHolder> {
 
     private final String color;
 
-    public ColorListViewItem(String color) {
+    ColorListViewItem(String color) {
         this.color = color;
     }
 
@@ -24,7 +26,8 @@ public class ColorListViewItem extends Item<ColorListViewItem.ViewHolder> {
 
     @Override
     public void bind(@NonNull ViewHolder viewHolder, int position) {
-        viewHolder.viewColor.setBackgroundColor(Color.parseColor(color));
+        Drawable drawable = viewHolder.viewColor.getBackground();
+        DrawableCompat.setTint(drawable, Color.parseColor(color));
     }
 
     @Override
@@ -34,7 +37,7 @@ public class ColorListViewItem extends Item<ColorListViewItem.ViewHolder> {
 
     @Override
     public int getSpanSize(int spanCount, int position) {
-        return spanCount / 2;
+        return 1;
     }
 
     @NonNull
