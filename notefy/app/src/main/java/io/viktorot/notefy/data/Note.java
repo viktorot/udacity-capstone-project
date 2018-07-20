@@ -12,6 +12,7 @@ public class Note {
     private String content;
 
     private int iconId;
+    private String color;
 
     public Note() {
     }
@@ -55,6 +56,14 @@ public class Note {
 
     public void setIconId(int iconId) {
         this.iconId = iconId;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(@NonNull String color) {
+        this.color = color;
     }
 
     @Override

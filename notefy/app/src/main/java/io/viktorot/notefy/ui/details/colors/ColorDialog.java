@@ -1,6 +1,5 @@
-package io.viktorot.notefy.ui.details.icons;
+package io.viktorot.notefy.ui.details.colors;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,47 +9,31 @@ import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.Section;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 
-import androidx.annotation.DrawableRes;
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.viktorot.notefy.NotefyBottomSheetDialogFragment;
 import io.viktorot.notefy.R;
+import io.viktorot.notefy.repo.ColorRepo;
 
-public class IconDialog extends NotefyBottomSheetDialogFragment {
+public class ColorDialog extends NotefyBottomSheetDialogFragment {
 
-    private static final String TAG = IconDialog.class.getSimpleName();
+    private static final String TAG = ColorDialog.class.getSimpleName();
 
     private static final int COLUMN_COUNT = 2;
 
-    private final List<Integer> ICON_IDS = Arrays.asList(
-            R.drawable.ic_android,
-            R.drawable.ic_attach,
-            R.drawable.ic_bookmark,
-            R.drawable.ic_check,
-            R.drawable.ic_doc,
-            R.drawable.ic_dot,
-            R.drawable.ic_extension,
-            R.drawable.ic_face,
-            R.drawable.ic_folder,
-            R.drawable.ic_run
-    );
-
     @Nullable
-    private IconDialog.Callback callback;
+    private ColorDialog.Callback callback;
 
     private RecyclerView recycler;
 
     private final GroupAdapter adapter = new GroupAdapter();
 
-    private void setCallback(@NonNull IconDialog.Callback callback) {
+    private void setCallback(@NonNull ColorDialog.Callback callback) {
         this.callback = callback;
     }
 
@@ -75,8 +58,8 @@ public class IconDialog extends NotefyBottomSheetDialogFragment {
         adapter.add(getAdapterSection());
 
         adapter.setOnItemClickListener((item, view1) -> {
-            IconListViewItem iconView = (IconListViewItem) item;
-            onIconClick(iconView.getIconResId());
+            ColorListViewItem colorView = (ColorListViewItem) item;
+            onColorClick(colorView.getColor());
         });
 
         return view;
@@ -84,32 +67,30 @@ public class IconDialog extends NotefyBottomSheetDialogFragment {
 
     @Override
     public void onDestroyView() {
-        this.callback = null;
+        callback = null;
         super.onDestroyView();
     }
 
-    private void onIconClick(@DrawableRes int iconResId) {
+    private void onColorClick(String color) {
         if (callback != null) {
-            callback.onIconSelected(iconResId);
+            callback.onColorSelected(color);
         }
         dismiss();
     }
 
     @NonNull
     private Section getAdapterSection() {
-        ArrayList<IconListViewItem> items = new ArrayList<>();
+        ArrayList<ColorListViewItem> items = new ArrayList<>();
 
-        for (int id : ICON_IDS) {
-            Drawable drawable = ContextCompat.getDrawable(requireContext(), id);
-            Objects.requireNonNull(drawable);
-            items.add(new IconListViewItem(id, drawable));
+        for (String color : ColorRepo.COLORS) {
+            items.add(new ColorListViewItem(color));
         }
 
         return new Section(items);
     }
 
     public static class Builder {
-        private IconDialog.Callback callback;
+        private ColorDialog.Callback callback;
 
         private Builder() {
         }
@@ -118,19 +99,19 @@ public class IconDialog extends NotefyBottomSheetDialogFragment {
             return new Builder();
         }
 
-        public Builder setCallback(@NonNull IconDialog.Callback callback) {
+        public Builder setCallback(@NonNull ColorDialog.Callback callback) {
             this.callback = callback;
             return this;
         }
 
         public void show(@NonNull FragmentManager fragmentManager) {
-            IconDialog dialog = new IconDialog();
+            ColorDialog dialog = new ColorDialog();
             dialog.setCallback(this.callback);
             dialog.show(fragmentManager, TAG);
         }
     }
 
     public interface Callback {
-        void onIconSelected(@DrawableRes int iconId);
+        void onColorSelected(String color);
     }
 }

@@ -9,14 +9,15 @@ import androidx.lifecycle.MutableLiveData;
 import io.viktorot.notefy.Navigator;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.data.Note;
-import io.viktorot.notefy.util.IconRepo;
+import io.viktorot.notefy.repo.ColorRepo;
+import io.viktorot.notefy.repo.IconRepo;
 import io.viktorot.notefy.util.SingleLiveEvent;
 import timber.log.Timber;
 
 public class NoteDetailsViewModel extends AndroidViewModel {
 
     enum Action {
-        SelectIcon
+        SelectIcon, SelectColor
     }
 
     private final Navigator navigator;
@@ -34,7 +35,8 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         iconRepo = NotefyApplication.get(application).getIconsRepo();
 
         Note note = new Note();
-        note.setIconId(IconRepo.ID_ATTACH);
+        note.setIconId(iconRepo.getDefaultIconId());
+        note.setColor(ColorRepo.getDefaultColor());
 
         data.setValue(note);
     }
@@ -52,6 +54,10 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         dispatchAction(Action.SelectIcon);
     }
 
+    void selectColor() {
+        dispatchAction(Action.SelectColor);
+    }
+
     void back() {
         navigator.back();
     }
@@ -67,6 +73,17 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         }
 
         note.setIconId(iconId);
+        notifyDataChange();
+    }
+
+    void onColorSelected(String color) {
+        Note note = data.getValue();
+        if (note == null) {
+            Timber.w("note not set");
+            return;
+        }
+
+        note.setColor(color);
         notifyDataChange();
     }
 }

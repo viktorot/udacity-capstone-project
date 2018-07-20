@@ -1,5 +1,6 @@
 package io.viktorot.notefy.ui.details;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;
+import io.viktorot.notefy.ui.details.colors.ColorDialog;
 import io.viktorot.notefy.ui.details.icons.IconDialog;
 
 public class NoteDetailsFragment extends Fragment {
@@ -71,7 +73,8 @@ public class NoteDetailsFragment extends Fragment {
 
         imgIcon = view.findViewById(R.id.icon);
         imgIcon.setOnClickListener(view1 -> {
-            vm.selectIcon();
+            //vm.selectIcon();
+            vm.selectColor();
         });
 
         return view;
@@ -80,6 +83,8 @@ public class NoteDetailsFragment extends Fragment {
     private void onViewModelAction(NoteDetailsViewModel.Action action) {
         if (action == NoteDetailsViewModel.Action.SelectIcon) {
             openIconMenu();
+        } else if (action == NoteDetailsViewModel.Action.SelectColor) {
+            openColorMenu();
         }
     }
 
@@ -87,11 +92,19 @@ public class NoteDetailsFragment extends Fragment {
         int iconResId = NotefyApplication.get(requireContext())
                 .getIconsRepo().getIconRes(note.getIconId());
         imgIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), iconResId));
+
+        toolbar.setBackgroundColor(Color.parseColor(note.getColor()));
     }
 
     private void openIconMenu() {
         IconDialog.Builder.create()
                 .setCallback(vm::onIconSelected)
+                .show(getFragmentManager());
+    }
+
+    private void openColorMenu() {
+        ColorDialog.Builder.create()
+                .setCallback(vm::onColorSelected)
                 .show(getFragmentManager());
     }
 }

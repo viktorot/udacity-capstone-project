@@ -1,4 +1,4 @@
-package io.viktorot.notefy.util;
+package io.viktorot.notefy.repo;
 
 import java.util.HashMap;
 
@@ -43,6 +43,10 @@ public class IconRepo {
         idToResMap.put(ID_FACE, R.drawable.ic_face);
         idToResMap.put(ID_FOLDER, R.drawable.ic_folder);
         idToResMap.put(ID_RUN, R.drawable.ic_run);
+    }
+
+    public int getDefaultIconId() {
+        return ID_ANDROID;
     }
 
     public int getIconId(@DrawableRes int iconResId) {

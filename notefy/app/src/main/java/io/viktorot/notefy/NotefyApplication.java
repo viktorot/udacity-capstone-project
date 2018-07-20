@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import io.viktorot.notefy.navigator.NavEvent;
 import io.viktorot.notefy.repo.AuthRepo;
 import io.viktorot.notefy.repo.NotesRepo;
-import io.viktorot.notefy.util.IconRepo;
+import io.viktorot.notefy.repo.IconRepo;
 import timber.log.Timber;
 
 public class NotefyApplication extends Application {
