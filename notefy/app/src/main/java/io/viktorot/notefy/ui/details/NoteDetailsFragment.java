@@ -33,10 +33,13 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
     public static final String TAG = NoteDetailsFragment.class.getSimpleName();
 
+    private static final String ARG_NOTE = "arg_note";
+
     private static final int PIN_ITEM_INDEX = 0;
 
-    public static NoteDetailsFragment newInstance() {
+    public static NoteDetailsFragment newInstance(@NonNull Note note) {
         Bundle args = new Bundle();
+        args.putParcelable(ARG_NOTE, note);
 
         NoteDetailsFragment fragment = new NoteDetailsFragment();
         fragment.setArguments(args);
@@ -69,7 +72,18 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle args = getArguments();
+        Note note = null;
+        if (args != null && args.containsKey(ARG_NOTE)) {
+            note = args.getParcelable(ARG_NOTE);
+        }
+        if (note == null) {
+            throw new IllegalArgumentException("note cannot be null");
+        }
+
         vm = ViewModelProviders.of(this).get(NoteDetailsViewModel.class);
+        vm.init(note);
     }
 
     @Nullable

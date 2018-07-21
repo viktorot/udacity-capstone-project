@@ -20,6 +20,11 @@ class NoteListViewItem extends Item<NoteListViewItem.ViewHolder> {
     }
 
     @NonNull
+    public Note getData() {
+        return data;
+    }
+
+    @NonNull
     @Override
     public ViewHolder createViewHolder(@NonNull View itemView) {
         return new NoteListViewItem.ViewHolder(itemView);

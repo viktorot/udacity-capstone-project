@@ -7,8 +7,10 @@ import java.util.List;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.ui.main.MainActivity;
 import io.viktorot.notefy.ui.details.NoteDetailsFragment;
 
@@ -45,8 +47,16 @@ public class Navigator {
                 RESULT_CODE_LOGIN);
     }
 
-    public void navigateToDetails() {
-        NoteDetailsFragment fragment = NoteDetailsFragment.newInstance();
+    public void navigateToNewNote() {
+        navigateToDetails(Note.empty());
+    }
+
+    public void navigateToEditNote(@NonNull Note note) {
+        navigateToDetails(note);
+    }
+
+    private void navigateToDetails(@NonNull Note note) {
+        NoteDetailsFragment fragment = NoteDetailsFragment.newInstance(note);
 
         fragmentManager.beginTransaction()
                 .add(container, fragment, NoteDetailsFragment.TAG)

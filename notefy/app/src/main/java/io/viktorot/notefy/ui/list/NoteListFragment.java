@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.xwray.groupie.GroupAdapter;
+import com.xwray.groupie.Item;
+import com.xwray.groupie.OnItemClickListener;
 import com.xwray.groupie.Section;
 
 import java.util.ArrayList;
@@ -64,7 +66,12 @@ public class NoteListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         vm = ViewModelProviders.of(this).get(NoteListViewModel.class);
+
         adapter.add(section);
+        adapter.setOnItemClickListener((item, view) -> {
+            NoteListViewItem viewItem = (NoteListViewItem) item;
+            vm.editNote(viewItem.getData());
+        });
     }
 
     @Nullable

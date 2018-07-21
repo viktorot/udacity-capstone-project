@@ -1,10 +1,12 @@
 package io.viktorot.notefy.ui.details;
 
 import android.app.Application;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import io.viktorot.notefy.Navigator;
@@ -41,8 +43,14 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         notesRepo = NotefyApplication.get(application).getNotesRepo();
         iconRepo = NotefyApplication.get(application).getIconRepo();
         colorRepo = NotefyApplication.get(application).getColorRepo();
+    }
 
-        data.setValue(Note.empty());
+    void init(@Nullable Note note) {
+        if (note == null) {
+            data.setValue(Note.empty());
+        } else {
+            data.setValue(note);
+        }
     }
 
     private void dispatchAction(Action action) {

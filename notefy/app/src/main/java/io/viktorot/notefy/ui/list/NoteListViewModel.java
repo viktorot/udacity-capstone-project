@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import io.reactivex.disposables.Disposable;
+import io.viktorot.notefy.Navigator;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.repo.AuthRepo;
@@ -20,6 +21,8 @@ public class NoteListViewModel extends AndroidViewModel {
     enum State {
         Unauthorized, Loading, Empty, Data
     }
+
+    private final Navigator navigator;
 
     private final AuthRepo authRepo;
     private final NotesRepo notesRepo;
@@ -33,6 +36,8 @@ public class NoteListViewModel extends AndroidViewModel {
 
     public NoteListViewModel(@NonNull Application application) {
         super(application);
+
+        navigator = NotefyApplication.get(application).getNavigator();
 
         notesRepo = NotefyApplication.get(application).getNotesRepo();
         authRepo = NotefyApplication.get(application).getAuthRepo();
@@ -60,27 +65,9 @@ public class NoteListViewModel extends AndroidViewModel {
         this.state.setValue(state);
     }
 
-//    private void subscribeNotes() {
-//        notesDisposable = notesRepo.notes.subscribe(this::onNoteEvent);
-//    }
-//
-//    private void unsubscribeNotes() {
-//        if (notesDisposable != null) {
-//            notesDisposable.dispose();
-//            notesDisposable = null;
-//        }
-//    }
-//
-//    private void onSessionStatusChanged(@NonNull Boolean hasSession) {
-//        if (hasSession) {
-//            setState(State.Empty);
-//            subscribeNotes();
-//        } else {
-//            unsubscribeNotes();
-//            _notes.clear();
-//            setState(State.Unauthorized);
-//        }
-//    }
+    void editNote(@NonNull Note note) {
+        navigator.navigateToEditNote(note);
+    }
 
     private void onNoteEvent(NotesRepo.Event event) {
         if (event instanceof NotesRepo.Event.Added) {

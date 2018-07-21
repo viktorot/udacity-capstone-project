@@ -2,18 +2,13 @@ package io.viktorot.notefy.ui.main;
 
 import android.app.Application;
 
-import com.google.auto.value.AutoValue;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import io.reactivex.disposables.Disposable;
 import io.viktorot.notefy.Navigator;
 import io.viktorot.notefy.NotefyApplication;
-import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.repo.AuthRepo;
 import io.viktorot.notefy.repo.NotesRepo;
 import io.viktorot.notefy.util.SingleLiveEvent;
-import timber.log.Timber;
 
 public class MainViewModel extends AndroidViewModel {
 
@@ -61,10 +56,7 @@ public class MainViewModel extends AndroidViewModel {
     private int count = 0;
 
     void newNote() {
-//        count++;
-//        notesRepo.save(new Note("title " + count, "content"));
-//        Timber.d("adding note => %d", count);
-        navigator.navigateToDetails();
+        navigator.navigateToNewNote();
     }
 
     @Override
