@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +20,7 @@ import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.ui.details.colors.ColorDialog;
 import io.viktorot.notefy.ui.details.icons.IconDialog;
+import io.viktorot.notefy.util.StatusBarUtils;
 
 public class NoteDetailsFragment extends Fragment {
 
@@ -84,6 +84,13 @@ public class NoteDetailsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        // TODO: do this in onBackPressed
+        StatusBarUtils.setColor(requireActivity(), ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark));
+        super.onDestroyView();
+    }
+
     private boolean onMenuItemClick(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_color) {
             vm.selectColor();
@@ -107,19 +114,19 @@ public class NoteDetailsFragment extends Fragment {
 
         int color = Color.parseColor(note.getColor());
         toolbar.setBackgroundColor(color);
-        Window window = requireActivity().getWindow();
-        window.setStatusBarColor(color);
+
+        StatusBarUtils.setColor(requireActivity(), color);
     }
 
     private void openIconMenu() {
         IconDialog.Builder.create()
                 .setCallback(vm::onIconSelected)
-                .show(getFragmentManager());
+                .show(requireFragmentManager());
     }
 
     private void openColorMenu() {
         ColorDialog.Builder.create()
                 .setCallback(vm::onColorSelected)
-                .show(getFragmentManager());
+                .show(requireFragmentManager());
     }
 }
