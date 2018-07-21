@@ -2,22 +2,35 @@ package io.viktorot.notefy.ui.main;
 
 import android.os.Bundle;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import androidx.annotation.NonNull;
+import java.util.Arrays;
+import java.util.List;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import io.reactivex.disposables.Disposable;
 import io.viktorot.notefy.FragmentNavigator;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
+import io.viktorot.notefy.navigator.Login;
+import io.viktorot.notefy.navigator.NavEvent;
+import io.viktorot.notefy.navigator.Pop;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String TAG = MainActivity.class.getSimpleName();
+
+    public static final int RESULT_CODE_LOGIN = 1;
 
     private FragmentNavigator fragmentNavigator;
 
     private MainViewModel vm;
+
+    private Disposable navigationDisposable;
 
     private final Observer<MainViewModel.Action> actionsObserver = action -> {
         if (action == null) {
@@ -57,8 +70,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResumeFragments();
         fragmentNavigator.attach();
 
-        NotefyApplication.get(this).getNavigator()
-                .attach(this, getSupportFragmentManager(), R.id.fragment_container);
+        navigationDisposable = NotefyApplication.get(this)
+                .getNavigator()
+                .observe(this::onNavEvent);
     }
 
     @Override
@@ -69,8 +83,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        //NotefyApplication.get(this).getAuthRepo().detachListener();
         fragmentNavigator.detach();
+        if (navigationDisposable != null) {
+            navigationDisposable.dispose();
+        }
         super.onPause();
     }
 
@@ -81,8 +97,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        NotefyApplication.get(this).getNavigator().detach();
         super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        NotefyApplication.get(this)
+                .getNavigator().back();
+    }
+
+    private void onNavEvent(NavEvent event) {
+        if (event instanceof Login) {
+            openLoginActivity();
+            return;
+        }
+        fragmentNavigator.applyCommand(event);
     }
 
     private void onViewModelAction(MainViewModel.Action action) {
@@ -103,5 +132,19 @@ public class MainActivity extends AppCompatActivity {
         AppMenuDialog.Builder.create()
                 .setCallback(vm::logout)
                 .show(getSupportFragmentManager());
+    }
+
+    private void openLoginActivity() {
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.EmailBuilder().build(),
+                new AuthUI.IdpConfig.GoogleBuilder().build());
+
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setIsSmartLockEnabled(false)
+                        .setAvailableProviders(providers)
+                        .build(),
+                RESULT_CODE_LOGIN);
     }
 }

@@ -21,8 +21,6 @@ public class NotefyApplication extends Application {
         return (NotefyApplication) context.getApplicationContext();
     }
 
-    private PublishRelay<NavEvent> navEventRelay = PublishRelay.create();
-
     private Navigator navigator;
 
     private AuthRepo authRepo;
@@ -41,7 +39,7 @@ public class NotefyApplication extends Application {
         authRepo = new AuthRepo(FirebaseAuth.getInstance());
         notesRepo = new NotesRepo(FirebaseDatabase.getInstance());
 
-        navigator = new Navigator();
+        navigator = new Navigator(new NavEventRelay());
     }
 
     public IconRepo getIconRepo() {

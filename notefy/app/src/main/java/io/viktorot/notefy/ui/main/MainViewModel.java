@@ -53,8 +53,6 @@ public class MainViewModel extends AndroidViewModel {
         authRepo.logout();
     }
 
-    private int count = 0;
-
     void newNote() {
         navigator.navigateToNewNote();
     }
