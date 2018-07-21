@@ -3,6 +3,7 @@ package io.viktorot.notefy.ui.details;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -67,18 +68,28 @@ public class NoteDetailsFragment extends Fragment {
         vm.data.observe(getViewLifecycleOwner(), dataObserver);
 
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationIcon(R.drawable.ic_back_white);
         toolbar.setNavigationOnClickListener(view1 -> {
             vm.back();
         });
 
+        toolbar.inflateMenu(R.menu.details);
+        toolbar.setOnMenuItemClickListener(this::onMenuItemClick);
+
         imgIcon = view.findViewById(R.id.icon);
         imgIcon.setOnClickListener(view1 -> {
             vm.selectIcon();
-//            vm.selectColor();
         });
 
         return view;
+    }
+
+    private boolean onMenuItemClick(MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.action_color) {
+            vm.selectColor();
+            return true;
+        }
+        return false;
     }
 
     private void onViewModelAction(NoteDetailsViewModel.Action action) {
