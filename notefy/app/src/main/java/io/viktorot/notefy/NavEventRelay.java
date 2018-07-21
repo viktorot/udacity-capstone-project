@@ -5,7 +5,7 @@ import com.jakewharton.rxrelay2.PublishRelay;
 import androidx.annotation.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.viktorot.notefy.navigator.NavEvent;
+import io.viktorot.notefy.navigator.events.NavEvent;
 
 public class NavEventRelay {
 

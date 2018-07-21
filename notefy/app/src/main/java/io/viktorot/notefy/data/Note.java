@@ -3,6 +3,8 @@ package io.viktorot.notefy.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import io.viktorot.notefy.repo.IconRepo;
 
 public class Note implements Parcelable {
 
+    @Exclude
     private String key;
     private String title;
     private String content;

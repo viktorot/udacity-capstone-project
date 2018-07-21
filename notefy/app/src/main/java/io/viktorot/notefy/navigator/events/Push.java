@@ -1,4 +1,4 @@
-package io.viktorot.notefy.navigator;
+package io.viktorot.notefy.navigator.events;
 
 import androidx.fragment.app.Fragment;
 

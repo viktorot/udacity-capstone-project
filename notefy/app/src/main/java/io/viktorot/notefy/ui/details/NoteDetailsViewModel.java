@@ -35,6 +35,8 @@ public class NoteDetailsViewModel extends AndroidViewModel {
     SingleLiveEvent<Action> action = new SingleLiveEvent<>();
     MutableLiveData<Note> data = new MutableLiveData<>();
 
+    private boolean edited = false;
+
     public NoteDetailsViewModel(@NonNull Application application) {
         super(application);
 
@@ -62,6 +64,14 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         data.setValue(note);
     }
 
+    boolean isEdited() {
+        return edited;
+    }
+
+    private void edited() {
+        edited = true;
+    }
+
     void save() {
         Note note = data.getValue();
         if (note == null) {
@@ -77,7 +87,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
         notesRepo.save(note);
 
-        close();
+        pop();
     }
 
     void selectIcon() {
@@ -88,7 +98,11 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         dispatchAction(Action.SelectColor);
     }
 
-    void close() {
+    void pop() {
+        navigator.pop();
+    }
+
+    void back() {
         navigator.back();
     }
 
@@ -98,6 +112,8 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             Timber.w("note not set");
             return;
         }
+
+        edited();
 
         note.setPinned(!note.isPinned());
         notifyDataChange();
@@ -110,6 +126,12 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             return;
         }
 
+        if (title.equals(note.getTitle())) {
+            return;
+        }
+
+        edited();
+
         note.setTitle(title);
     }
 
@@ -119,6 +141,12 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             Timber.w("note not set");
             return;
         }
+
+        if (content.equals(note.getContent())) {
+            return;
+        }
+
+        edited();
 
         note.setContent(content);
     }
@@ -133,6 +161,12 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             return;
         }
 
+        if (iconId == note.getIconId()) {
+            return;
+        }
+
+        edited();
+
         note.setIconId(iconId);
         notifyDataChange();
     }
@@ -143,6 +177,12 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             Timber.w("note not set");
             return;
         }
+
+        if (color.equals(note.getColor())) {
+            return;
+        }
+
+        edited = true;
 
         note.setColor(color);
         notifyDataChange();

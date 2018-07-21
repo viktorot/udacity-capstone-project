@@ -7,10 +7,10 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import io.viktorot.notefy.navigator.NavEvent;
-import io.viktorot.notefy.navigator.Pop;
-import io.viktorot.notefy.navigator.Push;
+import io.viktorot.notefy.navigator.events.NavEvent;
+import io.viktorot.notefy.navigator.events.Back;
+import io.viktorot.notefy.navigator.events.Pop;
+import io.viktorot.notefy.navigator.events.Push;
 import timber.log.Timber;
 
 public abstract class FragmentNavigator {
@@ -45,7 +45,7 @@ public abstract class FragmentNavigator {
 
 
     public void applyCommand(NavEvent command) {
-        applyCommands(new NavEvent[] { command });
+        applyCommands(new NavEvent[]{command});
     }
 
     public void applyCommands(NavEvent[] commands) {
@@ -65,9 +65,11 @@ public abstract class FragmentNavigator {
 
     protected void _applyCommand(NavEvent command) {
         if (command instanceof Push) {
-             push((Push) command);
+            push((Push) command);
+        } else if (command instanceof Back) {
+            back((Back) command);
         } else if (command instanceof Pop) {
-           pop((Pop) command);
+            pop((Pop) command);
         }
     }
 
@@ -87,14 +89,38 @@ public abstract class FragmentNavigator {
         Objects.requireNonNull(fragment);
         Objects.requireNonNull(tag);
 
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction
-                .replace(containerId, fragment)
+        fragmentManager.beginTransaction()
+                .add(containerId, fragment, tag)
                 .addToBackStack(tag)
                 .commit();
 
         localStackCopy.push(tag);
+    }
+
+    protected void back(Back command) {
+        if (localStackCopy.size() != 0) {
+            String tag = localStackCopy.getFirst();
+            Fragment fragment = fragmentManager.findFragmentByTag(tag);
+
+            if (fragment instanceof Navigatable && !((Navigatable) fragment).onBackPressed()) {
+                return;
+            }
+
+            fragmentManager.popBackStack();
+
+            if (fragment != null) {
+                fragmentManager.beginTransaction()
+                        .remove(fragment)
+                        .commit();
+            } else {
+                Timber.v("fragment with tag => %s not found. skipping remove", tag);
+            }
+
+            localStackCopy.pop();
+
+        } else {
+            exit();
+        }
     }
 
     protected void pop(Pop command) {

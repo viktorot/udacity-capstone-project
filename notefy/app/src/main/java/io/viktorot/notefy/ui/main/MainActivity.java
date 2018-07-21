@@ -16,9 +16,8 @@ import io.reactivex.disposables.Disposable;
 import io.viktorot.notefy.FragmentNavigator;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
-import io.viktorot.notefy.navigator.Login;
-import io.viktorot.notefy.navigator.NavEvent;
-import io.viktorot.notefy.navigator.Pop;
+import io.viktorot.notefy.navigator.events.Login;
+import io.viktorot.notefy.navigator.events.NavEvent;
 
 public class MainActivity extends AppCompatActivity {
 

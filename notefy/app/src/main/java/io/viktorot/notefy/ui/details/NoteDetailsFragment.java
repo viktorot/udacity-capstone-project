@@ -97,7 +97,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back_white);
         toolbar.setNavigationOnClickListener(view1 -> {
-            onBackPressed();
+            vm.back();
         });
 
         toolbar.inflateMenu(R.menu.details);
@@ -211,18 +211,23 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     }
 
     @Override
-    public void onBackPressed() {
-        new MaterialDialog.Builder(requireContext())
-                .title("[save]")
-                .content("[do you want to save changes?]")
-                .positiveText("[yes]")
-                .negativeText("[no]")
-                .onPositive((dialog, which) -> {
-                    vm.save();
-                })
-                .onNegative((dialog, which) -> {
-                    vm.close();
-                })
-                .show();
+    public boolean onBackPressed() {
+        if (vm.isEdited()) {
+            new MaterialDialog.Builder(requireContext())
+                    .title("[save]")
+                    .content("[do you want to save changes?]")
+                    .positiveText("[yes]")
+                    .negativeText("[no]")
+                    .onPositive((dialog, which) -> {
+                        vm.save();
+                    })
+                    .onNegative((dialog, which) -> {
+                        vm.pop();
+                    })
+                    .show();
+
+            return false;
+        }
+        return true;
     }
 }

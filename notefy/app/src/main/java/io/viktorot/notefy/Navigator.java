@@ -4,10 +4,11 @@ import androidx.annotation.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.viktorot.notefy.data.Note;
-import io.viktorot.notefy.navigator.Login;
-import io.viktorot.notefy.navigator.NavEvent;
-import io.viktorot.notefy.navigator.Pop;
-import io.viktorot.notefy.navigator.Push;
+import io.viktorot.notefy.navigator.events.Login;
+import io.viktorot.notefy.navigator.events.NavEvent;
+import io.viktorot.notefy.navigator.events.Back;
+import io.viktorot.notefy.navigator.events.Pop;
+import io.viktorot.notefy.navigator.events.Push;
 import io.viktorot.notefy.ui.details.NoteDetailsFragment;
 
 public class Navigator {
@@ -40,6 +41,10 @@ public class Navigator {
     }
 
     public void back() {
+        relay.post(new Back());
+    }
+
+    public void pop() {
         relay.post(new Pop());
     }
 }

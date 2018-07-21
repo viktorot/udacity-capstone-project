@@ -5,10 +5,8 @@ import android.content.Context;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
-import com.jakewharton.rxrelay2.PublishRelay;
 
 import androidx.annotation.NonNull;
-import io.viktorot.notefy.navigator.NavEvent;
 import io.viktorot.notefy.repo.AuthRepo;
 import io.viktorot.notefy.repo.ColorRepo;
 import io.viktorot.notefy.repo.NotesRepo;

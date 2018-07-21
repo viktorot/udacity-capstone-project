@@ -33,6 +33,7 @@ class NoteListViewItem extends Item<NoteListViewItem.ViewHolder> {
     @Override
     public void bind(@NonNull NoteListViewItem.ViewHolder viewHolder, int position) {
         viewHolder.tvTitle.setText(this.data.getTitle());
+        viewHolder.tvContent.setText(this.data.getContent());
         viewHolder.imgCorner.setColorFilter(Color.parseColor(this.data.getColor()));
     }
 
@@ -43,11 +44,13 @@ class NoteListViewItem extends Item<NoteListViewItem.ViewHolder> {
 
     class ViewHolder extends com.xwray.groupie.ViewHolder {
         final TextView tvTitle;
+        final TextView tvContent;
         final ImageView imgCorner;
 
         ViewHolder(@NonNull View rootView) {
             super(rootView);
             tvTitle = rootView.findViewById(R.id.title);
+            tvContent = rootView.findViewById(R.id.content);
             imgCorner = rootView.findViewById(R.id.corner);
         }
     }
