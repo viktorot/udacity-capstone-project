@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.firebase.database.Exclude;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -87,6 +89,17 @@ public class Note implements Parcelable {
 
     public void setPinned(boolean pinned) {
         this.pinned = pinned;
+    }
+
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("color", getColor());
+        result.put("title", getTitle());
+        result.put("content", getContent());
+        result.put("iconId", getIconId());
+        result.put("pinned", isPinned());
+
+        return result;
     }
 
     @Override
