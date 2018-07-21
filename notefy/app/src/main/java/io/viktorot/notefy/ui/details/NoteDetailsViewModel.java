@@ -54,23 +54,18 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         data.setValue(note);
     }
 
-    void saveNote(@NonNull String title, @NonNull String content) {
-        if (TextUtils.isEmpty(title)) {
-            Timber.w("empty title");
-            dispatchAction(Action.ShowEmptyTitleError);
-            return;
-        }
-
+    void save() {
         Note note = data.getValue();
         if (note == null) {
             Timber.w("note not set");
             return;
         }
 
-        note.setTitle(title);
-        note.setContent(content);
-
-        notifyDataChange();
+        if (TextUtils.isEmpty(note.getTitle())) {
+            Timber.w("empty title");
+            dispatchAction(Action.ShowEmptyTitleError);
+            return;
+        }
 
         notesRepo.save(note);
 
@@ -98,6 +93,26 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
         note.setPinned(!note.isPinned());
         notifyDataChange();
+    }
+
+    void onTitleChanged(@NonNull String title) {
+        Note note = data.getValue();
+        if (note == null) {
+            Timber.w("note not set");
+            return;
+        }
+
+        note.setTitle(title);
+    }
+
+    void onContentChanged(@NonNull String content) {
+        Note note = data.getValue();
+        if (note == null) {
+            Timber.w("note not set");
+            return;
+        }
+
+        note.setContent(content);
     }
 
     void onIconSelected(@DrawableRes int iconResId) {

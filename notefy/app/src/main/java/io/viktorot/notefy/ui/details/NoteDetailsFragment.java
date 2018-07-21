@@ -3,6 +3,8 @@ package io.viktorot.notefy.ui.details;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import androidx.annotation.NonNull;
@@ -96,7 +97,40 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         });
 
         tvTitle = view.findViewById(R.id.title);
+        tvTitle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                vm.onTitleChanged(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         tvContent = view.findViewById(R.id.content);
+        tvContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                vm.onContentChanged(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         return view;
     }
@@ -170,7 +204,10 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
                 .positiveText("[yes]")
                 .negativeText("[no]")
                 .onPositive((dialog, which) -> {
-                    vm.saveNote(tvTitle.getText().toString(), tvContent.getText().toString());
+                    vm.save();
+                })
+                .onNegative((dialog, which) -> {
+                    vm.close();
                 })
                 .show();
     }
