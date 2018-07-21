@@ -39,6 +39,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         Note note = new Note();
         note.setIconId(iconRepo.getDefaultIconId());
         note.setColor(colorRepo.getDefaultColor());
+        note.setPinned(false);
 
         data.setValue(note);
     }
@@ -62,6 +63,17 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
     void back() {
         navigator.back();
+    }
+
+    void togglePinnedState() {
+        Note note = data.getValue();
+        if (note == null) {
+            Timber.w("note not set");
+            return;
+        }
+
+        note.setPinned(!note.isPinned());
+        notifyDataChange();
     }
 
     void onIconSelected(@DrawableRes int iconResId) {

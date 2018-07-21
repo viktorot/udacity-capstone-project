@@ -1,6 +1,7 @@
 package io.viktorot.notefy.ui.details;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,6 +27,8 @@ public class NoteDetailsFragment extends Fragment {
 
     public static final String TAG = NoteDetailsFragment.class.getSimpleName();
 
+    private static final int PIN_ITEM_INDEX = 0;
+
     public static NoteDetailsFragment newInstance() {
         Bundle args = new Bundle();
 
@@ -38,6 +41,8 @@ public class NoteDetailsFragment extends Fragment {
 
     private Toolbar toolbar;
     private ImageView imgIcon;
+
+    private MenuItem pinMenuItem;
 
     private final Observer<NoteDetailsViewModel.Action> actionObserver = action -> {
         if (action == null) {
@@ -76,6 +81,8 @@ public class NoteDetailsFragment extends Fragment {
         toolbar.inflateMenu(R.menu.details);
         toolbar.setOnMenuItemClickListener(this::onMenuItemClick);
 
+        pinMenuItem = toolbar.getMenu().getItem(PIN_ITEM_INDEX);
+
         imgIcon = view.findViewById(R.id.icon);
         imgIcon.setOnClickListener(view1 -> {
             vm.selectIcon();
@@ -94,6 +101,9 @@ public class NoteDetailsFragment extends Fragment {
     private boolean onMenuItemClick(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_color) {
             vm.selectColor();
+            return true;
+        } else if (menuItem.getItemId() == R.id.action_pin) {
+            vm.togglePinnedState();
             return true;
         }
         return false;
@@ -116,6 +126,15 @@ public class NoteDetailsFragment extends Fragment {
         toolbar.setBackgroundColor(color);
 
         StatusBarUtils.setColor(requireActivity(), color);
+
+        // TODO: cache drawables
+        Drawable drawable;
+        if (note.isPinned()) {
+            drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_pined);
+        } else {
+            drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_pin);
+        }
+        pinMenuItem.setIcon(drawable);
     }
 
     private void openIconMenu() {

@@ -10,9 +10,9 @@ public class Note {
     private String key;
     private String title;
     private String content;
-
     private int iconId;
     private String color;
+    private boolean pinned;
 
     public Note() {
     }
@@ -64,6 +64,14 @@ public class Note {
 
     public void setColor(@NonNull String color) {
         this.color = color;
+    }
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
     }
 
     @Override
