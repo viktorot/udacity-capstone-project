@@ -45,7 +45,7 @@ public class IconRepo {
         idToResMap.put(ID_RUN, R.drawable.ic_run);
     }
 
-    public int getDefaultIconId() {
+    public static int getDefaultIconId() {
         return ID_ANDROID;
     }
 

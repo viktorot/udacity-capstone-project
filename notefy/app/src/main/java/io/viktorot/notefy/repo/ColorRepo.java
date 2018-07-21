@@ -33,7 +33,7 @@ public class ColorRepo {
     );
 
     @NonNull
-    public String getDefaultColor() {
+    public static String getDefaultColor() {
         return COLORS.get(0);
     }
 }

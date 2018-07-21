@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.viktorot.notefy.repo.ColorRepo;
+import io.viktorot.notefy.repo.IconRepo;
 
 public class Note {
 
@@ -14,13 +16,20 @@ public class Note {
     private String color;
     private boolean pinned;
 
-    public Note() {
+    @NonNull
+    public static Note empty() {
+        Note note = new Note();
+        note.setKey(null);
+        note.setTitle("");
+        note.setContent("");
+        note.setIconId(IconRepo.getDefaultIconId());
+        note.setColor(ColorRepo.getDefaultColor());
+        note.setPinned(false);
+
+        return note;
     }
 
-    public Note(String title, String content) {
-        this.title = title;
-        this.content = content;
-        this.key = null;
+    public Note() {
     }
 
     @Nullable
@@ -28,7 +37,7 @@ public class Note {
         return key;
     }
 
-    public void setKey(@NonNull String key) {
+    public void setKey(String key) {
         this.key = key;
     }
 

@@ -11,11 +11,11 @@
         android:layout_height="match_parent">
 
         <ImageView
+            android:id="@+id/corner"
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:layout_gravity="top|end"
             android:background="@null"
-            android:tint="#f00"
             app:srcCompat="@drawable/ic_triangle" />
 
         <androidx.constraintlayout.widget.ConstraintLayout

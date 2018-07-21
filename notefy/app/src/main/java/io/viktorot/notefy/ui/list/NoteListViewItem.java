@@ -1,6 +1,8 @@
 package io.viktorot.notefy.ui.list;
 
+import android.graphics.Color;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xwray.groupie.Item;
@@ -26,6 +28,7 @@ class NoteListViewItem extends Item<NoteListViewItem.ViewHolder> {
     @Override
     public void bind(@NonNull NoteListViewItem.ViewHolder viewHolder, int position) {
         viewHolder.tvTitle.setText(this.data.getTitle());
+        viewHolder.imgCorner.setColorFilter(Color.parseColor(this.data.getColor()));
     }
 
     @Override
@@ -35,10 +38,12 @@ class NoteListViewItem extends Item<NoteListViewItem.ViewHolder> {
 
     class ViewHolder extends com.xwray.groupie.ViewHolder {
         final TextView tvTitle;
+        final ImageView imgCorner;
 
         ViewHolder(@NonNull View rootView) {
             super(rootView);
             tvTitle = rootView.findViewById(R.id.title);
+            imgCorner = rootView.findViewById(R.id.corner);
         }
     }
 }

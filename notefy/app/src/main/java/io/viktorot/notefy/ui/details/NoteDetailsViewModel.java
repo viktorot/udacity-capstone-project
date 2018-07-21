@@ -1,6 +1,7 @@
 package io.viktorot.notefy.ui.details;
 
 import android.app.Application;
+import android.text.TextUtils;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -11,19 +12,23 @@ import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.repo.ColorRepo;
 import io.viktorot.notefy.repo.IconRepo;
+import io.viktorot.notefy.repo.NotesRepo;
 import io.viktorot.notefy.util.SingleLiveEvent;
 import timber.log.Timber;
 
 public class NoteDetailsViewModel extends AndroidViewModel {
 
     enum Action {
-        SelectIcon, SelectColor
+        SelectIcon,
+        SelectColor,
+        ShowEmptyTitleError
     }
 
     private final Navigator navigator;
 
     private final IconRepo iconRepo;
     private final ColorRepo colorRepo;
+    private final NotesRepo notesRepo;
 
     SingleLiveEvent<Action> action = new SingleLiveEvent<>();
     MutableLiveData<Note> data = new MutableLiveData<>();
@@ -33,15 +38,11 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
         navigator = NotefyApplication.get(application).getNavigator();
 
+        notesRepo = NotefyApplication.get(application).getNotesRepo();
         iconRepo = NotefyApplication.get(application).getIconRepo();
         colorRepo = NotefyApplication.get(application).getColorRepo();
 
-        Note note = new Note();
-        note.setIconId(iconRepo.getDefaultIconId());
-        note.setColor(colorRepo.getDefaultColor());
-        note.setPinned(false);
-
-        data.setValue(note);
+        data.setValue(Note.empty());
     }
 
     private void dispatchAction(Action action) {
@@ -53,6 +54,29 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         data.setValue(note);
     }
 
+    void saveNote(@NonNull String title, @NonNull String content) {
+        if (TextUtils.isEmpty(title)) {
+            Timber.w("empty title");
+            dispatchAction(Action.ShowEmptyTitleError);
+            return;
+        }
+
+        Note note = data.getValue();
+        if (note == null) {
+            Timber.w("note not set");
+            return;
+        }
+
+        note.setTitle(title);
+        note.setContent(content);
+
+        notifyDataChange();
+
+        notesRepo.save(note);
+
+        close();
+    }
+
     void selectIcon() {
         dispatchAction(Action.SelectIcon);
     }
@@ -61,7 +85,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         dispatchAction(Action.SelectColor);
     }
 
-    void back() {
+    void close() {
         navigator.back();
     }
 

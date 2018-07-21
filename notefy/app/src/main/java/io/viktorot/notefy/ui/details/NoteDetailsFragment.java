@@ -8,6 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +20,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import io.viktorot.notefy.Navigatable;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;
@@ -23,7 +28,7 @@ import io.viktorot.notefy.ui.details.colors.ColorDialog;
 import io.viktorot.notefy.ui.details.icons.IconDialog;
 import io.viktorot.notefy.util.StatusBarUtils;
 
-public class NoteDetailsFragment extends Fragment {
+public class NoteDetailsFragment extends Fragment implements Navigatable {
 
     public static final String TAG = NoteDetailsFragment.class.getSimpleName();
 
@@ -41,6 +46,8 @@ public class NoteDetailsFragment extends Fragment {
 
     private Toolbar toolbar;
     private ImageView imgIcon;
+    private TextView tvTitle;
+    private TextView tvContent;
 
     private MenuItem pinMenuItem;
 
@@ -75,7 +82,7 @@ public class NoteDetailsFragment extends Fragment {
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back_white);
         toolbar.setNavigationOnClickListener(view1 -> {
-            vm.back();
+            onBackPressed();
         });
 
         toolbar.inflateMenu(R.menu.details);
@@ -87,6 +94,9 @@ public class NoteDetailsFragment extends Fragment {
         imgIcon.setOnClickListener(view1 -> {
             vm.selectIcon();
         });
+
+        tvTitle = view.findViewById(R.id.title);
+        tvContent = view.findViewById(R.id.content);
 
         return view;
     }
@@ -118,6 +128,9 @@ public class NoteDetailsFragment extends Fragment {
     }
 
     private void onDataChanged(@NonNull Note note) {
+        tvTitle.setText(note.getTitle());
+        tvContent.setText(note.getContent());
+
         int iconResId = NotefyApplication.get(requireContext())
                 .getIconRepo().getIconRes(note.getIconId());
         imgIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), iconResId));
@@ -147,5 +160,18 @@ public class NoteDetailsFragment extends Fragment {
         ColorDialog.Builder.create()
                 .setCallback(vm::onColorSelected)
                 .show(requireFragmentManager());
+    }
+
+    @Override
+    public void onBackPressed() {
+        new MaterialDialog.Builder(requireContext())
+                .title("[save]")
+                .content("[do you want to save changes?]")
+                .positiveText("[yes]")
+                .negativeText("[no]")
+                .onPositive((dialog, which) -> {
+                    vm.saveNote(tvTitle.getText().toString(), tvContent.getText().toString());
+                })
+                .show();
     }
 }
