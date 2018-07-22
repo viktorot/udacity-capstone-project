@@ -219,6 +219,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     private void openTagMenu() {
         TagDialog.Builder.create()
                 .setCallback(vm::onTagSelected)
+                .setSelectedItem(2)
                 .show(requireFragmentManager());
     }
 

@@ -30,7 +30,11 @@ public class TagDialog extends NotefyBottomSheetDialogFragment {
 
     private static final String TAG = IconDialog.class.getSimpleName();
 
+    private static final String ARG_SELECTED_ID = "arg_selected_id";
+
     private static final int COLUMN_COUNT = 4;
+
+    private static final int SELECTED_NONE = -1;
 
     @Nullable
     private TagDialog.Callback callback;
@@ -79,6 +83,15 @@ public class TagDialog extends NotefyBottomSheetDialogFragment {
             group.addView(chip);
         }
 
+        Bundle args = getArguments();
+        int selected = SELECTED_NONE;
+        if (args != null && args.containsKey(ARG_SELECTED_ID)) {
+            selected = args.getInt(ARG_SELECTED_ID);
+        }
+        if (selected != SELECTED_NONE) {
+            group.check(selected);
+        }
+
         return view;
     }
 
@@ -104,6 +117,7 @@ public class TagDialog extends NotefyBottomSheetDialogFragment {
     }
 
     public static class Builder {
+        private int selected = SELECTED_NONE;
         private TagDialog.Callback callback;
 
         private Builder() {
@@ -113,13 +127,23 @@ public class TagDialog extends NotefyBottomSheetDialogFragment {
             return new Builder();
         }
 
+        public Builder setSelectedItem(int id) {
+            this.selected = id;
+            return this;
+        }
+
         public Builder setCallback(@NonNull TagDialog.Callback callback) {
             this.callback = callback;
             return this;
         }
 
         public void show(@NonNull FragmentManager fragmentManager) {
+            Bundle args = new Bundle();
+            args.putInt(ARG_SELECTED_ID, this.selected);
+
             TagDialog dialog = new TagDialog();
+            dialog.setArguments(args);
+
             dialog.setCallback(this.callback);
             dialog.show(fragmentManager, TAG);
         }
