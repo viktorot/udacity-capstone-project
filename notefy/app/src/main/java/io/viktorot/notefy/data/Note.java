@@ -37,6 +37,21 @@ public class Note implements Parcelable {
         return note;
     }
 
+    @NonNull
+    public static Note copy(@NonNull Note note) {
+        Objects.requireNonNull(note);
+
+        Note copy = new Note();
+        copy.setKey(note.getKey());
+        copy.setTitle(note.getTitle());
+        copy.setContent(note.getContent());
+        copy.setIconId(note.getIconId());
+        copy.setColor(note.getColor());
+        copy.setPinned(note.isPinned());
+
+        return copy;
+    }
+
     public Note() {
     }
 

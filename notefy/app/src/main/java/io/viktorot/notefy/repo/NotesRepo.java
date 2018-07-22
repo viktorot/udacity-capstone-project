@@ -119,6 +119,7 @@ public class NotesRepo {
     }
 
     public void save(@NonNull Note note) {
+        // TODO: attach Task callbacks
         if (TextUtils.isEmpty(note.getKey())) {
             ref.push().setValue(note);
         } else {

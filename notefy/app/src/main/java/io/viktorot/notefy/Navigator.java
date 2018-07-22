@@ -32,7 +32,7 @@ public class Navigator {
     }
 
     public void navigateToEditNote(@NonNull Note note) {
-        navigateToDetails(note);
+        navigateToDetails(Note.copy(note));
     }
 
     private void navigateToDetails(@NonNull Note note) {
