@@ -25,7 +25,8 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         SelectIcon,
         SelectColor,
         SelectTag,
-        ShowEmptyTitleError
+        ShowEmptyTitleError,
+        ShowDeleteConfirmation
     }
 
     private final Navigator navigator;
@@ -100,6 +101,18 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         pop();
     }
 
+    void delete() {
+        Note note = data.getValue();
+        if (note == null) {
+            Timber.w("note not set");
+            return;
+        }
+
+        notesRepo.delete(note);
+
+        pop();
+    }
+
     void selectIcon() {
         dispatchAction(Action.SelectIcon);
     }
@@ -110,6 +123,10 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
     void selectTag() {
         dispatchAction(Action.SelectTag);
+    }
+
+    void deleteNote() {
+        dispatchAction(Action.ShowDeleteConfirmation);
     }
 
     void pop() {

@@ -176,6 +176,8 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         } else if (menuItem.getItemId() == R.id.action_pin) {
             vm.togglePinnedState();
             return true;
+        } else if (menuItem.getItemId() == R.id.action_delete) {
+            vm.deleteNote();
         }
         return false;
     }
@@ -187,6 +189,8 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             openColorMenu();
         } else if (action == NoteDetailsViewModel.Action.SelectTag) {
             openTagMenu();
+        } else if (action == NoteDetailsViewModel.Action.ShowDeleteConfirmation) {
+            showDeleteConfirmationDialog();
         }
     }
 
@@ -239,22 +243,37 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
                 .show(requireFragmentManager());
     }
 
+    private void showDeleteConfirmationDialog() {
+        new MaterialDialog.Builder(requireContext())
+                .title("[delete]")
+                .content("[are you sure you want to delete this note?]")
+                .positiveText("[yes]")
+                .negativeText("[no]")
+                .onPositive((dialog, which) -> {
+                    vm.delete();
+                })
+                .show();
+    }
+
+    private void showSaveConfirmationDialog() {
+        new MaterialDialog.Builder(requireContext())
+                .title("[save]")
+                .content("[do you want to save changes?]")
+                .positiveText("[yes]")
+                .negativeText("[no]")
+                .onPositive((dialog, which) -> {
+                    vm.save();
+                })
+                .onNegative((dialog, which) -> {
+                    vm.pop();
+                })
+                .show();
+    }
+
     @Override
     public boolean onBackPressed() {
         if (vm.isEdited()) {
-            new MaterialDialog.Builder(requireContext())
-                    .title("[save]")
-                    .content("[do you want to save changes?]")
-                    .positiveText("[yes]")
-                    .negativeText("[no]")
-                    .onPositive((dialog, which) -> {
-                        vm.save();
-                    })
-                    .onNegative((dialog, which) -> {
-                        vm.pop();
-                    })
-                    .show();
-
+            showSaveConfirmationDialog();
             return false;
         }
         return true;

@@ -128,4 +128,12 @@ public class NotesRepo {
             ref.updateChildren(updates);
         }
     }
+
+    public void delete(@NonNull Note note) {
+        if (TextUtils.isEmpty(note.getKey())) {
+            Timber.w("cannot delete note without key");
+            return;
+        }
+        ref.child(note.getKey()).removeValue();
+    }
 }
