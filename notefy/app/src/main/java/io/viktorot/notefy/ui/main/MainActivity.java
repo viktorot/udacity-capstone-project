@@ -1,6 +1,7 @@
 package io.viktorot.notefy.ui.main;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.bottomappbar.BottomAppBar;
@@ -9,6 +10,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         appBar.setNavigationOnClickListener(view -> {
             vm.menu();
         });
+        appBar.inflateMenu(R.menu.main);
+        appBar.setOnMenuItemClickListener(this::onMenuItemSelected);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
@@ -105,6 +109,14 @@ public class MainActivity extends AppCompatActivity {
                 .getNavigator().back();
     }
 
+    private boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.action_filter) {
+            vm.filter();
+            return true;
+        }
+        return false;
+    }
+
     private void onNavEvent(NavEvent event) {
         if (event instanceof Login) {
             openLoginActivity();
@@ -118,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
             openLoginMenu();
         } else if (action == MainViewModel.Action.ShowAppMenu) {
             openAppMenu();
+        } else if (action == MainViewModel.Action.ShowFilterDialog) {
+            showFilterDialog();
         }
     }
 
@@ -130,6 +144,11 @@ public class MainActivity extends AppCompatActivity {
     private void openAppMenu() {
         AppMenuDialog.Builder.create()
                 .setCallback(vm::logout)
+                .show(getSupportFragmentManager());
+    }
+
+    private void showFilterDialog() {
+        FilterDialog.Builder.create()
                 .show(getSupportFragmentManager());
     }
 

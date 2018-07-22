@@ -13,6 +13,7 @@ import io.viktorot.notefy.Navigator;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.repo.AuthRepo;
+import io.viktorot.notefy.repo.FilterRelay;
 import io.viktorot.notefy.repo.NotesRepo;
 import timber.log.Timber;
 
@@ -30,8 +31,11 @@ public class NoteListViewModel extends AndroidViewModel {
     private final ArrayList<Note> _notes = new ArrayList<>();
     MutableLiveData<List<Note>> notes = new MutableLiveData<>();
 
+    private final FilterRelay filterRelay = new FilterRelay();
+
     MutableLiveData<State> state = new MutableLiveData<>();
 
+    private Disposable filterDisposable;
     private Disposable dataDisposable;
 
     public NoteListViewModel(@NonNull Application application) {
@@ -63,6 +67,19 @@ public class NoteListViewModel extends AndroidViewModel {
 
     private void setState(State state) {
         this.state.setValue(state);
+    }
+
+    private void subscribeToFilter() {
+        filterDisposable = filterRelay.observe(num -> {
+            // TODO: apply filter
+            notes.setValue(_notes);
+        });
+    }
+
+    private void unsubscribeFromFilter() {
+        if (filterDisposable != null) {
+            filterDisposable.dispose();
+        }
     }
 
     void editNote(@NonNull Note note) {
@@ -123,10 +140,10 @@ public class NoteListViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-//        unsubscribeNotes();
         if (dataDisposable != null) {
             dataDisposable.dispose();
         }
+        unsubscribeFromFilter();
         super.onCleared();
     }
 }

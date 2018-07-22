@@ -14,7 +14,8 @@ public class MainViewModel extends AndroidViewModel {
 
     enum Action {
         ShowLoginMenu,
-        ShowAppMenu
+        ShowAppMenu,
+        ShowFilterDialog
     }
 
     private final AuthRepo authRepo;
@@ -51,6 +52,10 @@ public class MainViewModel extends AndroidViewModel {
 
     void logout() {
         authRepo.logout();
+    }
+
+    void filter() {
+        dispatchAction(Action.ShowFilterDialog);
     }
 
     void newNote() {
