@@ -10,6 +10,10 @@ public class TagRepo {
         this.tags = tags;
     }
 
+    public static int getDefaultTagId() {
+        return -1;
+    }
+
     @NonNull
     public String[] getTags() {
         return tags;

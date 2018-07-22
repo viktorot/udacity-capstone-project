@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.viktorot.notefy.repo.ColorRepo;
 import io.viktorot.notefy.repo.IconRepo;
+import io.viktorot.notefy.repo.TagRepo;
 
 public class Note implements Parcelable {
 
@@ -20,6 +21,7 @@ public class Note implements Parcelable {
     private String key;
     private String title;
     private String content;
+    private int tagId;
     private int iconId;
     private String color;
     private boolean pinned;
@@ -32,6 +34,7 @@ public class Note implements Parcelable {
         note.setContent("");
         note.setIconId(IconRepo.getDefaultIconId());
         note.setColor(ColorRepo.getDefaultColor());
+        note.setTagId(TagRepo.getDefaultTagId());
         note.setPinned(false);
 
         return note;
@@ -48,6 +51,7 @@ public class Note implements Parcelable {
         copy.setIconId(note.getIconId());
         copy.setColor(note.getColor());
         copy.setPinned(note.isPinned());
+        copy.setTagId(note.getTagId());
 
         return copy;
     }
@@ -98,6 +102,14 @@ public class Note implements Parcelable {
         this.color = color;
     }
 
+    public int getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(int tagId) {
+        this.tagId = tagId;
+    }
+
     public boolean isPinned() {
         return pinned;
     }
@@ -113,6 +125,7 @@ public class Note implements Parcelable {
         result.put("content", getContent());
         result.put("iconId", getIconId());
         result.put("pinned", isPinned());
+        result.put("tagId", getTagId());
 
         return result;
     }
@@ -130,6 +143,7 @@ public class Note implements Parcelable {
         return Objects.hash(key);
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -140,6 +154,7 @@ public class Note implements Parcelable {
         dest.writeString(this.key);
         dest.writeString(this.title);
         dest.writeString(this.content);
+        dest.writeInt(this.tagId);
         dest.writeInt(this.iconId);
         dest.writeString(this.color);
         dest.writeByte(this.pinned ? (byte) 1 : (byte) 0);
@@ -149,12 +164,13 @@ public class Note implements Parcelable {
         this.key = in.readString();
         this.title = in.readString();
         this.content = in.readString();
+        this.tagId = in.readInt();
         this.iconId = in.readInt();
         this.color = in.readString();
         this.pinned = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<Note> CREATOR = new Parcelable.Creator<Note>() {
+    public static final Creator<Note> CREATOR = new Creator<Note>() {
         @Override
         public Note createFromParcel(Parcel source) {
             return new Note(source);

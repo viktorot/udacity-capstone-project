@@ -29,6 +29,7 @@ import io.viktorot.notefy.ui.details.colors.ColorDialog;
 import io.viktorot.notefy.ui.details.icons.IconDialog;
 import io.viktorot.notefy.ui.details.tags.TagDialog;
 import io.viktorot.notefy.util.StatusBarUtils;
+import io.viktorot.notefy.util.ViewUtils;
 
 public class NoteDetailsFragment extends Fragment implements Navigatable {
 
@@ -53,6 +54,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     private ImageView imgIcon;
     private TextView tvTitle;
     private TextView tvContent;
+    private TextView tvTag;
 
     private MenuItem pinMenuItem;
 
@@ -147,6 +149,8 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             }
         });
 
+        tvTag = view.findViewById(R.id.tag);
+
         return view;
     }
 
@@ -184,6 +188,14 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     private void onDataChanged(@NonNull Note note) {
         tvTitle.setText(note.getTitle());
         tvContent.setText(note.getContent());
+
+        if (note.getTagId() == -1) {
+            ViewUtils.hide(tvTag);
+        } else {
+            tvTag.setText(NotefyApplication.get(requireContext()).getTagRepo().getTag(note.getTagId()));
+            ViewUtils.show(tvTag);
+        }
+
 
         int iconResId = NotefyApplication.get(requireContext())
                 .getIconRepo().getIconRes(note.getIconId());

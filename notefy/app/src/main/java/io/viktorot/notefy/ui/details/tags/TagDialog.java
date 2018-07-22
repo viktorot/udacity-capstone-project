@@ -1,6 +1,5 @@
 package io.viktorot.notefy.ui.details.tags;
 
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.NotefyBottomSheetDialogFragment;
 import io.viktorot.notefy.R;
