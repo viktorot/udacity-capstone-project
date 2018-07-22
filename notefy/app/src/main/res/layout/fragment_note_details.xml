@@ -60,7 +60,7 @@
         android:id="@+id/tag"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#f00"
+        android:background="@color/dark_gray"
         android:gravity="center_vertical"
         android:drawablePadding="5dp"
         android:drawableStart="@drawable/ic_tag"

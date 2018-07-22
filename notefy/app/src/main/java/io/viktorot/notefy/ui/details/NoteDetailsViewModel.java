@@ -15,6 +15,7 @@ import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.repo.ColorRepo;
 import io.viktorot.notefy.repo.IconRepo;
 import io.viktorot.notefy.repo.NotesRepo;
+import io.viktorot.notefy.repo.TagRepo;
 import io.viktorot.notefy.util.SingleLiveEvent;
 import timber.log.Timber;
 
@@ -67,6 +68,14 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
     boolean isEdited() {
         return edited;
+    }
+
+    int getTagId() {
+        Note note = data.getValue();
+        if (note == null) {
+            return TagRepo.ID_NONE;
+        }
+        return note.getTagId();
     }
 
     private void edited() {
@@ -193,7 +202,20 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         notifyDataChange();
     }
 
-    void onTagSelected() {
+    void onTagSelected(int tagId) {
+        Note note = data.getValue();
+        if (note == null) {
+            Timber.w("note not set");
+            return;
+        }
 
+        if (tagId == note.getTagId()) {
+            return;
+        }
+
+        edited = true;
+
+        note.setTagId(tagId);
+        notifyDataChange();
     }
 }

@@ -8,21 +8,15 @@ import android.widget.TextView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.xwray.groupie.GroupAdapter;
-import com.xwray.groupie.Section;
-
-import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.GridLayoutManager;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.NotefyBottomSheetDialogFragment;
 import io.viktorot.notefy.R;
 import io.viktorot.notefy.repo.TagRepo;
 import io.viktorot.notefy.ui.details.icons.IconDialog;
-import timber.log.Timber;
 
 public class TagDialog extends NotefyBottomSheetDialogFragment {
 
@@ -30,17 +24,8 @@ public class TagDialog extends NotefyBottomSheetDialogFragment {
 
     private static final String ARG_SELECTED_ID = "arg_selected_id";
 
-    private static final int COLUMN_COUNT = 4;
-
-    private static final int SELECTED_NONE = -1;
-
     @Nullable
     private TagDialog.Callback callback;
-
-    //private RecyclerView recycler;
-    private ChipGroup group;
-
-    private final GroupAdapter adapter = new GroupAdapter();
 
     private void setCallback(@NonNull TagDialog.Callback callback) {
         this.callback = callback;
@@ -51,43 +36,40 @@ public class TagDialog extends NotefyBottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_tag_list, container, false);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), COLUMN_COUNT);
-        layoutManager.setSpanSizeLookup(adapter.getSpanSizeLookup());
+        Bundle args = getArguments();
+        final int initialSelected;
+        if (args != null && args.containsKey(ARG_SELECTED_ID)) {
+            initialSelected = args.getInt(ARG_SELECTED_ID);
+        } else {
+            initialSelected = TagRepo.ID_NONE;
+        }
 
-//        recycler = view.findViewById(R.id.recycler);
-//        recycler.setLayoutManager(layoutManager);
-//        recycler.setAdapter(adapter);
-//
-//        adapter.add(getAdapterSection());
-//
-//        adapter.setOnItemClickListener((item, view1) -> {
-//            IconListViewItem iconView = (IconListViewItem) item;
-//            onIconClick(iconView.getIconResId());
-//        });
-
-        group = view.findViewById(R.id.group);
+        final ChipGroup group = view.findViewById(R.id.group);
         group.setSingleSelection(true);
 
         group.setOnCheckedChangeListener((chipGroup, i) -> {
-            Timber.v("checked => %d", i);
+            if (i == initialSelected) {
+                return;
+            }
+            if (i == -1) {
+                onTagClick(TagRepo.ID_NONE);
+            } else {
+                onTagClick(i);
+            }
         });
 
         TagRepo repo = NotefyApplication.get(view.getContext()).getTagRepo();
 
         for (int i = 0; i < repo.getTags().length; i++) {
+            int id = i + 1;
             Chip chip = (Chip) inflater.inflate(R.layout.item_tag_list, group, false);
-            chip.setId(i);
-            chip.setText(repo.getTag(i), TextView.BufferType.NORMAL);
+            chip.setId(id);
+            chip.setText(repo.getTag(id), TextView.BufferType.NORMAL);
             group.addView(chip);
         }
 
-        Bundle args = getArguments();
-        int selected = SELECTED_NONE;
-        if (args != null && args.containsKey(ARG_SELECTED_ID)) {
-            selected = args.getInt(ARG_SELECTED_ID);
-        }
-        if (selected != SELECTED_NONE) {
-            group.check(selected);
+        if (initialSelected != TagRepo.ID_NONE) {
+            group.check(initialSelected);
         }
 
         return view;
@@ -95,27 +77,19 @@ public class TagDialog extends NotefyBottomSheetDialogFragment {
 
     @Override
     public void onDestroyView() {
-        // TODO: clean callbacks
+        callback = null;
         super.onDestroyView();
     }
 
-    private void onTagClick() {
-
-    }
-
-    @NonNull
-    private Section getAdapterSection() {
-        ArrayList<TagListViewItem> items = new ArrayList<>();
-
-        for (int i = 0; i < 20; i++) {
-            items.add(new TagListViewItem(String.valueOf(i)));
+    private void onTagClick(int tagId) {
+        if (callback != null) {
+            callback.onTagSelected(tagId);
         }
-
-        return new Section(items);
+        dismiss();
     }
 
     public static class Builder {
-        private int selected = SELECTED_NONE;
+        private int selected = TagRepo.ID_NONE;
         private TagDialog.Callback callback;
 
         private Builder() {
@@ -148,6 +122,6 @@ public class TagDialog extends NotefyBottomSheetDialogFragment {
     }
 
     public interface Callback {
-        void onTagSelected();
+        void onTagSelected(int tagId);
     }
 }

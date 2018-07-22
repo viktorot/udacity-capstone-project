@@ -25,6 +25,7 @@ import io.viktorot.notefy.Navigatable;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;
+import io.viktorot.notefy.repo.TagRepo;
 import io.viktorot.notefy.ui.details.colors.ColorDialog;
 import io.viktorot.notefy.ui.details.icons.IconDialog;
 import io.viktorot.notefy.ui.details.tags.TagDialog;
@@ -49,6 +50,8 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     }
 
     private NoteDetailsViewModel vm;
+
+    private TagRepo tagRepo;
 
     private Toolbar toolbar;
     private ImageView imgIcon;
@@ -75,6 +78,8 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        tagRepo = NotefyApplication.get(requireContext()).getTagRepo();
 
         Bundle args = getArguments();
         Note note = null;
@@ -189,13 +194,12 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         tvTitle.setText(note.getTitle());
         tvContent.setText(note.getContent());
 
-        if (note.getTagId() == -1) {
-            ViewUtils.hide(tvTag);
-        } else {
-            tvTag.setText(NotefyApplication.get(requireContext()).getTagRepo().getTag(note.getTagId()));
+        if (tagRepo.isIdValid(note.getTagId())) {
+            tvTag.setText(tagRepo.getTag(note.getTagId()));
             ViewUtils.show(tvTag);
+        } else {
+            ViewUtils.hide(tvTag);
         }
-
 
         int iconResId = NotefyApplication.get(requireContext())
                 .getIconRepo().getIconRes(note.getIconId());
@@ -231,7 +235,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     private void openTagMenu() {
         TagDialog.Builder.create()
                 .setCallback(vm::onTagSelected)
-                .setSelectedItem(2)
+                .setSelectedItem(vm.getTagId())
                 .show(requireFragmentManager());
     }
 
