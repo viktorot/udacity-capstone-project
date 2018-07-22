@@ -11,6 +11,7 @@ import io.viktorot.notefy.repo.AuthRepo;
 import io.viktorot.notefy.repo.ColorRepo;
 import io.viktorot.notefy.repo.NotesRepo;
 import io.viktorot.notefy.repo.IconRepo;
+import io.viktorot.notefy.repo.TagRepo;
 import timber.log.Timber;
 
 public class NotefyApplication extends Application {
@@ -25,6 +26,7 @@ public class NotefyApplication extends Application {
     private NotesRepo notesRepo;
     private final IconRepo iconRepo = new IconRepo();
     private final ColorRepo colorRepo = new ColorRepo();
+    private TagRepo tagRepo;
 
     @Override
     public void onCreate() {
@@ -36,6 +38,7 @@ public class NotefyApplication extends Application {
 
         authRepo = new AuthRepo(FirebaseAuth.getInstance());
         notesRepo = new NotesRepo(FirebaseDatabase.getInstance());
+        tagRepo = new TagRepo(getResources().getStringArray(R.array.tags));
 
         navigator = new Navigator(new NavEventRelay());
     }
@@ -54,6 +57,10 @@ public class NotefyApplication extends Application {
 
     public NotesRepo getNotesRepo() {
         return this.notesRepo;
+    }
+
+    public TagRepo getTagRepo() {
+        return tagRepo;
     }
 
     public Navigator getNavigator() {

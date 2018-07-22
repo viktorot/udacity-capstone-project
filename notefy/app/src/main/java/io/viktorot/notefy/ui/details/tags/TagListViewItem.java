@@ -29,7 +29,7 @@ public class TagListViewItem extends Item<TagListViewItem.ViewHolder> {
 
     @Override
     public int getLayout() {
-        return R.layout.item_filter_list;
+        return R.layout.item_tag_list;
     }
 
     class ViewHolder extends com.xwray.groupie.ViewHolder {
