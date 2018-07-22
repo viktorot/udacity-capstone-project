@@ -23,6 +23,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
     enum Action {
         SelectIcon,
         SelectColor,
+        SelectTag,
         ShowEmptyTitleError
     }
 
@@ -96,6 +97,10 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
     void selectColor() {
         dispatchAction(Action.SelectColor);
+    }
+
+    void selectTag() {
+        dispatchAction(Action.SelectTag);
     }
 
     void pop() {
@@ -186,5 +191,9 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
         note.setColor(color);
         notifyDataChange();
+    }
+
+    void onTagSelected() {
+
     }
 }

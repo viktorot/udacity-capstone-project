@@ -9,9 +9,16 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_tag"
+        android:icon="@drawable/ic_tag"
+        android:orderInCategory="101"
+        android:title="[pin]"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_color"
         android:icon="@drawable/ic_palette_white"
-        android:orderInCategory="101"
+        android:orderInCategory="102"
         android:title="[color]"
         app:showAsAction="always" />
 

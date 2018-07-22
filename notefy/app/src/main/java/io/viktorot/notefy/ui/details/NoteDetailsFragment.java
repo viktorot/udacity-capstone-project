@@ -27,6 +27,7 @@ import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.ui.details.colors.ColorDialog;
 import io.viktorot.notefy.ui.details.icons.IconDialog;
+import io.viktorot.notefy.ui.details.tags.TagDialog;
 import io.viktorot.notefy.util.StatusBarUtils;
 
 public class NoteDetailsFragment extends Fragment implements Navigatable {
@@ -160,6 +161,9 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         if (menuItem.getItemId() == R.id.action_color) {
             vm.selectColor();
             return true;
+        } else if (menuItem.getItemId() == R.id.action_tag) {
+            vm.selectTag();
+            return true;
         } else if (menuItem.getItemId() == R.id.action_pin) {
             vm.togglePinnedState();
             return true;
@@ -172,6 +176,8 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             openIconMenu();
         } else if (action == NoteDetailsViewModel.Action.SelectColor) {
             openColorMenu();
+        } else if (action == NoteDetailsViewModel.Action.SelectTag) {
+            openTagMenu();
         }
     }
 
@@ -207,6 +213,12 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     private void openColorMenu() {
         ColorDialog.Builder.create()
                 .setCallback(vm::onColorSelected)
+                .show(requireFragmentManager());
+    }
+
+    private void openTagMenu() {
+        TagDialog.Builder.create()
+                .setCallback(vm::onTagSelected)
                 .show(requireFragmentManager());
     }
 
