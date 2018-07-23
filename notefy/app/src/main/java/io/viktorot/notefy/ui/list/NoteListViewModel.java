@@ -19,6 +19,7 @@ import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.repo.AuthRepo;
 import io.viktorot.notefy.repo.FilterRelay;
 import io.viktorot.notefy.repo.NotesRepo;
+import io.viktorot.notefy.repo.TagRepo;
 import timber.log.Timber;
 
 public class NoteListViewModel extends AndroidViewModel {
@@ -67,21 +68,33 @@ public class NoteListViewModel extends AndroidViewModel {
                 })
                 .filter(auth -> auth)
                 .switchMap((Function<Boolean, ObservableSource<List<Note>>>) auth ->
-                        Observable.combineLatest(filterRelay.getColorFilterObservable(), notesRepo.notes, (filter, notes) -> {
-                            Timber.d("selected filter => %s", filter);
+                        Observable.combineLatest(filterRelay.getColorFilterObservable(), filterRelay.getTagFilterObservable(), notesRepo.notes, (color, tagId, notes) -> {
+                            Timber.d("filter color => %s, tag => %d", color, tagId);
+                            ArrayList<Note> step1 = new ArrayList<>();
 
-                            if (TextUtils.isEmpty(filter)) {
-                                return notes;
+                            if (TextUtils.isEmpty(color)) {
+                                step1.addAll(notes);
                             } else {
-                                ArrayList<Note> filtered = new ArrayList<>();
                                 for (Note note : notes) {
-                                    if (note.getColor().equals(filter)) {
-                                        filtered.add(note);
+                                    if (note.getColor().equals(color)) {
+                                        step1.add(note);
                                     }
                                 }
-
-                                return filtered;
                             }
+
+                            ArrayList<Note> step2 = new ArrayList<>();
+
+                            if (tagId == TagRepo.ID_NONE) {
+                                step2.addAll(step1);
+                            } else {
+                                for (Note note : step1) {
+                                    if (note.getTagId() == tagId) {
+                                        step2.add(note);
+                                    }
+                                }
+                            }
+
+                            return step2;
                         }))
 
 

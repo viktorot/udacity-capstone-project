@@ -150,7 +150,18 @@ public class MainActivity extends AppCompatActivity {
     private void showFilterDialog() {
         FilterDialog.Builder.create()
                 .setSelectedColor(vm.getActiveColorFilter())
-                .setCallback(vm::onColorFilterSelected)
+                .setSelectedTagId(vm.getActiveTagFilter())
+                .setCallback(new FilterDialog.Callback() {
+                    @Override
+                    public void onColorSelected(@NonNull String color) {
+                        vm.onColorFilterSelected(color);
+                    }
+
+                    @Override
+                    public void onTagSelected(int id) {
+                        vm.onTagFilterSelected(id);
+                    }
+                })
                 .show(getSupportFragmentManager());
     }
 

@@ -57,9 +57,9 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
         Bundle args = getArguments();
         final int initialSelectedTagId;
         if (args != null && args.containsKey(ARG_SELECTED_TAG_ID)) {
-            initialSelectedTagId = args.getInt(ARG_SELECTED_TAG_ID);
+            initialSelectedTagId = args.getInt(ARG_SELECTED_TAG_ID, -1);
         } else {
-            initialSelectedTagId = TagRepo.ID_NONE;
+            initialSelectedTagId = -1;
         }
 
         final int initialSelectedColorIndex;
@@ -89,8 +89,8 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
         }
 
         colorGroup.check(initialSelectedColorIndex);
-        colorGroup.setOnCheckedChangeListener((chipGroup, i) -> {
-            onColorClick(i);
+        colorGroup.setOnCheckedChangeListener((chipGroup, index) -> {
+            onColorClick(index);
         });
 
 
@@ -108,6 +108,15 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
             tagGroup.addView(chip);
         }
 
+        tagGroup.check(initialSelectedTagId);
+        tagGroup.setOnCheckedChangeListener((chipGroup, id) -> {
+            if (id == -1) {
+                onTagClick(TagRepo.ID_NONE);
+            } else {
+                onTagClick(id);
+            }
+        });
+
 
         return view;
     }
@@ -122,6 +131,13 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
         String color = ColorRepo.getColor(index);
         if (callback != null) {
             callback.onColorSelected(color);
+        }
+        dismiss();
+    }
+
+    private void onTagClick(int id) {
+        if (callback != null) {
+            callback.onTagSelected(id);
         }
         dismiss();
     }
@@ -168,5 +184,6 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
 
     public interface Callback {
         void onColorSelected(@NonNull String color);
+        void onTagSelected(int id);
     }
 }

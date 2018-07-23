@@ -48,6 +48,10 @@ public class MainViewModel extends AndroidViewModel {
         return filterRelay.getActiveColorFilter();
     }
 
+    int getActiveTagFilter() {
+        return filterRelay.getActiveTagFilter();
+    }
+
     void menu() {
         if (authRepo.hasSession()) {
             dispatchAction(Action.ShowAppMenu);
@@ -74,6 +78,10 @@ public class MainViewModel extends AndroidViewModel {
 
     void onColorFilterSelected(@NonNull String color) {
         filterRelay.postColor(color);
+    }
+
+    void onTagFilterSelected(int id) {
+        filterRelay.postTag(id);
     }
 
     @Override
