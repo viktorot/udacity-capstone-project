@@ -3,12 +3,17 @@ package io.viktorot.notefy.ui.list;
 import android.app.Application;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
 import io.viktorot.notefy.Navigator;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.data.Note;
@@ -61,7 +66,29 @@ public class NoteListViewModel extends AndroidViewModel {
                     }
                 })
                 .filter(auth -> auth)
-                .switchMap(auth -> notesRepo.notes)
+                .switchMap((Function<Boolean, ObservableSource<List<Note>>>) auth ->
+                        Observable.combineLatest(filterRelay.getObservable(), notesRepo.notes, (filter, notes) -> {
+                            Timber.d("selected filter => %s", filter);
+
+                            ArrayList<Note> filtered = new ArrayList<>();
+                            for (Note note : notes) {
+                                if (note.getTitle().contains(filter)) {
+                                    filtered.add(note);
+                                }
+                            }
+
+                            return filtered;
+                        }))
+
+
+//                .switchMap((Function<Boolean, ObservableSource<List<Note>>>) auth ->
+//                        // TODO: test switchMap vs flatMap
+//                        filterRelay.getObservable().flatMap(new Function<String, ObservableSource<List<Note>>>() {
+//                            @Override
+//                            public ObservableSource<List<Note>> apply(String s) {
+//                                return notesRepo.notes;
+//                            }
+//                        }))
                 .subscribe(this::onNotesReceived);
     }
 

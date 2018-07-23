@@ -2,18 +2,23 @@ package io.viktorot.notefy.repo;
 
 import com.jakewharton.rxrelay2.PublishRelay;
 
+import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 public class FilterRelay {
 
-    private PublishRelay<Integer> relay = PublishRelay.create();
+    private PublishRelay<String> relay = PublishRelay.create();
 
-    public Disposable observe(Consumer<Integer> consumer) {
+    public Observable<String> getObservable() {
+        return relay.startWith("test");
+    }
+
+    public Disposable observe(Consumer<String> consumer) {
         return relay.subscribe(relay);
     }
 
-    public void post(Integer value) {
+    public void post(String value) {
         relay.accept(value);
     }
 }
