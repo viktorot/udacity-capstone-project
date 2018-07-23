@@ -13,6 +13,7 @@ import io.viktorot.notefy.repo.FilterRelay;
 import io.viktorot.notefy.repo.NotesRepo;
 import io.viktorot.notefy.repo.IconRepo;
 import io.viktorot.notefy.repo.TagRepo;
+import io.viktorot.notefy.util.NotificationUtils;
 import timber.log.Timber;
 
 public class NotefyApplication extends Application {
@@ -31,6 +32,8 @@ public class NotefyApplication extends Application {
     private final ColorRepo colorRepo = new ColorRepo();
     private TagRepo tagRepo;
 
+    private NotificationUtils notificationUtils;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -44,6 +47,8 @@ public class NotefyApplication extends Application {
         tagRepo = new TagRepo(getResources().getStringArray(R.array.tags));
 
         navigator = new Navigator(new NavEventRelay());
+
+        notificationUtils = new NotificationUtils(this);
     }
 
     public IconRepo getIconRepo() {
@@ -72,5 +77,9 @@ public class NotefyApplication extends Application {
 
     public FilterRelay getFilterRelay() {
         return filterRelay;
+    }
+
+    public NotificationUtils getNotificationUtils() {
+        return notificationUtils;
     }
 }

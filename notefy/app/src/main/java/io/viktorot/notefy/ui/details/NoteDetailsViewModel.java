@@ -16,6 +16,7 @@ import io.viktorot.notefy.repo.ColorRepo;
 import io.viktorot.notefy.repo.IconRepo;
 import io.viktorot.notefy.repo.NotesRepo;
 import io.viktorot.notefy.repo.TagRepo;
+import io.viktorot.notefy.util.NotificationUtils;
 import io.viktorot.notefy.util.SingleLiveEvent;
 import timber.log.Timber;
 
@@ -35,6 +36,8 @@ public class NoteDetailsViewModel extends AndroidViewModel {
     private final ColorRepo colorRepo;
     private final NotesRepo notesRepo;
 
+    private final NotificationUtils notificationUtils;
+
     SingleLiveEvent<Action> action = new SingleLiveEvent<>();
     MutableLiveData<Note> data = new MutableLiveData<>();
 
@@ -48,6 +51,8 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         notesRepo = NotefyApplication.get(application).getNotesRepo();
         iconRepo = NotefyApplication.get(application).getIconRepo();
         colorRepo = NotefyApplication.get(application).getColorRepo();
+
+        notificationUtils = NotefyApplication.get(application).getNotificationUtils();
     }
 
     void init(@Nullable Note note) {
@@ -148,6 +153,9 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
         note.setPinned(!note.isPinned());
         notifyDataChange();
+
+        // TODO: update on Firebase
+        notificationUtils.notify(note);
     }
 
     void onTitleChanged(@NonNull String title) {
