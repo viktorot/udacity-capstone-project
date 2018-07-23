@@ -4,7 +4,6 @@ import android.app.Application;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -13,7 +12,6 @@ import androidx.lifecycle.MutableLiveData;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 import io.viktorot.notefy.Navigator;
 import io.viktorot.notefy.NotefyApplication;
@@ -69,7 +67,7 @@ public class NoteListViewModel extends AndroidViewModel {
                 })
                 .filter(auth -> auth)
                 .switchMap((Function<Boolean, ObservableSource<List<Note>>>) auth ->
-                        Observable.combineLatest(filterRelay.getObservable(), notesRepo.notes, (filter, notes) -> {
+                        Observable.combineLatest(filterRelay.getColorFilterObservable(), notesRepo.notes, (filter, notes) -> {
                             Timber.d("selected filter => %s", filter);
 
                             if (TextUtils.isEmpty(filter)) {
@@ -89,7 +87,7 @@ public class NoteListViewModel extends AndroidViewModel {
 
 //                .switchMap((Function<Boolean, ObservableSource<List<Note>>>) auth ->
 //                        // TODO: test switchMap vs flatMap
-//                        filterRelay.getObservable().flatMap(new Function<String, ObservableSource<List<Note>>>() {
+//                        filterRelay.getColorFilterObservable().flatMap(new Function<String, ObservableSource<List<Note>>>() {
 //                            @Override
 //                            public ObservableSource<List<Note>> apply(String s) {
 //                                return notesRepo.notes;

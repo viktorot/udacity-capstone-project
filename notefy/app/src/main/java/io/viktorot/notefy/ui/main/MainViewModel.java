@@ -68,7 +68,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     void onColorFilterSelected(@NonNull String color) {
-        filterRelay.post(color);
+        filterRelay.postColor(color);
     }
 
     @Override
