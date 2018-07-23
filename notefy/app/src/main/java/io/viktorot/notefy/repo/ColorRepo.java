@@ -1,5 +1,7 @@
 package io.viktorot.notefy.repo;
 
+import android.text.TextUtils;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,11 +39,26 @@ public class ColorRepo {
         return COLORS.get(0);
     }
 
+    @NonNull
     public static String getColor(int index) {
         if (index < 0 || index > COLORS.size() - 1) {
-            return getDefaultColor();
+            return "";
         } else {
             return COLORS.get(index);
         }
+    }
+
+    public static int getColorIndex(@NonNull String color) {
+        if (TextUtils.isEmpty(color)) {
+            return -1;
+        }
+
+        for (int i = 0; i < COLORS.size(); i++) {
+            if (getColor(i).equals(color)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

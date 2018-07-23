@@ -149,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showFilterDialog() {
         FilterDialog.Builder.create()
+                .setSelectedColor(vm.getActiveColorFilter())
                 .setCallback(vm::onColorFilterSelected)
                 .show(getSupportFragmentManager());
     }

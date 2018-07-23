@@ -1,5 +1,6 @@
 package io.viktorot.notefy.repo;
 
+import android.nfc.Tag;
 import android.text.TextUtils;
 
 import com.jakewharton.rxrelay2.BehaviorRelay;
@@ -15,13 +16,14 @@ public class FilterRelay {
     private static final String FILTER_NONE = "";
 
     private BehaviorRelay<String> colorFilterRelay = BehaviorRelay.create();
+    private BehaviorRelay<Integer> tagFilterRelay = BehaviorRelay.create();
 
     public Observable<String> getColorFilterObservable() {
         return colorFilterRelay.startWith(FILTER_NONE);
     }
 
     @NonNull
-    public String getColorFilter() {
+    public String getActiveColorFilter() {
         String value = colorFilterRelay.getValue();
         if (TextUtils.isEmpty(value)) {
             return "";
@@ -34,9 +36,22 @@ public class FilterRelay {
         colorFilterRelay.accept(value);
     }
 
-//    public Disposable observe(Consumer<String> consumer) {
-//        return colorFilterRelay.subscribe(colorFilterRelay);
-//    }
+    public Observable<Integer> getTagFilterObservable() {
+        return tagFilterRelay.startWith(TagRepo.ID_NONE);
+    }
+
+    public int getActiveTagFilter() {
+        Integer value = tagFilterRelay.getValue();
+        if (value == null) {
+            return TagRepo.ID_NONE;
+        } else {
+            return value;
+        }
+    }
+
+    public void postTag(int id) {
+        tagFilterRelay.accept(id);
+    }
 
 
 }

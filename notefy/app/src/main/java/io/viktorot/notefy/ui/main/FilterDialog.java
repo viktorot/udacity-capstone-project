@@ -23,10 +23,14 @@ import io.viktorot.notefy.NotefyBottomSheetDialogFragment;
 import io.viktorot.notefy.R;
 import io.viktorot.notefy.repo.ColorRepo;
 import io.viktorot.notefy.repo.TagRepo;
+import timber.log.Timber;
 
 public class FilterDialog extends NotefyBottomSheetDialogFragment {
 
     private static final String TAG = FilterDialog.class.getSimpleName();
+
+    private static final String ARG_SELECTED_COLOR = "arg_selected_color";
+    private static final String ARG_SELECTED_TAG_ID = "arg_selected_tag_id";
 
     @Nullable
     private FilterDialog.Callback callback;
@@ -50,13 +54,24 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_filter, container, false);
 
-        // TODO: set selected color
+        Bundle args = getArguments();
+        final int initialSelectedTagId;
+        if (args != null && args.containsKey(ARG_SELECTED_TAG_ID)) {
+            initialSelectedTagId = args.getInt(ARG_SELECTED_TAG_ID);
+        } else {
+            initialSelectedTagId = TagRepo.ID_NONE;
+        }
+
+        final int initialSelectedColorIndex;
+        if (args != null && args.containsKey(ARG_SELECTED_COLOR)) {
+            String color = args.getString(ARG_SELECTED_COLOR, "");
+            initialSelectedColorIndex = ColorRepo.getColorIndex(color);
+        } else {
+            initialSelectedColorIndex = -1;
+        }
+
         ChipGroup colorGroup = view.findViewById(R.id.group_color);
         colorGroup.setSingleSelection(true);
-
-        colorGroup.setOnCheckedChangeListener((chipGroup, i) -> {
-            onColorClick(i);
-        });
 
         for (int i = 0; i < ColorRepo.COLORS.size(); i++) {
             String colorHash = ColorRepo.getColor(i);
@@ -72,6 +87,12 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
 
             colorGroup.addView(chip);
         }
+
+        colorGroup.check(initialSelectedColorIndex);
+        colorGroup.setOnCheckedChangeListener((chipGroup, i) -> {
+            onColorClick(i);
+        });
+
 
 
         // TODO: set selected color
@@ -107,7 +128,8 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
 
     public static class Builder {
         private FilterDialog.Callback callback;
-
+        private String selectedColor = "";
+        private int selectedTagId = TagRepo.ID_NONE;
 
         private Builder() {
         }
@@ -121,9 +143,24 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
             return this;
         }
 
+        public Builder setSelectedColor(@NonNull String color) {
+            this.selectedColor = color;
+            return this;
+        }
+
+        public Builder setSelectedTagId(int id) {
+            this.selectedTagId = id;
+            return this;
+        }
+
         public void show(@NonNull FragmentManager fragmentManager) {
+            Bundle args = new Bundle();
+            args.putString(ARG_SELECTED_COLOR, this.selectedColor);
+            args.putInt(ARG_SELECTED_TAG_ID, this.selectedTagId);
+
             FilterDialog dialog = new FilterDialog();
             dialog.setCallback(this.callback);
+            dialog.setArguments(args);
 
             dialog.show(fragmentManager, TAG);
         }

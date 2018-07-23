@@ -43,6 +43,11 @@ public class MainViewModel extends AndroidViewModel {
         this.actions.setValue(action);
     }
 
+    @NonNull
+    String getActiveColorFilter() {
+        return filterRelay.getActiveColorFilter();
+    }
+
     void menu() {
         if (authRepo.hasSession()) {
             dispatchAction(Action.ShowAppMenu);

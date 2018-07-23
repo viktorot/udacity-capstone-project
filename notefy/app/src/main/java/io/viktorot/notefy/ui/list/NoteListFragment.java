@@ -120,7 +120,7 @@ public class NoteListFragment extends Fragment {
     private void onNoteListChanged(@NonNull List<Note> notes) {
         ArrayList<NoteListViewItem> viewItems = new ArrayList<>();
         for (Note note : notes) {
-            viewItems.add(new NoteListViewItem(note));
+            viewItems.add(new NoteListViewItem(requireContext(), note));
         }
         section.update(viewItems);
     }
