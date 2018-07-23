@@ -9,9 +9,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jakewharton.rxrelay2.BehaviorRelay;
 import com.jakewharton.rxrelay2.PublishRelay;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -57,21 +60,40 @@ public class NotesRepo {
 
     private final FirebaseDatabase db;
     private final DatabaseReference ref;
-    private final ChildEventListener listener;
 
-    public PublishRelay<NotesRepo.Event> notes = PublishRelay.create();
+    private final ValueEventListener valueEventListener;
+    private final ChildEventListener childEventListener;
+
+    public PublishRelay<NotesRepo.Event> noteChanges = PublishRelay.create();
+    public BehaviorRelay<List<Note>> notes = BehaviorRelay.create();
 
     public NotesRepo(@NonNull FirebaseDatabase db) {
         this.db = db;
         this.ref = db.getReference().child(NODE_NOTES);
 
-        this.listener = new ChildEventListener() {
+        this.valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<Note> data = new ArrayList<>();
+                for(DataSnapshot child : dataSnapshot.getChildren()) {
+                    data.add(parseSnapshot(child));
+                }
+                notes.accept(data);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Timber.e(databaseError.toException(), "cancelled");
+            }
+        };
+
+        this.childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Note note = parseSnapshot(dataSnapshot);
 
                 Timber.d("added => %s", note.getKey());
-                notes.accept(Event.Added.create(note));
+                noteChanges.accept(Event.Added.create(note));
             }
 
             @Override
@@ -79,7 +101,7 @@ public class NotesRepo {
                 Note note = parseSnapshot(dataSnapshot);
 
                 Timber.d("changed => %s", note.getKey());
-                notes.accept(Event.Changed.create(note));
+                noteChanges.accept(Event.Changed.create(note));
             }
 
             @Override
@@ -87,7 +109,7 @@ public class NotesRepo {
                 Note note = parseSnapshot(dataSnapshot);
 
                 Timber.d("removed => %s", note.getKey());
-                notes.accept(Event.Removed.create(note));
+                noteChanges.accept(Event.Removed.create(note));
             }
 
             @Override
@@ -101,11 +123,13 @@ public class NotesRepo {
     }
 
     public void attachListener() {
-        this.ref.addChildEventListener(this.listener);
+        //this.ref.addChildEventListener(this.childEventListener);
+        this.ref.addValueEventListener(this.valueEventListener);
     }
 
     public void detachListener() {
-        this.ref.removeEventListener(this.listener);
+        //this.ref.removeEventListener(this.childEventListener);
+        this.ref.removeEventListener(this.valueEventListener);
     }
 
     @NonNull

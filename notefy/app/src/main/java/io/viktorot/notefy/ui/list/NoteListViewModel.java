@@ -62,7 +62,7 @@ public class NoteListViewModel extends AndroidViewModel {
                 })
                 .filter(auth -> auth)
                 .switchMap(auth -> notesRepo.notes)
-                .subscribe(this::onNoteEvent);
+                .subscribe(this::onNotesReceived);
     }
 
     private void setState(State state) {
@@ -84,6 +84,14 @@ public class NoteListViewModel extends AndroidViewModel {
 
     void editNote(@NonNull Note note) {
         navigator.navigateToEditNote(note);
+    }
+
+    private void onNotesReceived(@NonNull List<Note> notes) {
+        _notes.clear();
+        _notes.addAll(notes);
+
+        setState(State.Data);
+        this.notes.setValue(notes);
     }
 
     private void onNoteEvent(NotesRepo.Event event) {

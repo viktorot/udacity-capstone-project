@@ -135,14 +135,19 @@ public class Note implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Note note = (Note) o;
-        return Objects.equals(key, note.key);
+        return tagId == note.tagId &&
+                iconId == note.iconId &&
+                pinned == note.pinned &&
+                Objects.equals(key, note.key) &&
+                Objects.equals(title, note.title) &&
+                Objects.equals(content, note.content) &&
+                Objects.equals(color, note.color);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(key);
+        return Objects.hash(key, title, content, tagId, iconId, color, pinned);
     }
-
 
     @Override
     public int describeContents() {
