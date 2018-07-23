@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import io.viktorot.notefy.Navigator;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.repo.AuthRepo;
+import io.viktorot.notefy.repo.FilterRelay;
 import io.viktorot.notefy.repo.NotesRepo;
 import io.viktorot.notefy.util.SingleLiveEvent;
 
@@ -21,6 +22,8 @@ public class MainViewModel extends AndroidViewModel {
     private final AuthRepo authRepo;
     private final NotesRepo notesRepo;
 
+    private final FilterRelay filterRelay;
+
     private final Navigator navigator;
 
     final SingleLiveEvent<Action> actions = new SingleLiveEvent<>();
@@ -29,6 +32,8 @@ public class MainViewModel extends AndroidViewModel {
         super(application);
 
         navigator = NotefyApplication.get(application).getNavigator();
+
+        filterRelay = NotefyApplication.get(application).getFilterRelay();
 
         authRepo = NotefyApplication.get(application).getAuthRepo();
         notesRepo = NotefyApplication.get(application).getNotesRepo();
@@ -60,6 +65,10 @@ public class MainViewModel extends AndroidViewModel {
 
     void newNote() {
         navigator.navigateToNewNote();
+    }
+
+    void onColorFilterSelected(@NonNull String color) {
+        filterRelay.post(color);
     }
 
     @Override

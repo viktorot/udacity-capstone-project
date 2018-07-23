@@ -11,7 +11,7 @@ public class FilterRelay {
     private PublishRelay<String> relay = PublishRelay.create();
 
     public Observable<String> getObservable() {
-        return relay.startWith("test");
+        return relay.startWith("");
     }
 
     public Disposable observe(Consumer<String> consumer) {

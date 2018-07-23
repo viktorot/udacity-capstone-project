@@ -1,6 +1,7 @@
 package io.viktorot.notefy.ui.list;
 
 import android.app.Application;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,11 +37,10 @@ public class NoteListViewModel extends AndroidViewModel {
     private final ArrayList<Note> _notes = new ArrayList<>();
     MutableLiveData<List<Note>> notes = new MutableLiveData<>();
 
-    private final FilterRelay filterRelay = new FilterRelay();
+    private final FilterRelay filterRelay;
 
     MutableLiveData<State> state = new MutableLiveData<>();
 
-    private Disposable filterDisposable;
     private Disposable dataDisposable;
 
     public NoteListViewModel(@NonNull Application application) {
@@ -50,6 +50,8 @@ public class NoteListViewModel extends AndroidViewModel {
 
         notesRepo = NotefyApplication.get(application).getNotesRepo();
         authRepo = NotefyApplication.get(application).getAuthRepo();
+
+        filterRelay = NotefyApplication.get(application).getFilterRelay();
 
         dataDisposable = authRepo.getSessionObservable()
                 .doOnSubscribe(disposable -> {
@@ -70,14 +72,18 @@ public class NoteListViewModel extends AndroidViewModel {
                         Observable.combineLatest(filterRelay.getObservable(), notesRepo.notes, (filter, notes) -> {
                             Timber.d("selected filter => %s", filter);
 
-                            ArrayList<Note> filtered = new ArrayList<>();
-                            for (Note note : notes) {
-                                if (note.getTitle().contains(filter)) {
-                                    filtered.add(note);
+                            if (TextUtils.isEmpty(filter)) {
+                                return notes;
+                            } else {
+                                ArrayList<Note> filtered = new ArrayList<>();
+                                for (Note note : notes) {
+                                    if (note.getColor().equals(filter)) {
+                                        filtered.add(note);
+                                    }
                                 }
-                            }
 
-                            return filtered;
+                                return filtered;
+                            }
                         }))
 
 
@@ -96,19 +102,6 @@ public class NoteListViewModel extends AndroidViewModel {
         this.state.setValue(state);
     }
 
-    private void subscribeToFilter() {
-        filterDisposable = filterRelay.observe(num -> {
-            // TODO: apply filter
-            notes.setValue(_notes);
-        });
-    }
-
-    private void unsubscribeFromFilter() {
-        if (filterDisposable != null) {
-            filterDisposable.dispose();
-        }
-    }
-
     void editNote(@NonNull Note note) {
         navigator.navigateToEditNote(note);
     }
@@ -117,7 +110,12 @@ public class NoteListViewModel extends AndroidViewModel {
         _notes.clear();
         _notes.addAll(notes);
 
-        setState(State.Data);
+        if (_notes.size() == 0) {
+            setState(State.Empty);
+        } else {
+            setState(State.Data);
+        }
+
         this.notes.setValue(notes);
     }
 
@@ -178,7 +176,6 @@ public class NoteListViewModel extends AndroidViewModel {
         if (dataDisposable != null) {
             dataDisposable.dispose();
         }
-        unsubscribeFromFilter();
         super.onCleared();
     }
 }
