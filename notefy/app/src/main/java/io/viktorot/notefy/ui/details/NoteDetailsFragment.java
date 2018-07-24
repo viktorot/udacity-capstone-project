@@ -56,7 +56,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     private Toolbar toolbar;
     private ImageView imgIcon;
     private TextView tvTitle;
-    private TextView tvContent;
+    //private TextView tvContent;
     private TextView tvTag;
 
     private MenuItem pinMenuItem;
@@ -136,23 +136,23 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             }
         });
 
-        tvContent = view.findViewById(R.id.content);
-        tvContent.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                vm.onContentChanged(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
+//        tvContent = view.findViewById(R.id.content);
+//        tvContent.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                vm.onContentChanged(charSequence.toString());
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//            }
+//        });
 
         tvTag = view.findViewById(R.id.tag);
 
@@ -196,7 +196,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
     private void onDataChanged(@NonNull Note note) {
         tvTitle.setText(note.getTitle());
-        tvContent.setText(note.getContent());
+        //tvContent.setText(note.getContent());
 
         if (tagRepo.isIdValid(note.getTagId())) {
             tvTag.setText(tagRepo.getTag(note.getTagId()));
