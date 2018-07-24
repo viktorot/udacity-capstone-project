@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.bottomappbar.BottomAppBar;
@@ -15,7 +16,8 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import io.reactivex.disposables.Disposable;
@@ -24,6 +26,7 @@ import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
 import io.viktorot.notefy.navigator.events.Login;
 import io.viktorot.notefy.navigator.events.NavEvent;
+import io.viktorot.notefy.ui.list.NoteListFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,7 +38,16 @@ public class MainActivity extends AppCompatActivity {
 
     private MainViewModel vm;
 
+    private MenuItem filterMenuItem;
+
     private Disposable navigationDisposable;
+
+    private final Observer<MainViewModel.State> stateObserver = state -> {
+        if (state == null) {
+            return;
+        }
+        onViewModelStateChanged(state);
+    };
 
     private final Observer<MainViewModel.Action> actionsObserver = action -> {
         if (action == null) {
@@ -66,9 +78,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        vm = ViewModelProviders.of(this).get(MainViewModel.class);
-        vm.actions.observe(this, this.actionsObserver);
-
         BottomAppBar appBar = findViewById(R.id.app_bar);
         appBar.setNavigationOnClickListener(view -> {
             vm.menu();
@@ -76,10 +85,16 @@ public class MainActivity extends AppCompatActivity {
         appBar.inflateMenu(R.menu.main);
         appBar.setOnMenuItemClickListener(this::onMenuItemSelected);
 
+        filterMenuItem = appBar.getMenu().getItem(0);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             vm.newNote();
         });
+
+        vm = ViewModelProviders.of(this).get(MainViewModel.class);
+        vm.state.observe(this, this.stateObserver);
+        vm.actions.observe(this, this.actionsObserver);
     }
 
     @Override
@@ -139,6 +154,16 @@ public class MainActivity extends AppCompatActivity {
         fragmentNavigator.applyCommand(event);
     }
 
+    private void onViewModelStateChanged(MainViewModel.State state) {
+        if (state == MainViewModel.State.Authorized) {
+            showListFragment();
+            filterMenuItem.setVisible(true);
+        } else if (state == MainViewModel.State.Unauthorized) {
+            hideListFragment();
+            filterMenuItem.setVisible(false);
+        }
+    }
+
     private void onViewModelAction(MainViewModel.Action action) {
         if (action == MainViewModel.Action.ShowLoginMenu) {
             openLoginMenu();
@@ -146,7 +171,35 @@ public class MainActivity extends AppCompatActivity {
             openAppMenu();
         } else if (action == MainViewModel.Action.ShowFilterDialog) {
             showFilterDialog();
+        } else if (action == MainViewModel.Action.ShowUnauthorizedMessage) {
+            Toast.makeText(this, "[you are not logged in]", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void showListFragment() {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentById(R.id.note_list_fragment);
+
+        if (fragment == null) {
+            return;
+        }
+
+        getSupportFragmentManager().beginTransaction()
+                .show(fragment)
+                .commit();
+    }
+
+    private void hideListFragment() {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentById(R.id.note_list_fragment);
+
+        if (fragment == null) {
+            return;
+        }
+
+        getSupportFragmentManager().beginTransaction()
+                .hide(fragment)
+                .commit();
     }
 
     private void openLoginMenu() {

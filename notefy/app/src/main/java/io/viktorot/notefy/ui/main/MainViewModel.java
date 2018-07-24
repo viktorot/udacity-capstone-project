@@ -4,11 +4,12 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
+import io.reactivex.disposables.Disposable;
 import io.viktorot.notefy.Navigator;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.repo.AuthRepo;
 import io.viktorot.notefy.repo.FilterRelay;
-import io.viktorot.notefy.repo.NotesRepo;
 import io.viktorot.notefy.util.SingleLiveEvent;
 
 public class MainViewModel extends AndroidViewModel {
@@ -16,17 +17,24 @@ public class MainViewModel extends AndroidViewModel {
     enum Action {
         ShowLoginMenu,
         ShowAppMenu,
-        ShowFilterDialog
+        ShowFilterDialog,
+        ShowUnauthorizedMessage
+    }
+
+    enum State {
+        Unauthorized, Authorized
     }
 
     private final AuthRepo authRepo;
-    private final NotesRepo notesRepo;
 
     private final FilterRelay filterRelay;
 
     private final Navigator navigator;
 
+    final MutableLiveData<State> state = new MutableLiveData<>();
     final SingleLiveEvent<Action> actions = new SingleLiveEvent<>();
+
+    private Disposable authDisposable;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -36,7 +44,15 @@ public class MainViewModel extends AndroidViewModel {
         filterRelay = NotefyApplication.get(application).getFilterRelay();
 
         authRepo = NotefyApplication.get(application).getAuthRepo();
-        notesRepo = NotefyApplication.get(application).getNotesRepo();
+
+        authDisposable = authRepo.getSessionObservable()
+                .subscribe(auth -> {
+                    if (auth) {
+                        state.setValue(State.Authorized);
+                    } else {
+                        state.setValue(State.Unauthorized);
+                    }
+                });
     }
 
     private void dispatchAction(@NonNull Action action) {
@@ -73,6 +89,10 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     void newNote() {
+        if (!authRepo.hasSession()) {
+            dispatchAction(Action.ShowUnauthorizedMessage);
+            return;
+        }
         navigator.navigateToNewNote();
     }
 
@@ -86,6 +106,9 @@ public class MainViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
+        if (authDisposable != null) {
+            authDisposable.dispose();
+        }
         super.onCleared();
     }
 }

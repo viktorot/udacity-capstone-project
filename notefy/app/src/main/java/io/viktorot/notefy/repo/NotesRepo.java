@@ -14,6 +14,7 @@ import com.jakewharton.rxrelay2.PublishRelay;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -121,6 +122,10 @@ public class NotesRepo {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         };
+    }
+
+    public void clearCache() {
+        notes.accept(Collections.emptyList());
     }
 
     public void attachListener() {

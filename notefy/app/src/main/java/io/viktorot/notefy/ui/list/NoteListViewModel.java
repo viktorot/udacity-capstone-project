@@ -25,7 +25,7 @@ import timber.log.Timber;
 public class NoteListViewModel extends AndroidViewModel {
 
     enum State {
-        Unauthorized, Loading, Empty, Data
+        Loading, Empty, Data
     }
 
     private final Navigator navigator;
@@ -59,11 +59,12 @@ public class NoteListViewModel extends AndroidViewModel {
                 .doOnNext(auth -> {
                     if (!auth) {
                         _notes.clear();
+                        notesRepo.clearCache();
                         notesRepo.detachListener();
-                        setState(State.Unauthorized);
+                        setState(State.Loading);
                     } else {
                         notesRepo.attachListener();
-                        setState(State.Empty);
+                        setState(State.Loading);
                     }
                 })
                 .filter(auth -> auth)

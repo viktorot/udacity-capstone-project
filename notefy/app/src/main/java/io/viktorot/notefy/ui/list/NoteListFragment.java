@@ -41,7 +41,6 @@ public class NoteListFragment extends Fragment {
     private NoteListViewModel vm;
 
     private TextView tvEmpty;
-    private TextView tvUnauthorized;
     private ContentLoadingProgressBar progress;
     private RecyclerView recycler;
 
@@ -80,7 +79,6 @@ public class NoteListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_note_list, container, false);
 
         tvEmpty = view.findViewById(R.id.empty_label);
-        tvUnauthorized = view.findViewById(R.id.unauthorized_label);
         progress = view.findViewById(R.id.progress);
 
         recycler = view.findViewById(R.id.notes_recycler);
@@ -96,24 +94,16 @@ public class NoteListFragment extends Fragment {
     private void onStateChanged(NoteListViewModel.State state) {
         if (state == NoteListViewModel.State.Loading) {
             ViewUtils.hide(tvEmpty);
-            ViewUtils.hide(tvUnauthorized);
             ViewUtils.hide(recycler);
             ViewUtils.show(progress);
         } else if (state == NoteListViewModel.State.Empty) {
-            ViewUtils.hide(tvUnauthorized);
             ViewUtils.hide(recycler);
             ViewUtils.hide(progress);
             ViewUtils.show(tvEmpty);
         } else if (state == NoteListViewModel.State.Data) {
             ViewUtils.hide(tvEmpty);
-            ViewUtils.hide(tvUnauthorized);
             ViewUtils.hide(progress);
             ViewUtils.show(recycler);
-        } else if (state == NoteListViewModel.State.Unauthorized) {
-            ViewUtils.hide(tvEmpty);
-            ViewUtils.hide(progress);
-            ViewUtils.hide(recycler);
-            ViewUtils.show(tvUnauthorized);
         }
     }
 
