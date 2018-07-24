@@ -1,6 +1,7 @@
 package io.viktorot.notefy.ui.details;
 
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.jakewharton.rxrelay2.PublishRelay;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +24,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import io.github.mthli.knife.KnifeText;
+import io.reactivex.disposables.Disposable;
 import io.viktorot.notefy.Navigatable;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
@@ -31,6 +36,7 @@ import io.viktorot.notefy.ui.details.icons.IconDialog;
 import io.viktorot.notefy.ui.details.tags.TagDialog;
 import io.viktorot.notefy.util.StatusBarUtils;
 import io.viktorot.notefy.util.ViewUtils;
+import timber.log.Timber;
 
 public class NoteDetailsFragment extends Fragment implements Navigatable {
 
@@ -49,6 +55,11 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         return fragment;
     }
 
+    private PublishRelay<Boolean> keyboardStateRelay = PublishRelay.create();
+    private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
+
+    private Disposable keyboardStateDisposable;
+
     private NoteDetailsViewModel vm;
 
     private TagRepo tagRepo;
@@ -56,7 +67,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     private Toolbar toolbar;
     private ImageView imgIcon;
     private TextView tvTitle;
-    //private TextView tvContent;
+    private KnifeText tvContent;
     private TextView tvTag;
 
     private MenuItem pinMenuItem;
@@ -99,6 +110,27 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_note_details, container, false);
 
+        globalLayoutListener = () -> {
+            Rect measureRect = new Rect(); //you should cache this, onGlobalLayout can get called often
+            view.getWindowVisibleDisplayFrame(measureRect);
+            // measureRect.bottom is the position above soft keypad
+
+            int keypadHeight = view.getHeight() - measureRect.bottom;
+
+            if (keypadHeight > 50 /*mMainHolder.getHeight()*/) {
+                keyboardStateRelay.accept(true);
+            } else {
+                keyboardStateRelay.accept(false);
+            }
+        };
+        view.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
+
+        keyboardStateDisposable = keyboardStateRelay
+                .distinctUntilChanged()
+                .subscribe(visible -> {
+                    Timber.v("keyboard visible => %b", visible);
+                });
+
         vm.action.observe(getViewLifecycleOwner(), actionObserver);
         vm.data.observe(getViewLifecycleOwner(), dataObserver);
 
@@ -136,23 +168,23 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             }
         });
 
-//        tvContent = view.findViewById(R.id.content);
-//        tvContent.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                vm.onContentChanged(charSequence.toString());
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//
-//            }
-//        });
+        tvContent = view.findViewById(R.id.content);
+        tvContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                vm.onContentChanged(tvContent.toHtml());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         tvTag = view.findViewById(R.id.tag);
 
@@ -161,6 +193,15 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
     @Override
     public void onDestroyView() {
+        if (keyboardStateDisposable != null) {
+            keyboardStateDisposable.dispose();
+        }
+
+        View view = getView();
+        if (globalLayoutListener != null && view != null) {
+            view.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
+        }
+
         // TODO: do this in onBackPressed
         StatusBarUtils.setColor(requireActivity(), ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark));
         super.onDestroyView();
@@ -196,7 +237,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
     private void onDataChanged(@NonNull Note note) {
         tvTitle.setText(note.getTitle());
-        //tvContent.setText(note.getContent());
+        tvContent.fromHtml(note.getContent());
 
         if (tagRepo.isIdValid(note.getTagId())) {
             tvTag.setText(tagRepo.getTag(note.getTagId()));
