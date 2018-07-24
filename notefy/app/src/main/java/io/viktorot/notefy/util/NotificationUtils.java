@@ -22,8 +22,11 @@ public class NotificationUtils {
     private final Context context;
     private final IconRepo iconRepo;
 
+    private final String CHANNEL_ID;
+
     public NotificationUtils(Context context) {
         this.context = context;
+        CHANNEL_ID = context.getString(R.string.notes_notification_channel_id);
 
         this.iconRepo = NotefyApplication.get(context).getIconRepo();
     }
@@ -50,10 +53,8 @@ public class NotificationUtils {
         PendingIntent pendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // TODO: register channel id
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
         builder.setOngoing(true);
-        // TODO: set icon
         builder.setSmallIcon(iconRepo.getIconRes(note.getIconId()));
         builder.setContentTitle(note.getTitle());
         if (!TextUtils.isEmpty(note.getContent())) {

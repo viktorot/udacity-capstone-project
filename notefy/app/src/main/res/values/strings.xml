@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Notefy</string>
 
+    <string name="notes_notification_channel_id" translatable="false">note</string>
+    <string name="notes_notification_channel_name">Notes</string>
+
     <string-array name="tags">
         <item>ToDo</item>
         <item>Shopping</item>

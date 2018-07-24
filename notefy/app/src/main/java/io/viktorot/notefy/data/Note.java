@@ -2,6 +2,7 @@ package io.viktorot.notefy.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.google.firebase.database.Exclude;
 
@@ -118,7 +119,11 @@ public class Note implements Parcelable {
         this.pinned = pinned;
     }
 
-    public Map<String, Object> toMap() {
+    public boolean isNew() {
+        return TextUtils.isEmpty(getKey());
+    }
+
+    public Map<String, Object> getUpdateMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("color", getColor());
         result.put("title", getTitle());
@@ -126,6 +131,13 @@ public class Note implements Parcelable {
         result.put("iconId", getIconId());
         result.put("pinned", isPinned());
         result.put("tagId", getTagId());
+
+        return result;
+    }
+
+    public Map<String, Object> getPinUpdateMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("pinned", isPinned());
 
         return result;
     }

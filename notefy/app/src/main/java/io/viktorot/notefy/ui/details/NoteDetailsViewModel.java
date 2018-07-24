@@ -4,6 +4,8 @@ import android.app.Application;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import com.google.android.gms.tasks.Task;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -151,11 +153,27 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
         edited();
 
-        note.setPinned(!note.isPinned());
-        notifyDataChange();
+        if (note.isNew()) {
+            note.setPinned(!note.isPinned());
+            notifyDataChange();
+        } else {
+            Task<Void> task = notesRepo.pin(note);
+            if (task == null) {
+                return;
+            }
 
-        // TODO: update on Firebase
-        notificationUtils.notify(note);
+            task.addOnSuccessListener(aVoid -> {
+                Timber.d("pin state updated");
+
+                note.setPinned(!note.isPinned());
+                notifyDataChange();
+                notificationUtils.notify(note);
+            });
+            task.addOnFailureListener(e -> {
+                Timber.e(e, "pin failed");
+                // TODO: show toast
+            });
+        }
     }
 
     void onTitleChanged(@NonNull String title) {

@@ -2,6 +2,8 @@ package io.viktorot.notefy.repo;
 
 import android.text.TextUtils;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.auto.value.AutoValue;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -11,6 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jakewharton.rxrelay2.BehaviorRelay;
 import com.jakewharton.rxrelay2.PublishRelay;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,9 +151,21 @@ public class NotesRepo {
             ref.push().setValue(note);
         } else {
             HashMap<String, Object> updates = new HashMap<>();
-            updates.put(note.getKey(), note.toMap());
+            updates.put(note.getKey(), note.getUpdateMap());
             ref.updateChildren(updates);
         }
+    }
+
+    @Nullable
+    public Task<Void> pin(@NonNull Note note) {
+        if (TextUtils.isEmpty(note.getKey())) {
+            Timber.w("cannot update pinned state on new note");
+            return null;
+        }
+
+        HashMap<String, Object> updates = new HashMap<>();
+        updates.put(note.getKey(), note.getUpdateMap());
+        return ref.updateChildren(updates);
     }
 
     public void delete(@NonNull Note note) {
