@@ -145,27 +145,36 @@ public class NotesRepo {
         return note;
     }
 
-    public void save(@NonNull Note note) {
-        // TODO: attach Task callbacks
+    public void save(@NonNull Note note, @NonNull SaveCallback callback) {
         if (TextUtils.isEmpty(note.getKey())) {
-            ref.push().setValue(note);
+            ref.push().setValue(note, (databaseError, databaseReference) -> {
+                if (databaseError == null) {
+                    callback.onSuccess(databaseReference.getKey());
+                } else {
+                    callback.onError(databaseError.toException());
+                }
+            });
         } else {
             HashMap<String, Object> updates = new HashMap<>();
             updates.put(note.getKey(), note.getUpdateMap());
-            ref.updateChildren(updates);
+            Task<Void> task = ref.updateChildren(updates);
+            task.addOnSuccessListener(aVoid -> callback.onSuccess(note.getKey()));
+            task.addOnFailureListener(e -> callback.onError(e));
         }
     }
 
-    @Nullable
-    public Task<Void> pin(@NonNull Note note) {
+    public void pin(@NonNull Note note, @NonNull PinCallback callback) {
         if (TextUtils.isEmpty(note.getKey())) {
             Timber.w("cannot update pinned state on new note");
-            return null;
+            return;
         }
 
         HashMap<String, Object> updates = new HashMap<>();
         updates.put(note.getKey(), note.getUpdateMap());
-        return ref.updateChildren(updates);
+
+        Task<Void> task = ref.updateChildren(updates);
+        task.addOnSuccessListener(aVoid -> callback.onSuccess());
+        task.addOnFailureListener(e -> callback.onError(e));
     }
 
     public void delete(@NonNull Note note) {
@@ -174,5 +183,15 @@ public class NotesRepo {
             return;
         }
         ref.child(note.getKey()).removeValue();
+    }
+
+    public interface SaveCallback {
+        void onSuccess(String key);
+        void onError(Exception exception);
+    }
+
+    public interface PinCallback {
+        void onSuccess();
+        void onError(Exception exception);
     }
 }

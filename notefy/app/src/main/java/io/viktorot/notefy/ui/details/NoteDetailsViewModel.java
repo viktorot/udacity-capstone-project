@@ -4,6 +4,8 @@ import android.app.Application;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import androidx.annotation.DrawableRes;
@@ -86,8 +88,12 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         return note.getTagId();
     }
 
+    private void edited(boolean value) {
+        edited = value;
+    }
+
     private void edited() {
-        edited = true;
+        edited(true);
     }
 
     void save() {
@@ -103,9 +109,21 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             return;
         }
 
-        notesRepo.save(note);
+        notesRepo.save(note, new NotesRepo.SaveCallback() {
+            @Override
+            public void onSuccess(String key) {
+                // TODO: get new key
+                note.setKey(key);
+                notificationUtils.notify(note);
+                pop();
+            }
 
-        pop();
+            @Override
+            public void onError(Exception exception) {
+                Timber.e(exception, "failed to save note");
+                // TODO: show toast
+            }
+        });
     }
 
     void delete() {
@@ -157,21 +175,27 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             note.setPinned(!note.isPinned());
             notifyDataChange();
         } else {
-            Task<Void> task = notesRepo.pin(note);
-            if (task == null) {
-                return;
-            }
+            boolean newPinnedState = !note.isPinned();
+            note.setPinned(newPinnedState);
 
-            task.addOnSuccessListener(aVoid -> {
-                Timber.d("pin state updated");
+            notifyDataChange();
 
-                note.setPinned(!note.isPinned());
-                notifyDataChange();
-                notificationUtils.notify(note);
-            });
-            task.addOnFailureListener(e -> {
-                Timber.e(e, "pin failed");
-                // TODO: show toast
+            notesRepo.pin(note, new NotesRepo.PinCallback() {
+                @Override
+                public void onSuccess() {
+                    Timber.d("pin state updated");
+                    notificationUtils.notify(note);
+                    edited(false);
+                }
+
+                @Override
+                public void onError(Exception exception) {
+                    Timber.e(exception, "updating pin state failed");
+
+                    // TODO: show toast
+                    note.setPinned(!newPinnedState);
+                    notifyDataChange();
+                }
             });
         }
     }
@@ -239,7 +263,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             return;
         }
 
-        edited = true;
+        edited();
 
         note.setColor(color);
         notifyDataChange();
@@ -256,7 +280,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             return;
         }
 
-        edited = true;
+        edited();
 
         note.setTagId(tagId);
         notifyDataChange();
