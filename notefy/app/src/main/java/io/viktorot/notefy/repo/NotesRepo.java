@@ -2,8 +2,6 @@ package io.viktorot.notefy.repo;
 
 import android.text.TextUtils;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.auto.value.AutoValue;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -145,7 +143,7 @@ public class NotesRepo {
         return note;
     }
 
-    public void save(@NonNull Note note, @NonNull SaveCallback callback) {
+    public void save(@NonNull Note note, @NonNull SaveTaskCallback callback) {
         if (TextUtils.isEmpty(note.getKey())) {
             ref.push().setValue(note, (databaseError, databaseReference) -> {
                 if (databaseError == null) {
@@ -163,7 +161,7 @@ public class NotesRepo {
         }
     }
 
-    public void pin(@NonNull Note note, @NonNull PinCallback callback) {
+    public void pin(@NonNull Note note, @NonNull TaskCallback callback) {
         if (TextUtils.isEmpty(note.getKey())) {
             Timber.w("cannot update pinned state on new note");
             return;
@@ -177,20 +175,26 @@ public class NotesRepo {
         task.addOnFailureListener(e -> callback.onError(e));
     }
 
-    public void delete(@NonNull Note note) {
+    public void delete(@NonNull Note note, @NonNull TaskCallback callback) {
         if (TextUtils.isEmpty(note.getKey())) {
             Timber.w("cannot delete note without key");
             return;
         }
-        ref.child(note.getKey()).removeValue();
+        ref.child(note.getKey()).removeValue((databaseError, databaseReference) -> {
+            if (databaseError == null) {
+                callback.onSuccess();
+            } else {
+                callback.onError(databaseError.toException());
+            }
+        });
     }
 
-    public interface SaveCallback {
+    public interface SaveTaskCallback {
         void onSuccess(String key);
         void onError(Exception exception);
     }
 
-    public interface PinCallback {
+    public interface TaskCallback {
         void onSuccess();
         void onError(Exception exception);
     }

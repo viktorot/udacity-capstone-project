@@ -1,12 +1,7 @@
 package io.viktorot.notefy.ui.details;
 
 import android.app.Application;
-import android.os.Parcelable;
 import android.text.TextUtils;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -109,7 +104,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             return;
         }
 
-        notesRepo.save(note, new NotesRepo.SaveCallback() {
+        notesRepo.save(note, new NotesRepo.SaveTaskCallback() {
             @Override
             public void onSuccess(String key) {
                 // TODO: get new key
@@ -133,9 +128,21 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             return;
         }
 
-        notesRepo.delete(note);
+        notesRepo.delete(note, new NotesRepo.TaskCallback() {
+            @Override
+            public void onSuccess() {
+                notificationUtils.remove(note);
+                pop();
+            }
 
-        pop();
+            @Override
+            public void onError(Exception exception) {
+                Timber.e(exception, "failed to delete note");
+                // TODO: show toast
+            }
+        });
+
+
     }
 
     void selectIcon() {
@@ -180,7 +187,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
             notifyDataChange();
 
-            notesRepo.pin(note, new NotesRepo.PinCallback() {
+            notesRepo.pin(note, new NotesRepo.TaskCallback() {
                 @Override
                 public void onSuccess() {
                     Timber.d("pin state updated");

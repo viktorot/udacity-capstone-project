@@ -69,7 +69,7 @@ public class NotificationUtils {
                 .notify(notificationId, builder.build());
     }
 
-    private void remove(@NonNull Note note) {
+    public void remove(@NonNull Note note) {
         int notificationId = Objects.hash(note.getKey());
 
         NotificationManagerCompat.from(context)
