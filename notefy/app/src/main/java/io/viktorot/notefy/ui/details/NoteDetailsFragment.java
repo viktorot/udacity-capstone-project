@@ -1,6 +1,7 @@
 package io.viktorot.notefy.ui.details;
 
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,11 +10,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.jakewharton.rxrelay2.PublishRelay;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import io.github.mthli.knife.KnifeText;
+import io.reactivex.disposables.Disposable;
 import io.viktorot.notefy.Navigatable;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
@@ -34,6 +38,7 @@ import io.viktorot.notefy.ui.details.tags.TagDialog;
 import io.viktorot.notefy.util.KeyboardUtils;
 import io.viktorot.notefy.util.StatusBarUtils;
 import io.viktorot.notefy.util.ViewUtils;
+import timber.log.Timber;
 
 public class NoteDetailsFragment extends Fragment implements Navigatable {
 
@@ -52,9 +57,9 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         return fragment;
     }
 
-//    private PublishRelay<Boolean> keyboardStateRelay = PublishRelay.create();
-//    private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
-//    private Disposable keyboardStateDisposable;
+    private PublishRelay<Boolean> keyboardStateRelay = PublishRelay.create();
+    private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
+    private Disposable keyboardStateDisposable;
 
     private NoteDetailsViewModel vm;
 
@@ -64,7 +69,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     private ImageView imgIcon;
     private TextView tvTitle;
     private KnifeText tvContent;
-    private TextView tvTag;
+    //    private TextView tvTag;
     private View editorToolbar;
     private ImageButton btnBold;
     private ImageButton btnItalic;
@@ -106,31 +111,52 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         vm.init(note);
     }
 
+    int prev = -1;
+    int h = -1;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_note_details, container, false);
 
-//        globalLayoutListener = () -> {
-//            Rect measureRect = new Rect(); //you should cache this, onGlobalLayout can get called often
-//            view.getWindowVisibleDisplayFrame(measureRect);
-//
-//            // measureRect.bottom is the position above soft keypad
-//            int keypadHeight = view.getHeight() - measureRect.bottom;
-//
-//            if (keypadHeight > editorToolbar.getHeight()) {
-//                keyboardStateRelay.accept(true);
-//            } else {
-//                keyboardStateRelay.accept(false);
-//            }
-//        };
-//        view.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
-//
-//        keyboardStateDisposable = keyboardStateRelay
-//                .distinctUntilChanged()
-//                .subscribe(visible -> {
-//                    Timber.v("keyboard visible => %b", visible);
-//                });
+        h = getResources().getDimensionPixelSize(R.dimen.editor_toolbar_height);
+
+        globalLayoutListener = () -> {
+            Rect measureRect = new Rect(); //you should cache this, onGlobalLayout can get called often
+            view.getWindowVisibleDisplayFrame(measureRect);
+
+            // measureRect.bottom is the position above soft keypad
+            int keypadHeight = view.getHeight() - measureRect.bottom;
+
+            Timber.v("keyboard height => %d", keypadHeight);
+
+            if (keypadHeight > editorToolbar.getHeight()) {
+                keyboardStateRelay.accept(true);
+//                prev = editorToolbar.getTop();
+//                editorToolbar.setTop(keypadHeight + editorToolbar.getHeight());
+            } else {
+                keyboardStateRelay.accept(false);
+//                if (prev > -1) {
+//                    editorToolbar.setTop(prev);
+//                }
+            }
+        };
+        view.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
+
+        keyboardStateDisposable = keyboardStateRelay
+                .distinctUntilChanged()
+                .subscribe(visible -> {
+                    Timber.v("keyboard visible => %b", visible);
+//                    if (visible) {
+//                        prev = editorToolbar.getTop();
+//                        editorToolbar.setTop(718);
+//                    } else {
+//                        if (prev > -1) {
+//                            editorToolbar.setTop(prev);
+//                            prev = -1;
+//                        }
+//                    }
+                });
 
         vm.action.observe(getViewLifecycleOwner(), actionObserver);
         vm.data.observe(getViewLifecycleOwner(), dataObserver);
@@ -185,22 +211,22 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
         tvContent.setOnFocusChangeListener((view12, hasFocus) -> {
             if (hasFocus) {
-                ViewUtils.hide(tvTag);
-                ViewUtils.show(editorToolbar);
+//                ViewUtils.hide(tvTag);
+//                ViewUtils.show(editorToolbar);
             } else {
                 ViewUtils.hide(editorToolbar);
                 // TODO: show only if tag available
-                ViewUtils.show(tvTag);
+//                ViewUtils.show(tvTag);
 
                 KeyboardUtils.hideKeyboard(requireActivity(), tvContent);
             }
         });
 
-        tvTag = view.findViewById(R.id.tag);
+//        tvTag = view.findViewById(R.id.tag);
         editorToolbar = view.findViewById(R.id.editor_toolbar);
 
         ViewUtils.hide(editorToolbar);
-        ViewUtils.show(tvTag);
+//        ViewUtils.show(tvTag);
 
         btnBold = view.findViewById(R.id.bold);
         btnBold.setOnClickListener(view1 -> {
@@ -231,14 +257,14 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
     @Override
     public void onDestroyView() {
-//        if (keyboardStateDisposable != null) {
-//            keyboardStateDisposable.dispose();
-//        }
-//
-//        View view = getView();
-//        if (globalLayoutListener != null && view != null) {
-//            view.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
-//        }
+        if (keyboardStateDisposable != null) {
+            keyboardStateDisposable.dispose();
+        }
+
+        View view = getView();
+        if (globalLayoutListener != null && view != null) {
+            view.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
+        }
         super.onDestroyView();
     }
 
@@ -274,12 +300,12 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         tvTitle.setText(note.getTitle());
         tvContent.fromHtml(note.getContent());
 
-        if (tagRepo.isIdValid(note.getTagId())) {
-            tvTag.setText(tagRepo.getTag(note.getTagId()));
-            ViewUtils.show(tvTag);
-        } else {
-            ViewUtils.hide(tvTag);
-        }
+//        if (tagRepo.isIdValid(note.getTagId())) {
+//            tvTag.setText(tagRepo.getTag(note.getTagId()));
+//            ViewUtils.show(tvTag);
+//        } else {
+//            ViewUtils.hide(tvTag);
+//        }
 
         int iconResId = NotefyApplication.get(requireContext())
                 .getIconRepo().getIconRes(note.getIconId());
