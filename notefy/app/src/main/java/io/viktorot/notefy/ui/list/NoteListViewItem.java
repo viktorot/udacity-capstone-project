@@ -3,6 +3,7 @@ package io.viktorot.notefy.ui.list;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,7 +50,10 @@ class NoteListViewItem extends Item<NoteListViewItem.ViewHolder> {
     @Override
     public void bind(@NonNull NoteListViewItem.ViewHolder viewHolder, int position) {
         viewHolder.tvTitle.setText(this.data.getTitle());
-        viewHolder.tvContent.setText(this.data.getContent());
+
+
+
+        viewHolder.tvContent.setText(Html.fromHtml(this.data.getContent()));
 
         int id = this.data.getTagId();
         if (tagRepo.isIdValid(id)) {

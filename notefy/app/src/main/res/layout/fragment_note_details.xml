@@ -69,13 +69,52 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/editor_toolbar"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:background="#f00"
+        android:background="@drawable/menu_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/bold"
+            style="@style/FormatIcon"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/italic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_format_bold" />
+
+        <ImageButton
+            android:id="@+id/italic"
+            style="@style/FormatIcon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/underline"
+            app:layout_constraintStart_toEndOf="@+id/bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_format_italic" />
+
+        <ImageButton
+            android:id="@+id/underline"
+            style="@style/FormatIcon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bullet"
+            app:layout_constraintStart_toEndOf="@+id/italic"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_format_underline" />
+
+        <ImageButton
+            android:id="@+id/bullet"
+            style="@style/FormatIcon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/underline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_format_list_bulleted" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

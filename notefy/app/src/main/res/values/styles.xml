@@ -9,7 +9,7 @@
     </style>
 
     <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/main_menu_bg</item>
+        <item name="android:background">@drawable/menu_bg</item>
     </style>
 
     <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
@@ -34,6 +34,15 @@
 
     <style name="NoteContent">
         <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="FormatIcon">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:scaleType">fitXY</item>
+
     </style>
 
 
