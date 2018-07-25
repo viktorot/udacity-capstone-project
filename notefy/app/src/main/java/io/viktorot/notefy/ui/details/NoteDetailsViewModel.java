@@ -87,7 +87,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         edited = value;
     }
 
-    private void edited() {
+    void edited() {
         edited(true);
     }
 

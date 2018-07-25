@@ -205,21 +205,25 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         btnBold = view.findViewById(R.id.bold);
         btnBold.setOnClickListener(view1 -> {
             tvContent.bold(!tvContent.contains(KnifeText.FORMAT_BOLD));
+            vm.edited();
         });
 
         btnItalic = view.findViewById(R.id.italic);
         btnItalic.setOnClickListener(view1 -> {
             tvContent.italic(!tvContent.contains(KnifeText.FORMAT_ITALIC));
+            vm.edited();
         });
 
         btnUnderline = view.findViewById(R.id.underline);
         btnUnderline.setOnClickListener(view1 -> {
             tvContent.underline(!tvContent.contains(KnifeText.FORMAT_UNDERLINED));
+            vm.edited();
         });
 
         btnBulletList = view.findViewById(R.id.bullet);
         btnBulletList.setOnClickListener(view1 -> {
             tvContent.bullet(!tvContent.contains(KnifeText.FORMAT_BULLET));
+            vm.edited();
         });
 
         return view;
