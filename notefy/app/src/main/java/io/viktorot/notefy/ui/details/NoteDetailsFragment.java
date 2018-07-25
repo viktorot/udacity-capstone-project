@@ -34,6 +34,7 @@ import io.viktorot.notefy.repo.TagRepo;
 import io.viktorot.notefy.ui.details.colors.ColorDialog;
 import io.viktorot.notefy.ui.details.icons.IconDialog;
 import io.viktorot.notefy.ui.details.tags.TagDialog;
+import io.viktorot.notefy.util.KeyboardUtils;
 import io.viktorot.notefy.util.StatusBarUtils;
 import io.viktorot.notefy.util.ViewUtils;
 import timber.log.Timber;
@@ -69,6 +70,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     private TextView tvTitle;
     private KnifeText tvContent;
     private TextView tvTag;
+    private View editorToolbar;
 
     private MenuItem pinMenuItem;
 
@@ -113,11 +115,11 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         globalLayoutListener = () -> {
             Rect measureRect = new Rect(); //you should cache this, onGlobalLayout can get called often
             view.getWindowVisibleDisplayFrame(measureRect);
-            // measureRect.bottom is the position above soft keypad
 
+            // measureRect.bottom is the position above soft keypad
             int keypadHeight = view.getHeight() - measureRect.bottom;
 
-            if (keypadHeight > 50 /*mMainHolder.getHeight()*/) {
+            if (keypadHeight > editorToolbar.getHeight()) {
                 keyboardStateRelay.accept(true);
             } else {
                 keyboardStateRelay.accept(false);
@@ -186,7 +188,20 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             }
         });
 
+        tvContent.setOnFocusChangeListener((view12, hasFocus) -> {
+            if (hasFocus) {
+                ViewUtils.hide(tvTag);
+                ViewUtils.show(editorToolbar);
+            } else {
+                ViewUtils.hide(editorToolbar);
+                ViewUtils.show(tvTag);
+
+                KeyboardUtils.hideKeyboard(requireActivity(), tvContent);
+            }
+        });
+
         tvTag = view.findViewById(R.id.tag);
+        editorToolbar = view.findViewById(R.id.editor_toolbar);
 
         return view;
     }
