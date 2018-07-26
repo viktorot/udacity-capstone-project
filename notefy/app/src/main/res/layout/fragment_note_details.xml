@@ -1,117 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:background="#f00">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="?attr/colorPrimaryDark"
+        android:layout_alignParentTop="true"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/holder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ff0"
-        android:orientation="vertical">
+        android:layout_below="@id/toolbar"
+        android:layout_above="@+id/editor_toolbar"
+        android:background="#f00"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            android:background="?attr/colorPrimaryDark" />
+            android:layout_height="wrap_content"
+            android:background="#ff0"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/icon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:padding="15dp"
+                android:scaleType="fitXY" />
+
+            <io.viktorot.notefy.util.HideHintEditText
+                android:id="@+id/title"
+                style="@style/NoteTitle"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="#00f"
+                android:gravity="center_horizontal"
+                android:hint="[title]" />
+
+            <io.github.mthli.knife.KnifeText
+                android:id="@+id/content"
+                style="@style/NoteContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="#0f0"
+                android:gravity="top|start"
+                android:inputType="textMultiLine"
+                android:padding="@dimen/spacing_small"
+                app:bulletColor="@color/white"
+                app:bulletGapWidth="@dimen/spacing_small"
+                app:bulletRadius="2dp"
+                app:historyEnable="false" />
+
+            <TextView
+                android:id="@+id/tag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/dark_gray"
+                android:drawableStart="@drawable/ic_tag"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:padding="@dimen/spacing_small"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/editor_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/editor_toolbar_height"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/menu_bg">
 
         <ImageButton
-            android:id="@+id/icon"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:padding="15dp"
-            android:scaleType="fitXY" />
+            android:id="@+id/bold"
+            style="@style/FormatIcon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/italic"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_format_bold" />
 
-        <io.viktorot.notefy.util.HideHintEditText
-            android:id="@+id/title"
-            style="@style/NoteTitle"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:background="#00f"
-            android:gravity="center_horizontal"
-            android:hint="[title]" />
+        <ImageButton
+            android:id="@+id/italic"
+            style="@style/FormatIcon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/underline"
+            app:layout_constraintStart_toEndOf="@+id/bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_format_italic" />
 
+        <ImageButton
+            android:id="@+id/underline"
+            style="@style/FormatIcon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bullet"
+            app:layout_constraintStart_toEndOf="@+id/italic"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_format_underline" />
 
-        <io.github.mthli.knife.KnifeText
-            android:id="@+id/content"
-            style="@style/NoteContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="#0f0"
-            android:gravity="top|start"
-            android:inputType="textMultiLine"
-            android:padding="@dimen/spacing_small"
-            app:bulletColor="@color/white"
-            app:bulletGapWidth="@dimen/spacing_small"
-            app:bulletRadius="2dp"
-            app:historyEnable="false" />
+        <ImageButton
+            android:id="@+id/bullet"
+            style="@style/FormatIcon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/underline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_format_list_bulleted" />
 
-        <TextView
-            android:id="@+id/tag"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/dark_gray"
-            android:drawableStart="@drawable/ic_tag"
-            android:drawablePadding="5dp"
-            android:gravity="center_vertical"
-            android:padding="@dimen/spacing_small"
-            android:visibility="gone" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/editor_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/editor_toolbar_height"
-            android:background="@drawable/menu_bg">
-
-            <ImageButton
-                android:id="@+id/bold"
-                style="@style/FormatIcon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/italic"
-                app:layout_constraintHorizontal_chainStyle="spread"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_format_bold" />
-
-            <ImageButton
-                android:id="@+id/italic"
-                style="@style/FormatIcon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/underline"
-                app:layout_constraintStart_toEndOf="@+id/bold"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_format_italic" />
-
-            <ImageButton
-                android:id="@+id/underline"
-                style="@style/FormatIcon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/bullet"
-                app:layout_constraintStart_toEndOf="@+id/italic"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_format_underline" />
-
-            <ImageButton
-                android:id="@+id/bullet"
-                style="@style/FormatIcon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/underline"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_format_list_bulleted" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>
+</RelativeLayout>

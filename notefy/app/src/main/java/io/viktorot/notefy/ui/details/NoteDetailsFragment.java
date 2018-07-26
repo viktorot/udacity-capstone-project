@@ -66,7 +66,10 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
     private TagRepo tagRepo;
 
-    private NestedScrollView nestedScrollView;
+    private View root;
+    private View holder;
+
+
     private Toolbar toolbar;
     private ImageView imgIcon;
     private TextView tvTitle;
@@ -114,6 +117,8 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     }
 
     int prev = -1;
+    int prevToolbar = -1;
+
     int h = -1;
 
     @Nullable
@@ -128,43 +133,58 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             view.getWindowVisibleDisplayFrame(measureRect);
 
             // measureRect.bottom is the position above soft keypad
-            int keypadHeight = view.getHeight() - measureRect.bottom;
+            int keypadHeight = view.getRootView().getHeight() - measureRect.bottom;
 
             Timber.v("keyboard height => %d", keypadHeight);
 
-            if (keypadHeight > editorToolbar.getHeight()) {
+            if (keypadHeight > 150) {
                 keyboardStateRelay.accept(true);
-//                prev = editorToolbar.getTop();
-//                editorToolbar.setTop(keypadHeight + editorToolbar.getHeight());
             } else {
                 keyboardStateRelay.accept(false);
-//                if (prev > -1) {
-//                    editorToolbar.setTop(prev);
-//                }
             }
         };
         view.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
 
-        nestedScrollView = view.findViewById(R.id.root);
-        nestedScrollView.setNestedScrollingEnabled(true);
-
-        nestedScrollView.setOnClickListener(view13 -> {
+        root = view.findViewById(R.id.root);
+        root.setNestedScrollingEnabled(true);
+        root.setOnClickListener(view13 -> {
             tvContent.requestFocus();
         });
+
+        holder = view.findViewById(R.id.holder);
 
         keyboardStateDisposable = keyboardStateRelay
                 .distinctUntilChanged()
                 .subscribe(visible -> {
                     Timber.v("keyboard visible => %b", visible);
-//                    if (visible) {
-//                        prev = editorToolbar.getTop();
-//                        editorToolbar.setTop(718);
-//                    } else {
-//                        if (prev > -1) {
-//                            editorToolbar.setTop(prev);
-//                            prev = -1;
-//                        }
-//                    }
+                    if (visible) {
+//                        prev = holder.getBottom();
+//                        holder.setBottom(934);
+
+//                        prevToolbar = editorToolbar.getBottom();
+//                        editorToolbar.setBottom(790);
+
+//                        ViewUtils.show(editorToolbar);
+
+//                        FrameLayout.LayoutParams params = ((FrameLayout.LayoutParams) root.getLayoutParams());
+//                        params.setMargins(0, 0, 0, 718);
+//                        root.setLayoutParams(params);
+//                        root.setBottom(718);
+                    } else {
+//                        ViewUtils.hide(editorToolbar);
+
+                        if (prev > -1) {
+                            holder.setBottom(prev);
+                            prev = -1;
+                        }
+
+                        if (prevToolbar > -1) {
+                            editorToolbar.setBottom(prevToolbar);
+                            prevToolbar = -1;
+                        }
+                    }
+//                    ((FrameLayout.LayoutParams) root.getLayoutParams())
+//                            .setMargins(0, 0, 0, 0);
                 });
 
         vm.action.observe(getViewLifecycleOwner(), actionObserver);
@@ -223,7 +243,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 //                ViewUtils.hide(tvTag);
 //                ViewUtils.show(editorToolbar);
             } else {
-                ViewUtils.hide(editorToolbar);
+//                ViewUtils.hide(editorToolbar);
                 // TODO: show only if tag available
 //                ViewUtils.show(tvTag);
 
@@ -234,7 +254,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 //        tvTag = view.findViewById(R.id.tag);
         editorToolbar = view.findViewById(R.id.editor_toolbar);
 
-        ViewUtils.hide(editorToolbar);
+//        ViewUtils.hide(editorToolbar);
 //        ViewUtils.show(tvTag);
 
         btnBold = view.findViewById(R.id.bold);
