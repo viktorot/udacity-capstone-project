@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -65,6 +66,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
     private TagRepo tagRepo;
 
+    private NestedScrollView nestedScrollView;
     private Toolbar toolbar;
     private ImageView imgIcon;
     private TextView tvTitle;
@@ -142,6 +144,13 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             }
         };
         view.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
+
+        nestedScrollView = view.findViewById(R.id.root);
+        nestedScrollView.setNestedScrollingEnabled(true);
+
+        nestedScrollView.setOnClickListener(view13 -> {
+            tvContent.requestFocus();
+        });
 
         keyboardStateDisposable = keyboardStateRelay
                 .distinctUntilChanged()
