@@ -6,8 +6,11 @@ import android.text.TextUtils;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.viktorot.notefy.Navigator;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.data.Note;
@@ -32,6 +35,10 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         HideProgress
     }
 
+    enum Change {
+        Content, Pin
+    }
+
     private final Navigator navigator;
 
     private final IconRepo iconRepo;
@@ -43,7 +50,10 @@ public class NoteDetailsViewModel extends AndroidViewModel {
     SingleLiveEvent<Action> action = new SingleLiveEvent<>();
     MutableLiveData<Note> data = new MutableLiveData<>();
 
+    private Change change = null;
     private boolean edited = false;
+
+    private Disposable changesDisposable = null;
 
     public NoteDetailsViewModel(@NonNull Application application) {
         super(application);
@@ -63,6 +73,39 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         } else {
             data.setValue(note);
         }
+
+        changesDisposable = notesRepo.noteChanges
+                .filter(event -> {
+                    Note n = NoteDetailsViewModel.this.data.getValue();
+
+                    return n != null &&
+                            ((!TextUtils.isEmpty(n.getKey()) &&
+                            n.getKey().equals(event.data().getKey())) ||
+                            TextUtils.isEmpty(n.getKey()));
+                })
+                .subscribe(event -> {
+
+                    dispatchAction(Action.HideProgress);
+
+                    if (event instanceof NotesRepo.Event.Added) {
+                        //NoteDetailsViewModel.this.data.setValue(event.data());
+                        notificationUtils.notify(event.data());
+                        pop();
+                    } else if (event instanceof NotesRepo.Event.Changed) {
+                        NoteDetailsViewModel.this.data.setValue(event.data());
+                        notificationUtils.notify(event.data());
+                        if (change == Change.Pin) {
+                            edited(false);
+                        } else {
+                            pop();
+                        }
+                    } else if (event instanceof NotesRepo.Event.Removed) {
+                        notificationUtils.remove(event.data());
+                        pop();
+                    }
+
+                    change = null;
+                });
     }
 
     private void dispatchAction(Action action) {
@@ -109,25 +152,29 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
         dispatchAction(Action.ShowProgress);
 
-        notesRepo.save(note, new NotesRepo.SaveTaskCallback() {
-            @Override
-            public void onSuccess(String key) {
-                // TODO: get new key
-                note.setKey(key);
-                notificationUtils.notify(note);
-                pop();
+        change = Change.Content;
 
-                dispatchAction(Action.HideProgress);
-            }
+        notesRepo.save(note);
 
-            @Override
-            public void onError(Exception exception) {
-                Timber.e(exception, "failed to save note");
-                // TODO: show toast
-
-                dispatchAction(Action.HideProgress);
-            }
-        });
+//        notesRepo.save(note, new NotesRepo.SaveTaskCallback() {
+//            @Override
+//            public void onSuccess(String key) {
+//                // TODO: get new key
+//                note.setKey(key);
+//                notificationUtils.notify(note);
+//                pop();
+//
+//                dispatchAction(Action.HideProgress);
+//            }
+//
+//            @Override
+//            public void onError(Exception exception) {
+//                Timber.e(exception, "failed to save note");
+//                // TODO: show toast
+//
+//                dispatchAction(Action.HideProgress);
+//            }
+//        });
     }
 
     void delete() {
@@ -137,21 +184,20 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             return;
         }
 
-        notesRepo.delete(note, new NotesRepo.TaskCallback() {
-            @Override
-            public void onSuccess() {
-                notificationUtils.remove(note);
-                pop();
-            }
-
-            @Override
-            public void onError(Exception exception) {
-                Timber.e(exception, "failed to delete note");
-                // TODO: show toast
-            }
-        });
-
-
+        notesRepo.delete(note);
+//        notesRepo.delete(note, new NotesRepo.TaskCallback() {
+//            @Override
+//            public void onSuccess() {
+//                notificationUtils.remove(note);
+//                pop();
+//            }
+//
+//            @Override
+//            public void onError(Exception exception) {
+//                Timber.e(exception, "failed to delete note");
+//                // TODO: show toast
+//            }
+//        });
     }
 
     void selectIcon() {
@@ -198,27 +244,31 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
             dispatchAction(Action.ShowProgress);
 
-            notesRepo.pin(note, new NotesRepo.TaskCallback() {
-                @Override
-                public void onSuccess() {
-                    Timber.d("pin state updated");
-                    notificationUtils.notify(note);
-                    edited(false);
+            change = Change.Pin;
 
-                    dispatchAction(Action.HideProgress);
-                }
+            notesRepo.pin(note);
 
-                @Override
-                public void onError(Exception exception) {
-                    Timber.e(exception, "updating pin state failed");
-
-                    // TODO: show toast
-                    note.setPinned(!newPinnedState);
-                    notifyDataChange();
-
-                    dispatchAction(Action.HideProgress);
-                }
-            });
+//            notesRepo.pin(note, new NotesRepo.TaskCallback() {
+//                @Override
+//                public void onSuccess() {
+//                    Timber.d("pin state updated");
+//                    notificationUtils.notify(note);
+//                    edited(false);
+//
+//                    dispatchAction(Action.HideProgress);
+//                }
+//
+//                @Override
+//                public void onError(Exception exception) {
+//                    Timber.e(exception, "updating pin state failed");
+//
+//                     TODO: show toast
+//                    note.setPinned(!newPinnedState);
+//                    notifyDataChange();
+//
+//                    dispatchAction(Action.HideProgress);
+//                }
+//            });
         }
     }
 
@@ -306,5 +356,13 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
         note.setTagId(tagId);
         notifyDataChange();
+    }
+
+    @Override
+    protected void onCleared() {
+        if (changesDisposable != null) {
+            changesDisposable.dispose();
+        }
+        super.onCleared();
     }
 }

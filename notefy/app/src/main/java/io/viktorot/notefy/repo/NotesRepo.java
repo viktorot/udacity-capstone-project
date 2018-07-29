@@ -2,6 +2,8 @@ package io.viktorot.notefy.repo;
 
 import android.text.TextUtils;
 
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.auto.value.AutoValue;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -29,11 +31,11 @@ public class NotesRepo {
     private static final String NODE_NOTES = "notes";
 
     public static abstract class Event {
+
+        public abstract Note data();
+
         @AutoValue
         public abstract static class Added extends Event {
-
-            public abstract Note data();
-
             static Event.Added create(@NonNull Note data) {
                 return new AutoValue_NotesRepo_Event_Added(data);
             }
@@ -41,9 +43,6 @@ public class NotesRepo {
 
         @AutoValue
         public abstract static class Changed extends Event {
-
-            public abstract Note data();
-
             static Event.Changed create(@NonNull Note data) {
                 return new AutoValue_NotesRepo_Event_Changed(data);
             }
@@ -51,9 +50,6 @@ public class NotesRepo {
 
         @AutoValue
         public abstract static class Removed extends Event {
-
-            public abstract Note data();
-
             static Event.Removed create(@NonNull Note data) {
                 return new AutoValue_NotesRepo_Event_Removed(data);
             }
@@ -62,8 +58,10 @@ public class NotesRepo {
 
     private final FirebaseDatabase db;
     private final DatabaseReference ref;
+    private final DatabaseReference connectedRef;
 
     private final ValueEventListener valueEventListener;
+    private final ValueEventListener connectedEventListener;
     private final ChildEventListener childEventListener;
 
     public PublishRelay<NotesRepo.Event> noteChanges = PublishRelay.create();
@@ -71,13 +69,35 @@ public class NotesRepo {
 
     public NotesRepo(@NonNull FirebaseDatabase db) {
         this.db = db;
+        this.db.setPersistenceEnabled(true);
+
         this.ref = db.getReference().child(NODE_NOTES);
+        this.ref.keepSynced(true);
+
+        this.connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+
+        this.connectedEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
+                    Timber.d("connected");
+                } else {
+                    Timber.d("not connected");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Timber.e("connection listener was cancelled");
+            }
+        };
 
         this.valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<Note> data = new ArrayList<>();
-                for(DataSnapshot child : dataSnapshot.getChildren()) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
                     data.add(parseSnapshot(child));
                 }
                 notes.accept(data);
@@ -129,13 +149,15 @@ public class NotesRepo {
     }
 
     public void attachListener() {
-        //this.ref.addChildEventListener(this.childEventListener);
+        this.ref.addChildEventListener(this.childEventListener);
         this.ref.addValueEventListener(this.valueEventListener);
+        //this.connectedRef.addValueEventListener(this.connectedEventListener);
     }
 
     public void detachListener() {
-        //this.ref.removeEventListener(this.childEventListener);
+        this.ref.removeEventListener(this.childEventListener);
         this.ref.removeEventListener(this.valueEventListener);
+        //this.connectedRef.removeEventListener(this.connectedEventListener);
     }
 
     @NonNull
@@ -148,7 +170,7 @@ public class NotesRepo {
         return note;
     }
 
-    public void save(@NonNull Note note, @NonNull SaveTaskCallback callback) {
+    public void _save(@NonNull Note note, @NonNull SaveTaskCallback callback) {
         if (TextUtils.isEmpty(note.getKey())) {
             ref.push().setValue(note, (databaseError, databaseReference) -> {
                 if (databaseError == null) {
@@ -166,7 +188,17 @@ public class NotesRepo {
         }
     }
 
-    public void pin(@NonNull Note note, @NonNull TaskCallback callback) {
+    public void save(@NonNull Note note) {
+        if (TextUtils.isEmpty(note.getKey())) {
+            ref.push().setValue(note);
+        } else {
+            HashMap<String, Object> updates = new HashMap<>();
+            updates.put(note.getKey(), note.getUpdateMap());
+            ref.updateChildren(updates);
+        }
+    }
+
+    public void _pin(@NonNull Note note, @NonNull TaskCallback callback) {
         if (TextUtils.isEmpty(note.getKey())) {
             Timber.w("cannot update pinned state on new note");
             return;
@@ -180,7 +212,19 @@ public class NotesRepo {
         task.addOnFailureListener(e -> callback.onError(e));
     }
 
-    public void delete(@NonNull Note note, @NonNull TaskCallback callback) {
+    public void pin(@NonNull Note note) {
+        if (TextUtils.isEmpty(note.getKey())) {
+            Timber.w("cannot update pinned state on new note");
+            return;
+        }
+
+        HashMap<String, Object> updates = new HashMap<>();
+        updates.put(note.getKey(), note.getUpdateMap());
+
+        ref.updateChildren(updates);
+    }
+
+    public void _delete(@NonNull Note note, @NonNull TaskCallback callback) {
         if (TextUtils.isEmpty(note.getKey())) {
             Timber.w("cannot delete note without key");
             return;
@@ -194,13 +238,23 @@ public class NotesRepo {
         });
     }
 
+    public void delete(@NonNull Note note) {
+        if (TextUtils.isEmpty(note.getKey())) {
+            Timber.w("cannot delete note without key");
+            return;
+        }
+        ref.child(note.getKey()).removeValue();
+    }
+
     public interface SaveTaskCallback {
         void onSuccess(String key);
+
         void onError(Exception exception);
     }
 
     public interface TaskCallback {
         void onSuccess();
+
         void onError(Exception exception);
     }
 }
