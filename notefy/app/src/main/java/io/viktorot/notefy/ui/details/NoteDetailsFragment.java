@@ -76,10 +76,6 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     private KnifeText tvContent;
     private TextView tvTag;
     private View editorToolbar;
-    private ImageButton btnBold;
-    private ImageButton btnItalic;
-    private ImageButton btnUnderline;
-    private ImageButton btnBulletList;
 
     private MenuItem pinMenuItem;
 
@@ -116,40 +112,27 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         vm.init(note);
     }
 
-    int prev = -1;
-    int prevToolbar = -1;
-
-    int h = -1;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_note_details, container, false);
 
-        h = getResources().getDimensionPixelSize(R.dimen.editor_toolbar_height);
+        final int h = getResources().getDimensionPixelSize(R.dimen.editor_toolbar_height);
 
         globalLayoutListener = () -> {
-            Rect measureRect = new Rect(); //you should cache this, onGlobalLayout can get called often
+            Rect measureRect = new Rect();
             view.getWindowVisibleDisplayFrame(measureRect);
 
             // measureRect.bottom is the position above soft keypad
             int keypadHeight = view.getRootView().getHeight() - measureRect.bottom;
 
-            Timber.v("keyboard height => %d", keypadHeight);
-
-            if (keypadHeight > 150) {
+            if (keypadHeight > h) {
                 keyboardStateRelay.accept(true);
             } else {
                 keyboardStateRelay.accept(false);
             }
         };
         view.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
-
-        root = view.findViewById(R.id.root);
-        root.setNestedScrollingEnabled(true);
-        root.setOnClickListener(view13 -> {
-            tvContent.requestFocus();
-        });
 
         scrollView = view.findViewById(R.id.scroll_view);
         holder = view.findViewById(R.id.holder);
@@ -158,34 +141,10 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
                 .distinctUntilChanged()
                 .subscribe(visible -> {
                     Timber.v("keyboard visible => %b", visible);
-                    if (visible) {
-//                        prev = holder.getBottom();
-//                        holder.setBottom(934);
-
-//                        prevToolbar = editorToolbar.getBottom();
-//                        editorToolbar.setBottom(790);
-
-//                        ViewUtils.show(editorToolbar);
-
-//                        FrameLayout.LayoutParams params = ((FrameLayout.LayoutParams) root.getLayoutParams());
-//                        params.setMargins(0, 0, 0, 718);
-//                        root.setLayoutParams(params);
-//                        root.setBottom(718);
-                    } else {
-//                        ViewUtils.hide(editorToolbar);
-
-                        if (prev > -1) {
-                            holder.setBottom(prev);
-                            prev = -1;
-                        }
-
-                        if (prevToolbar > -1) {
-                            editorToolbar.setBottom(prevToolbar);
-                            prevToolbar = -1;
-                        }
+                    if (!visible) {
+                        tvTitle.clearFocus();
+                        tvContent.clearFocus();
                     }
-//                    ((FrameLayout.LayoutParams) root.getLayoutParams())
-//                            .setMargins(0, 0, 0, 0);
                 });
 
         vm.action.observe(getViewLifecycleOwner(), actionObserver);
@@ -262,25 +221,31 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         tvTag = view.findViewById(R.id.tag);
         editorToolbar = view.findViewById(R.id.editor_toolbar);
 
-        btnBold = view.findViewById(R.id.bold);
+        ImageButton btnBold = view.findViewById(R.id.bold);
         btnBold.setOnClickListener(view1 -> {
             tvContent.bold(!tvContent.contains(KnifeText.FORMAT_BOLD));
             vm.edited();
         });
 
-        btnItalic = view.findViewById(R.id.italic);
+        ImageButton btnItalic = view.findViewById(R.id.italic);
         btnItalic.setOnClickListener(view1 -> {
             tvContent.italic(!tvContent.contains(KnifeText.FORMAT_ITALIC));
             vm.edited();
         });
 
-        btnUnderline = view.findViewById(R.id.underline);
+        ImageButton btnUnderline = view.findViewById(R.id.underline);
         btnUnderline.setOnClickListener(view1 -> {
             tvContent.underline(!tvContent.contains(KnifeText.FORMAT_UNDERLINED));
             vm.edited();
         });
 
-        btnBulletList = view.findViewById(R.id.bullet);
+        ImageButton btnStrikethrugh = view.findViewById(R.id.strkethrough);
+        btnStrikethrugh.setOnClickListener(view1 -> {
+            tvContent.strikethrough(!tvContent.contains(KnifeText.FORMAT_STRIKETHROUGH));
+            vm.edited();
+        });
+
+        ImageButton btnBulletList = view.findViewById(R.id.bullet);
         btnBulletList.setOnClickListener(view1 -> {
             tvContent.bullet(!tvContent.contains(KnifeText.FORMAT_BULLET));
             vm.edited();

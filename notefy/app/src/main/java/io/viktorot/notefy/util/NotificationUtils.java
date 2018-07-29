@@ -3,6 +3,7 @@ package io.viktorot.notefy.util;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.text.Html;
 import android.text.TextUtils;
 
 import java.util.Objects;
@@ -59,6 +60,7 @@ public class NotificationUtils {
         builder.setSmallIcon(iconRepo.getIconRes(note.getIconId()));
         builder.setContentTitle(note.getTitle());
         if (!TextUtils.isEmpty(note.getContent())) {
+            //builder.setContentText(Html.fromHtml(note.getContent()));
             builder.setContentText(note.getContent());
         }
         builder.setContentIntent(pendingIntent);

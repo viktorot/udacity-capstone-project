@@ -111,17 +111,26 @@
             android:id="@+id/underline"
             style="@style/FormatIcon"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/bullet"
+            app:layout_constraintEnd_toStartOf="@+id/strkethrough"
             app:layout_constraintStart_toEndOf="@+id/italic"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_format_underline" />
+
+        <ImageButton
+            android:id="@+id/strkethrough"
+            style="@style/FormatIcon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bullet"
+            app:layout_constraintStart_toEndOf="@id/underline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_format_strikethrough" />
 
         <ImageButton
             android:id="@+id/bullet"
             style="@style/FormatIcon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/underline"
+            app:layout_constraintStart_toEndOf="@id/strkethrough"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_format_list_bulleted" />
 
