@@ -26,7 +26,10 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         SelectColor,
         SelectTag,
         ShowEmptyTitleError,
-        ShowDeleteConfirmation
+        ShowDeleteConfirmation,
+
+        ShowProgress,
+        HideProgress
     }
 
     private final Navigator navigator;
@@ -104,6 +107,8 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             return;
         }
 
+        dispatchAction(Action.ShowProgress);
+
         notesRepo.save(note, new NotesRepo.SaveTaskCallback() {
             @Override
             public void onSuccess(String key) {
@@ -111,12 +116,16 @@ public class NoteDetailsViewModel extends AndroidViewModel {
                 note.setKey(key);
                 notificationUtils.notify(note);
                 pop();
+
+                dispatchAction(Action.HideProgress);
             }
 
             @Override
             public void onError(Exception exception) {
                 Timber.e(exception, "failed to save note");
                 // TODO: show toast
+
+                dispatchAction(Action.HideProgress);
             }
         });
     }
@@ -187,12 +196,16 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
             notifyDataChange();
 
+            dispatchAction(Action.ShowProgress);
+
             notesRepo.pin(note, new NotesRepo.TaskCallback() {
                 @Override
                 public void onSuccess() {
                     Timber.d("pin state updated");
                     notificationUtils.notify(note);
                     edited(false);
+
+                    dispatchAction(Action.HideProgress);
                 }
 
                 @Override
@@ -202,6 +215,8 @@ public class NoteDetailsViewModel extends AndroidViewModel {
                     // TODO: show toast
                     note.setPinned(!newPinnedState);
                     notifyDataChange();
+
+                    dispatchAction(Action.HideProgress);
                 }
             });
         }

@@ -67,14 +67,14 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     private TagRepo tagRepo;
 
     private View root;
+    private NestedScrollView scrollView;
     private View holder;
-
 
     private Toolbar toolbar;
     private ImageView imgIcon;
     private TextView tvTitle;
     private KnifeText tvContent;
-    //    private TextView tvTag;
+    private TextView tvTag;
     private View editorToolbar;
     private ImageButton btnBold;
     private ImageButton btnItalic;
@@ -151,6 +151,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             tvContent.requestFocus();
         });
 
+        scrollView = view.findViewById(R.id.scroll_view);
         holder = view.findViewById(R.id.holder);
 
         keyboardStateDisposable = keyboardStateRelay
@@ -238,24 +239,28 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             }
         });
 
-        tvContent.setOnFocusChangeListener((view12, hasFocus) -> {
-            if (hasFocus) {
-//                ViewUtils.hide(tvTag);
-//                ViewUtils.show(editorToolbar);
-            } else {
-//                ViewUtils.hide(editorToolbar);
-                // TODO: show only if tag available
-//                ViewUtils.show(tvTag);
+        scrollView.setOnClickListener(view16 -> {
+            Timber.v("scroll click");
+        });
 
-                KeyboardUtils.hideKeyboard(requireActivity(), tvContent);
+        holder.setOnClickListener(view15 -> {
+            KeyboardUtils.hideKeyboard(requireActivity());
+        });
+
+        tvTitle.setOnFocusChangeListener((view14, hasFocus) -> {
+            if (!hasFocus) {
+                KeyboardUtils.hideKeyboard(requireActivity(), view14);
             }
         });
 
-//        tvTag = view.findViewById(R.id.tag);
-        editorToolbar = view.findViewById(R.id.editor_toolbar);
+        tvContent.setOnFocusChangeListener((view12, hasFocus) -> {
+            if (!hasFocus) {
+                KeyboardUtils.hideKeyboard(requireActivity(), view12);
+            }
+        });
 
-//        ViewUtils.hide(editorToolbar);
-//        ViewUtils.show(tvTag);
+        tvTag = view.findViewById(R.id.tag);
+        editorToolbar = view.findViewById(R.id.editor_toolbar);
 
         btnBold = view.findViewById(R.id.bold);
         btnBold.setOnClickListener(view1 -> {
@@ -294,6 +299,10 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         if (globalLayoutListener != null && view != null) {
             view.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
         }
+
+        StatusBarUtils.setColor(requireActivity(),
+                ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark));
+
         super.onDestroyView();
     }
 
@@ -322,6 +331,10 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             openTagMenu();
         } else if (action == NoteDetailsViewModel.Action.ShowDeleteConfirmation) {
             showDeleteConfirmationDialog();
+        } else if (action == NoteDetailsViewModel.Action.ShowProgress) {
+            showProgressDialog();
+        } else if (action == NoteDetailsViewModel.Action.HideProgress) {
+            hideProgressDialog();
         }
     }
 
@@ -329,12 +342,12 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         tvTitle.setText(note.getTitle());
         tvContent.fromHtml(note.getContent());
 
-//        if (tagRepo.isIdValid(note.getTagId())) {
-//            tvTag.setText(tagRepo.getTag(note.getTagId()));
-//            ViewUtils.show(tvTag);
-//        } else {
-//            ViewUtils.hide(tvTag);
-//        }
+        if (tagRepo.isIdValid(note.getTagId())) {
+            tvTag.setText(tagRepo.getTag(note.getTagId()));
+            ViewUtils.show(tvTag);
+        } else {
+            ViewUtils.hide(tvTag);
+        }
 
         int iconResId = NotefyApplication.get(requireContext())
                 .getIconRepo().getIconRes(note.getIconId());
@@ -401,15 +414,30 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
                 .show();
     }
 
+    private MaterialDialog progressDialog;
+
+    private void showProgressDialog() {
+        hideProgressDialog();
+
+        progressDialog = new MaterialDialog.Builder(requireContext())
+                .title("[updating]")
+                .progress(true, 0)
+                .show();
+    }
+
+    private void hideProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.hide();
+            progressDialog = null;
+        }
+    }
+
     @Override
     public boolean onBackPressed() {
         if (vm.isEdited()) {
             showSaveConfirmationDialog();
             return false;
         }
-
-        StatusBarUtils.setColor(requireActivity(),
-                ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark));
         return true;
     }
 }
