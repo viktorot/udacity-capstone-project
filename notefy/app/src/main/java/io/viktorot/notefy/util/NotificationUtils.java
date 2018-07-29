@@ -19,6 +19,8 @@ import io.viktorot.notefy.ui.main.MainActivity;
 
 public class NotificationUtils {
 
+    public static final String NOTE_DATA = "note_data";
+
     private final Context context;
     private final IconRepo iconRepo;
 
@@ -45,8 +47,7 @@ public class NotificationUtils {
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.setAction(String.valueOf(System.currentTimeMillis()));
-        // TODO: open from notfication
-        //intent.putExtra(NOTE_KEY, note.getKey());
+        intent.putExtra(NOTE_DATA, note);
 
         stackBuilder.addNextIntent(intent);
 
@@ -75,5 +76,4 @@ public class NotificationUtils {
         NotificationManagerCompat.from(context)
                 .cancel(notificationId);
     }
-
 }

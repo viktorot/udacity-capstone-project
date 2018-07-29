@@ -2,6 +2,7 @@ package io.viktorot.notefy.ui.main;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -17,16 +18,17 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import io.reactivex.disposables.Disposable;
 import io.viktorot.notefy.FragmentNavigator;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
+import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.navigator.events.Login;
 import io.viktorot.notefy.navigator.events.NavEvent;
-import io.viktorot.notefy.ui.list.NoteListFragment;
+import io.viktorot.notefy.util.NotificationUtils;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -95,16 +97,28 @@ public class MainActivity extends AppCompatActivity {
         vm = ViewModelProviders.of(this).get(MainViewModel.class);
         vm.state.observe(this, this.stateObserver);
         vm.actions.observe(this, this.actionsObserver);
+
+        navigationDisposable = NotefyApplication.get(this)
+                .getNavigator()
+                .observe(this::onNavEvent);
+
+        onNewIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Note note = intent.getParcelableExtra(NotificationUtils.NOTE_DATA);
+        if (note == null) {
+            Timber.w("notification note null");
+            return;
+        }
+        vm.editNote(note);
     }
 
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
         fragmentNavigator.attach();
-
-        navigationDisposable = NotefyApplication.get(this)
-                .getNavigator()
-                .observe(this::onNavEvent);
     }
 
     @Override
@@ -116,9 +130,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         fragmentNavigator.detach();
-        if (navigationDisposable != null) {
-            navigationDisposable.dispose();
-        }
         super.onPause();
     }
 
@@ -130,6 +141,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (navigationDisposable != null) {
+            navigationDisposable.dispose();
+        }
+        super.onDestroy();
     }
 
     @Override

@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import io.reactivex.disposables.Disposable;
 import io.viktorot.notefy.Navigator;
 import io.viktorot.notefy.NotefyApplication;
+import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.repo.AuthRepo;
 import io.viktorot.notefy.repo.FilterRelay;
 import io.viktorot.notefy.util.SingleLiveEvent;
@@ -94,6 +95,10 @@ public class MainViewModel extends AndroidViewModel {
             return;
         }
         navigator.navigateToNewNote();
+    }
+
+    void editNote(@NonNull Note note) {
+        navigator.navigateToEditNote(note);
     }
 
     void onColorFilterSelected(@NonNull String color) {

@@ -89,6 +89,8 @@ public abstract class FragmentNavigator {
         Objects.requireNonNull(fragment);
         Objects.requireNonNull(tag);
 
+        Timber.d("pushing => %s", command.getTag());
+
         fragmentManager.beginTransaction()
                 .add(containerId, fragment, tag)
                 .addToBackStack(tag)
@@ -105,6 +107,8 @@ public abstract class FragmentNavigator {
             if (fragment instanceof Navigatable && !((Navigatable) fragment).onBackPressed()) {
                 return;
             }
+
+            Timber.d("poping => %s", tag);
 
             fragmentManager.popBackStack();
 
