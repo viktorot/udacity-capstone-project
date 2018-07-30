@@ -17,4 +17,8 @@ public class ViewUtils {
         view.setVisibility(View.VISIBLE);
     }
 
+    public static void invisible(@NonNull View view) {
+        view.setVisibility(View.INVISIBLE);
+    }
+
 }

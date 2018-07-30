@@ -51,8 +51,6 @@ class NoteListViewItem extends Item<NoteListViewItem.ViewHolder> {
     public void bind(@NonNull NoteListViewItem.ViewHolder viewHolder, int position) {
         viewHolder.tvTitle.setText(this.data.getTitle());
 
-
-
         viewHolder.tvContent.setText(Html.fromHtml(this.data.getContent()));
 
         int id = this.data.getTagId();
@@ -61,8 +59,8 @@ class NoteListViewItem extends Item<NoteListViewItem.ViewHolder> {
             ViewUtils.show(viewHolder.tvTag);
             ViewUtils.show(viewHolder.imgTag);
         } else {
-            ViewUtils.hide(viewHolder.tvTag);
-            ViewUtils.hide(viewHolder.imgTag);
+            ViewUtils.invisible(viewHolder.tvTag);
+            ViewUtils.invisible(viewHolder.imgTag);
         }
 
         Drawable icon = ContextCompat.getDrawable(context, iconRepo.getIconRes(data.getIconId()));
@@ -100,6 +98,8 @@ class NoteListViewItem extends Item<NoteListViewItem.ViewHolder> {
             imgCorner = rootView.findViewById(R.id.corner);
             imgPin = rootView.findViewById(R.id.pin);
             imgIcon = rootView.findViewById(R.id.icon);
+
+            imgTag.setColorFilter(ContextCompat.getColor(context, R.color.light_gray));
         }
     }
 }
