@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.jakewharton.rxrelay2.BehaviorRelay;
 
+import androidx.annotation.Nullable;
 import io.reactivex.Observable;
 import timber.log.Timber;
 
@@ -14,6 +15,9 @@ public class AuthRepo {
 
     private final BehaviorRelay<Boolean> session = BehaviorRelay.create();
     //public final MutableLiveData<Boolean> session = new MutableLiveData<>();
+
+    @Nullable
+    private FirebaseUser user = null;
 
     public AuthRepo(FirebaseAuth auth) {
         this.auth = auth;
@@ -41,9 +45,27 @@ public class AuthRepo {
         return val != null && val;
     }
 
+    @Nullable
+    public String getUserEmail() {
+        if (this.user != null) {
+            return this.user.getEmail();
+        } else {
+            return null;
+        }
+    }
+
+    @Nullable
+    public String getUserDisplayName() {
+        if (this.user != null) {
+            return this.user.getDisplayName();
+        } else {
+            return null;
+        }
+    }
+
     private void onAuthStateChanged(FirebaseAuth auth) {
-        FirebaseUser user = auth.getCurrentUser();
-        boolean hasSession = user != null;
+        this.user = auth.getCurrentUser();
+        boolean hasSession = this.user != null;
         Timber.d("has session => %b", hasSession);
         session.accept(hasSession);
     }

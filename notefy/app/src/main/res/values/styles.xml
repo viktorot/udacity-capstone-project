@@ -45,7 +45,12 @@
         <item name="android:padding">5dp</item>
         <item name="android:background">?android:selectableItemBackground</item>
         <item name="android:scaleType">fitXY</item>
+    </style>
 
+    <style name="AuthButton">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
 
