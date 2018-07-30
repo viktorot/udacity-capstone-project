@@ -163,6 +163,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         pinMenuItem = toolbar.getMenu().getItem(PIN_ITEM_INDEX);
 
         imgIcon = view.findViewById(R.id.icon);
+        imgIcon.setColorFilter(Color.WHITE);
         imgIcon.setOnClickListener(view1 -> {
             vm.selectIcon();
         });
@@ -191,7 +192,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                onContenChanged();
+                onContentChanged();
             }
 
             @Override
@@ -225,31 +226,31 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         ImageButton btnBold = view.findViewById(R.id.bold);
         btnBold.setOnClickListener(view1 -> {
             tvContent.bold(!tvContent.contains(KnifeText.FORMAT_BOLD));
-            onContenChanged();
+            onContentChanged();
         });
 
         ImageButton btnItalic = view.findViewById(R.id.italic);
         btnItalic.setOnClickListener(view1 -> {
             tvContent.italic(!tvContent.contains(KnifeText.FORMAT_ITALIC));
-            onContenChanged();
+            onContentChanged();
         });
 
         ImageButton btnUnderline = view.findViewById(R.id.underline);
         btnUnderline.setOnClickListener(view1 -> {
             tvContent.underline(!tvContent.contains(KnifeText.FORMAT_UNDERLINED));
-            onContenChanged();
+            onContentChanged();
         });
 
         ImageButton btnStrikethrugh = view.findViewById(R.id.strkethrough);
         btnStrikethrugh.setOnClickListener(view1 -> {
             tvContent.strikethrough(!tvContent.contains(KnifeText.FORMAT_STRIKETHROUGH));
-            onContenChanged();
+            onContentChanged();
         });
 
         ImageButton btnBulletList = view.findViewById(R.id.bullet);
         btnBulletList.setOnClickListener(view1 -> {
             tvContent.bullet(!tvContent.contains(KnifeText.FORMAT_BULLET));
-            onContenChanged();
+            onContentChanged();
         });
 
         return view;
@@ -259,7 +260,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         vm.onTitleChanged(tvTitle.getText().toString());
     }
 
-    private void onContenChanged() {
+    private void onContentChanged() {
         vm.onContentChanged(tvContent.toHtml());
     }
 
