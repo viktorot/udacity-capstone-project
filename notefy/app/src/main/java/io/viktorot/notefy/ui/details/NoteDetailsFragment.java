@@ -14,6 +14,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxrelay2.PublishRelay;
@@ -300,6 +301,8 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             showProgressDialog();
         } else if (action == NoteDetailsViewModel.Action.HideProgress) {
             hideProgressDialog();
+        } else if (action == NoteDetailsViewModel.Action.ShowEmptyTitleError) {
+            Toast.makeText(requireContext(), "[title must be set before saving note]", Toast.LENGTH_LONG).show();
         }
     }
 

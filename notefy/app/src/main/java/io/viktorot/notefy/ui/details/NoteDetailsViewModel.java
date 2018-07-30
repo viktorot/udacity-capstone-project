@@ -75,23 +75,19 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         }
 
         changesDisposable = notesRepo.noteChanges
-                .filter(event -> {
-                    Note n = NoteDetailsViewModel.this.data.getValue();
-
-                    return n != null &&
-                            ((!TextUtils.isEmpty(n.getKey()) &&
-                            n.getKey().equals(event.data().getKey())) ||
-                            TextUtils.isEmpty(n.getKey()));
-                })
                 .subscribe(event -> {
-
                     dispatchAction(Action.HideProgress);
 
-                    if (event instanceof NotesRepo.Event.Added) {
-                        //NoteDetailsViewModel.this.data.setValue(event.data());
+                    @Nullable Note n = NoteDetailsViewModel.this.data.getValue();
+                    if (n == null) {
+                        return;
+                    }
+
+                    if (event instanceof NotesRepo.Event.Added && n.isNew()) {
+                        NoteDetailsViewModel.this.data.setValue(event.data());
                         notificationUtils.notify(event.data());
                         pop();
-                    } else if (event instanceof NotesRepo.Event.Changed) {
+                    } else if (event instanceof NotesRepo.Event.Changed && !n.isNew() && n.getKey().equals(event.data().getKey())) {
                         NoteDetailsViewModel.this.data.setValue(event.data());
                         notificationUtils.notify(event.data());
                         if (change == Change.Pin) {
@@ -99,7 +95,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
                         } else {
                             pop();
                         }
-                    } else if (event instanceof NotesRepo.Event.Removed) {
+                    } else if (event instanceof NotesRepo.Event.Removed && !n.isNew() && n.getKey().equals(event.data().getKey())) {
                         notificationUtils.remove(event.data());
                         pop();
                     }
@@ -283,6 +279,8 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             return;
         }
 
+        Timber.v("title => %s", title);
+
         edited();
 
         note.setTitle(title);
@@ -298,6 +296,8 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         if (content.equals(note.getContent())) {
             return;
         }
+
+        Timber.v("content => %s", content);
 
         edited();
 
