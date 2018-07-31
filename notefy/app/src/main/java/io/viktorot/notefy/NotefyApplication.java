@@ -55,29 +55,16 @@ public class NotefyApplication extends Application {
         notificationUtils = new NotificationUtils(this);
     }
 
-//    public void updateWidgets() {
-//        Intent intent = new Intent(this, NotifyWidget.class);
-//        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-//
-//        int[] ids = AppWidgetManager
-//                .getInstance(this)
-//                .getAppWidgetIds(new ComponentName(this, NotifyWidget.class));
-//
-//        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-//        this.sendBroadcast(intent);
-//    }
-
-    public static void updateWidgets(Context context) {
-        Application app = (Application) context.getApplicationContext();
-        Intent intent = new Intent(app, NotifyWidget.class);
+    public void updateWidgets() {
+        Intent intent = new Intent(this, NotifyWidget.class);
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 
         int[] ids = AppWidgetManager
-                .getInstance(app)
-                .getAppWidgetIds(new ComponentName(app, NotifyWidget.class));
+                .getInstance(this)
+                .getAppWidgetIds(new ComponentName(this, NotifyWidget.class));
 
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-        app.sendBroadcast(intent);
+        this.sendBroadcast(intent);
     }
 
     public IconRepo getIconRepo() {

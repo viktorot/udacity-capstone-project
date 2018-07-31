@@ -108,8 +108,7 @@ public class NotesRepo {
                 }
 
                 notes.accept(data);
-                //NotefyApplication.get(context).updateWidgets();
-                NotefyApplication.updateWidgets(context);
+                NotefyApplication.get(context).updateWidgets();
             }
 
             @Override
@@ -155,6 +154,7 @@ public class NotesRepo {
 
     public void clearCache() {
         notes.accept(Collections.emptyList());
+        NotefyApplication.get(context).updateWidgets();
     }
 
     public void attachListener() {

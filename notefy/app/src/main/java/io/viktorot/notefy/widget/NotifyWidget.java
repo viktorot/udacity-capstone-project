@@ -33,7 +33,6 @@ public class NotifyWidget extends AppWidgetProvider {
         if (notes == null || notes.isEmpty()) {
             views.setViewVisibility(R.id.empty, View.VISIBLE);
             views.setViewVisibility(R.id.title, View.GONE);
-            views.setTextViewText(R.id.empty, context.getString(R.string.no_notes_available));
             views.setViewVisibility(R.id.list, View.GONE);
         } else {
             views.setViewVisibility(R.id.empty, View.GONE);

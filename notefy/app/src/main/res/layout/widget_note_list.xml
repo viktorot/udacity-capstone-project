@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:colorBackground"
+    android:background="@color/transparent"
     android:orientation="vertical">
 
     <TextView
@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:gravity="center_horizontal"
-        android:text="[no notes]"
+        android:gravity="center"
+        android:text="@string/no_notes_available"
         android:textColor="@color/colorPrimary" />
 
     <TextView
