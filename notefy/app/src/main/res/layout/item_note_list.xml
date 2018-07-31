@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_margin="@dimen/spacing_large"
+    android:descendantFocusability="beforeDescendants"
     app:cardCornerRadius="10dp">
 
     <FrameLayout
@@ -58,7 +59,7 @@
                 app:layout_constraintTop_toTopOf="@id/icon"
                 app:layout_constraintVertical_chainStyle="packed" />
 
-            <TextView
+            <io.viktorot.notefy.util.KnifeTextView
                 android:id="@+id/content"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -67,6 +68,9 @@
                 android:maxLines="1"
                 android:textColor="@color/white"
                 android:textSize="14sp"
+                app:bulletColor="@color/white"
+                app:bulletGapWidth="@dimen/spacing_small"
+                app:bulletRadius="2dp"
                 app:layout_constraintBottom_toBottomOf="@id/icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/icon"

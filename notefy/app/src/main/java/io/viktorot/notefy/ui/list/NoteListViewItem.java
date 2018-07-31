@@ -12,11 +12,13 @@ import com.xwray.groupie.Item;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import io.github.mthli.knife.KnifeText;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.repo.IconRepo;
 import io.viktorot.notefy.repo.TagRepo;
+import io.viktorot.notefy.util.KnifeTextView;
 import io.viktorot.notefy.util.ViewUtils;
 
 class NoteListViewItem extends Item<NoteListViewItem.ViewHolder> {
@@ -51,7 +53,7 @@ class NoteListViewItem extends Item<NoteListViewItem.ViewHolder> {
     public void bind(@NonNull NoteListViewItem.ViewHolder viewHolder, int position) {
         viewHolder.tvTitle.setText(this.data.getTitle());
 
-        viewHolder.tvContent.setText(Html.fromHtml(this.data.getContent()));
+        viewHolder.tvContent.fromHtml(this.data.getContent());
 
         int id = this.data.getTagId();
         if (tagRepo.isIdValid(id)) {
@@ -82,7 +84,7 @@ class NoteListViewItem extends Item<NoteListViewItem.ViewHolder> {
 
     class ViewHolder extends com.xwray.groupie.ViewHolder {
         final TextView tvTitle;
-        final TextView tvContent;
+        final KnifeTextView tvContent;
         final TextView tvTag;
         final ImageView imgTag;
         final ImageView imgCorner;
