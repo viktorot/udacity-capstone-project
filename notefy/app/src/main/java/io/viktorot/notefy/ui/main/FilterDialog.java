@@ -132,14 +132,14 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
         if (callback != null) {
             callback.onColorSelected(color);
         }
-        dismiss();
+        //dismiss();
     }
 
     private void onTagClick(int id) {
         if (callback != null) {
             callback.onTagSelected(id);
         }
-        dismiss();
+        //dismiss();
     }
 
     public static class Builder {

@@ -11,4 +11,6 @@
     <color name="transparent">@android:color/transparent</color>
 
     <color name="icon">@color/dark_gray</color>
+    <color name="chip">#f0f0f0</color>
+
 </resources>
