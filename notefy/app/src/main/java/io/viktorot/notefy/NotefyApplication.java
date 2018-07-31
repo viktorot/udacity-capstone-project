@@ -26,19 +26,6 @@ public class NotefyApplication extends Application {
         return (NotefyApplication) context.getApplicationContext();
     }
 
-    public static void updateWidgets(Context context) {
-        Application app = (Application) context.getApplicationContext();
-        Intent intent = new Intent(app, NotifyWidget.class);
-        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-
-        int[] ids = AppWidgetManager
-                .getInstance(app)
-                .getAppWidgetIds(new ComponentName(app, NotifyWidget.class));
-
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-        app.sendBroadcast(intent);
-    }
-
     private Navigator navigator;
 
     private FilterRelay filterRelay = new FilterRelay();
@@ -60,12 +47,37 @@ public class NotefyApplication extends Application {
         }
 
         authRepo = new AuthRepo(FirebaseAuth.getInstance());
-        notesRepo = new NotesRepo(FirebaseDatabase.getInstance());
+        notesRepo = new NotesRepo(this, FirebaseDatabase.getInstance());
         tagRepo = new TagRepo(getResources().getStringArray(R.array.tags));
 
         navigator = new Navigator(new NavEventRelay());
 
         notificationUtils = new NotificationUtils(this);
+    }
+
+//    public void updateWidgets() {
+//        Intent intent = new Intent(this, NotifyWidget.class);
+//        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+//
+//        int[] ids = AppWidgetManager
+//                .getInstance(this)
+//                .getAppWidgetIds(new ComponentName(this, NotifyWidget.class));
+//
+//        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+//        this.sendBroadcast(intent);
+//    }
+
+    public static void updateWidgets(Context context) {
+        Application app = (Application) context.getApplicationContext();
+        Intent intent = new Intent(app, NotifyWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
+        int[] ids = AppWidgetManager
+                .getInstance(app)
+                .getAppWidgetIds(new ComponentName(app, NotifyWidget.class));
+
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        app.sendBroadcast(intent);
     }
 
     public IconRepo getIconRepo() {

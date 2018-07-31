@@ -1,5 +1,6 @@
 package io.viktorot.notefy.repo;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.google.android.gms.tasks.OnCanceledListener;
@@ -23,6 +24,7 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.data.Note;
 import timber.log.Timber;
 
@@ -56,6 +58,8 @@ public class NotesRepo {
         }
     }
 
+    private final Context context;
+
     private final FirebaseDatabase db;
     private final DatabaseReference ref;
     private final DatabaseReference connectedRef;
@@ -67,7 +71,9 @@ public class NotesRepo {
     public PublishRelay<NotesRepo.Event> noteChanges = PublishRelay.create();
     public BehaviorRelay<List<Note>> notes = BehaviorRelay.create();
 
-    public NotesRepo(@NonNull FirebaseDatabase db) {
+    public NotesRepo(@NonNull Context context, @NonNull FirebaseDatabase db) {
+        this.context = context;
+
         this.db = db;
         this.db.setPersistenceEnabled(true);
 
@@ -100,7 +106,10 @@ public class NotesRepo {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     data.add(parseSnapshot(child));
                 }
+
                 notes.accept(data);
+                //NotefyApplication.get(context).updateWidgets();
+                NotefyApplication.updateWidgets(context);
             }
 
             @Override
@@ -168,6 +177,11 @@ public class NotesRepo {
         note.setKey(dataSnapshot.getKey());
 
         return note;
+    }
+
+    @Nullable
+    public List<Note> getLatestNoteList() {
+        return notes.getValue();
     }
 
     public void _save(@NonNull Note note, @NonNull SaveTaskCallback callback) {

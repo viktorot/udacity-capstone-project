@@ -2,12 +2,14 @@ package io.viktorot.notefy.widget;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.Html;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.repo.ColorRepo;
@@ -16,6 +18,7 @@ public class NotifyWidgetRemoteViewService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
+
         return new RemoteViewsFactory() {
 
             private List<Note> notes;
@@ -27,20 +30,8 @@ public class NotifyWidgetRemoteViewService extends RemoteViewsService {
 
             @Override
             public void onDataSetChanged() {
-                // TODO: get note list
-                Note n1 = new Note();
-                n1.setTitle("11");
-                n1.setContent("22");
-                n1.setColor(ColorRepo.getColor(2));
-
-                Note n2 = new Note();
-                n2.setTitle("11");
-                n2.setContent("22");
-                n2.setColor(ColorRepo.getColor(3));
-
-                notes = new ArrayList<>();
-                notes.add(n1);
-                notes.add(n2);
+                notes = NotefyApplication
+                        .get(getApplicationContext()).getNotesRepo().getLatestNoteList();
             }
 
             @Override
@@ -60,8 +51,10 @@ public class NotifyWidgetRemoteViewService extends RemoteViewsService {
             public RemoteViews getViewAt(int i) {
                 RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_note);
                 Note note = notes.get(i);
+
+                views.setInt(R.id.root, "setBackgroundColor", Color.parseColor(note.getColor()));
                 views.setTextViewText(R.id.title, note.getTitle());
-                views.setTextViewText(R.id.content, note.getContent());
+                views.setTextViewText(R.id.content, Html.fromHtml(note.getContent()));
 
                 return views;
             }
