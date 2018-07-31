@@ -6,10 +6,11 @@ import io.reactivex.functions.Consumer;
 import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.navigator.events.Login;
 import io.viktorot.notefy.navigator.events.NavEvent;
-import io.viktorot.notefy.navigator.events.Back;
 import io.viktorot.notefy.navigator.events.Pop;
 import io.viktorot.notefy.navigator.events.Push;
+import io.viktorot.notefy.navigator.events.Replace;
 import io.viktorot.notefy.ui.details.NoteDetailsFragment;
+import io.viktorot.notefy.ui.list.NoteListFragment;
 
 public class Navigator {
 
@@ -21,6 +22,11 @@ public class Navigator {
 
     public Disposable observe(Consumer<NavEvent> consumer) {
         return this.relay.observe(consumer);
+    }
+
+    public void showNoteList() {
+        NoteListFragment fragment = NoteListFragment.newInstance();
+        relay.post(new Replace(fragment, NoteListFragment.TAG));
     }
 
     public void navigateToLogin() {
@@ -38,10 +44,6 @@ public class Navigator {
     private void navigateToDetails(@NonNull Note note) {
         NoteDetailsFragment fragment = NoteDetailsFragment.newInstance(note);
         relay.post(new Push(fragment, NoteDetailsFragment.TAG));
-    }
-
-    public void back() {
-        relay.post(new Back());
     }
 
     public void pop() {

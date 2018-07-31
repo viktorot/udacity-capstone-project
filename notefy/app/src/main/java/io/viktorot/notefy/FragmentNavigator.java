@@ -8,9 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import io.viktorot.notefy.navigator.events.NavEvent;
-import io.viktorot.notefy.navigator.events.Back;
 import io.viktorot.notefy.navigator.events.Pop;
 import io.viktorot.notefy.navigator.events.Push;
+import io.viktorot.notefy.navigator.events.Replace;
 import timber.log.Timber;
 
 public abstract class FragmentNavigator {
@@ -20,13 +20,15 @@ public abstract class FragmentNavigator {
     private final FragmentManager fragmentManager;
 
     private final int containerId;
+    private final int baseContainerId;
 
     protected LinkedList<String> localStackCopy;
 
     private LinkedList<NavEvent[]> pendingCommands = new LinkedList<>();
 
-    public FragmentNavigator(@NonNull FragmentManager fragmentManager, @IdRes int containerId) {
+    public FragmentNavigator(@NonNull FragmentManager fragmentManager, @IdRes int baseContainerId, @IdRes int containerId) {
         this.fragmentManager = fragmentManager;
+        this.baseContainerId = baseContainerId;
         this.containerId = containerId;
 
         copyStackToLocal();
@@ -66,10 +68,10 @@ public abstract class FragmentNavigator {
     protected void _applyCommand(NavEvent command) {
         if (command instanceof Push) {
             push((Push) command);
-        } else if (command instanceof Back) {
-            back((Back) command);
         } else if (command instanceof Pop) {
             pop((Pop) command);
+        } else if (command instanceof Replace) {
+            replace((Replace) command);
         }
     }
 
@@ -79,6 +81,29 @@ public abstract class FragmentNavigator {
         final int stackSize = fragmentManager.getBackStackEntryCount();
         for (int i = 0; i < stackSize; i++) {
             localStackCopy.add(fragmentManager.getBackStackEntryAt(i).getName());
+        }
+    }
+
+    protected void replace(Replace command) {
+        if (localStackCopy.size() > 0) {
+            fragmentManager.popBackStack();
+            String prevTag = localStackCopy.pop();
+
+            Timber.d("replacing => %s with => %s", prevTag, command.getTag());
+
+            fragmentManager
+                    .beginTransaction()
+                    .replace(baseContainerId, command.getFragment(), command.getTag())
+                    .addToBackStack(command.getTag())
+                    .commit();
+
+            localStackCopy.push(command.getTag());
+        } else {
+            Timber.d("replacing => %s", command.getTag());
+
+            fragmentManager.beginTransaction()
+                    .replace(baseContainerId, command.getFragment(), command.getTag())
+                    .commit();
         }
     }
 
@@ -99,34 +124,6 @@ public abstract class FragmentNavigator {
         localStackCopy.push(tag);
     }
 
-    protected void back(Back command) {
-        if (localStackCopy.size() != 0) {
-            String tag = localStackCopy.getFirst();
-            Fragment fragment = fragmentManager.findFragmentByTag(tag);
-
-            if (fragment instanceof Navigatable && !((Navigatable) fragment).onBackPressed()) {
-                return;
-            }
-
-            Timber.d("poping => %s", tag);
-
-            fragmentManager.popBackStack();
-
-            if (fragment != null) {
-                fragmentManager.beginTransaction()
-                        .remove(fragment)
-                        .commit();
-            } else {
-                Timber.v("fragment with tag => %s not found. skipping remove", tag);
-            }
-
-            localStackCopy.pop();
-
-        } else {
-            exit();
-        }
-    }
-
     protected void pop(Pop command) {
         if (localStackCopy.size() != 0) {
             String tag = localStackCopy.getFirst();
@@ -142,11 +139,18 @@ public abstract class FragmentNavigator {
                 Timber.v("fragment with tag => %s not found. skipping remove", tag);
             }
 
+            Timber.d("poping => %s", tag);
+
             localStackCopy.pop();
 
         } else {
+            Timber.v("exiting...");
             exit();
         }
+    }
+
+    public int getBackstackSize() {
+        return localStackCopy.size();
     }
 
     public abstract void exit();

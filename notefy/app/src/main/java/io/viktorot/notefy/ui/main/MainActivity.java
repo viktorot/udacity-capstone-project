@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -27,6 +28,8 @@ import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.navigator.events.Login;
 import io.viktorot.notefy.navigator.events.NavEvent;
+import io.viktorot.notefy.ui.details.NoteDetailsFragment;
+import io.viktorot.notefy.ui.list.NoteListFragment;
 import io.viktorot.notefy.util.NotificationUtils;
 import timber.log.Timber;
 
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        fragmentNavigator = new FragmentNavigator(getSupportFragmentManager(), R.id.fragment_container) {
+        fragmentNavigator = new FragmentNavigator(getSupportFragmentManager(), R.id.base_fragment_container, R.id.fragment_container) {
             @Override
             public void exit() {
                 finish();
@@ -102,11 +105,29 @@ public class MainActivity extends AppCompatActivity {
                 .getNavigator()
                 .observe(this::onNavEvent);
 
+        if (savedInstanceState == null) {
+            NotefyApplication.get(this)
+                    .getNavigator()
+                    .showNoteList();
+        } else {
+//            Fragment fragment = getSupportFragmentManager().findFragmentByTag(NoteDetailsFragment.TAG);
+//            if (fragment != null) {
+//                getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .show(fragment)
+//                        .commit();
+//            }
+        }
+
         onNewIntent(getIntent());
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@Nullable Intent intent) {
+        if (intent == null) {
+            return;
+        }
+
         Note note = intent.getParcelableExtra(NotificationUtils.NOTE_DATA);
         if (note == null) {
             Timber.w("notification note null");
@@ -130,6 +151,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         fragmentNavigator.detach();
+        // TODO: test
+        NotefyApplication.get(this).getAuthRepo().detachListener();
         super.onPause();
     }
 
@@ -154,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         NotefyApplication.get(this)
-                .getNavigator().back();
+                .getNavigator().pop();
     }
 
     private boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
@@ -191,34 +214,34 @@ public class MainActivity extends AppCompatActivity {
         } else if (action == MainViewModel.Action.ShowFilterDialog) {
             showFilterDialog();
         } else if (action == MainViewModel.Action.ShowUnauthorizedMessage) {
-            Toast.makeText(this, "[you are not logged in]", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.unauthorized), Toast.LENGTH_LONG).show();
         }
     }
 
     private void showListFragment() {
-        Fragment fragment = getSupportFragmentManager()
-                .findFragmentById(R.id.note_list_fragment);
-
-        if (fragment == null) {
-            return;
-        }
-
-        getSupportFragmentManager().beginTransaction()
-                .show(fragment)
-                .commit();
+//        Fragment fragment = getSupportFragmentManager()
+//                .findFragmentByTag(NoteListFragment.TAG);
+//
+//        if (fragment == null) {
+//            return;
+//        }
+//
+//        getSupportFragmentManager().beginTransaction()
+//                .show(fragment)
+//                .commit();
     }
 
     private void hideListFragment() {
-        Fragment fragment = getSupportFragmentManager()
-                .findFragmentById(R.id.note_list_fragment);
-
-        if (fragment == null) {
-            return;
-        }
-
-        getSupportFragmentManager().beginTransaction()
-                .hide(fragment)
-                .commit();
+//        Fragment fragment = getSupportFragmentManager()
+//                .findFragmentByTag(NoteListFragment.TAG);
+//
+//        if (fragment == null) {
+//            return;
+//        }
+//
+//        getSupportFragmentManager().beginTransaction()
+//                .hide(fragment)
+//                .commit();
     }
 
     private void openLoginMenu() {

@@ -47,6 +47,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     public static final String TAG = NoteDetailsFragment.class.getSimpleName();
 
     private static final String ARG_NOTE = "arg_note";
+    private static final String ARG_EDITED = "arg_edited";
 
     private static final int PIN_ITEM_INDEX = 0;
 
@@ -102,15 +103,20 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
         Bundle args = savedInstanceState != null ? savedInstanceState : getArguments();
         Note note = null;
+        boolean edited = false;
+
         if (args != null && args.containsKey(ARG_NOTE)) {
+            Timber.d("restoring note state");
+
             note = args.getParcelable(ARG_NOTE);
+            edited = args.getBoolean(ARG_EDITED, false);
         }
         if (note == null) {
             throw new IllegalArgumentException("note cannot be null");
         }
 
         vm = ViewModelProviders.of(this).get(NoteDetailsViewModel.class);
-        vm.init(note);
+        vm.init(note, edited);
     }
 
     @Nullable
@@ -154,7 +160,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back_white);
         toolbar.setNavigationOnClickListener(view1 -> {
-            vm.back();
+            vm.pop();
         });
 
         toolbar.inflateMenu(R.menu.details);
@@ -415,7 +421,9 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
         Note note = vm.data();
         if (note != null) {
+            Timber.d("saving note state");
             outState.putParcelable(ARG_NOTE, note);
+            outState.putBoolean(ARG_EDITED, vm.isEdited());
         }
     }
 

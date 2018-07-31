@@ -68,12 +68,14 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         notificationUtils = NotefyApplication.get(application).getNotificationUtils();
     }
 
-    void init(@Nullable Note note) {
+    void init(@Nullable Note note, boolean edited) {
         if (note == null) {
             data.setValue(Note.empty());
         } else {
             data.setValue(note);
         }
+
+        edited(edited);
 
         changesDisposable = notesRepo.noteChanges
                 .subscribe(event -> {
@@ -87,7 +89,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
                     if (event instanceof NotesRepo.Event.Added && n.isNew()) {
                         NoteDetailsViewModel.this.data.setValue(event.data());
                         notificationUtils.notify(event.data());
-                        pop();
+                        //pop();
                     } else if (event instanceof NotesRepo.Event.Changed && !n.isNew() && n.getKey().equals(event.data().getKey())) {
                         NoteDetailsViewModel.this.data.setValue(event.data());
                         notificationUtils.notify(event.data());
@@ -220,10 +222,6 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
     void pop() {
         navigator.pop();
-    }
-
-    void back() {
-        navigator.back();
     }
 
     void togglePinnedState() {
