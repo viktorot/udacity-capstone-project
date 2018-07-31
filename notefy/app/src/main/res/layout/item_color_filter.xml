@@ -6,5 +6,5 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:chipIconEnabled="true"
-    app:checkedIcon="@drawable/ic_chip_color_icon_active"
+    app:checkedIcon="@drawable/ic_chip_active_white"
     />

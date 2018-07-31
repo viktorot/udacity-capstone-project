@@ -1,6 +1,7 @@
 package io.viktorot.notefy.ui.details;
 
 import android.app.Application;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.DrawableRes;
@@ -111,6 +112,11 @@ public class NoteDetailsViewModel extends AndroidViewModel {
     private void notifyDataChange() {
         Note note = data.getValue();
         data.setValue(note);
+    }
+
+    @Nullable
+    Note data() {
+        return data.getValue();
     }
 
     boolean isEdited() {

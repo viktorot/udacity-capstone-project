@@ -5,7 +5,7 @@
     style="@style/Widget.MaterialComponents.Chip.Filter"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:checkedIcon="@drawable/ic_chip_icon"
+    app:checkedIcon="@drawable/ic_chip_active_white"
     app:chipBackgroundColor="@color/chip_tag_bg"
     app:chipIcon="@drawable/ic_chip_icon"
     app:chipIconEnabled="true" />

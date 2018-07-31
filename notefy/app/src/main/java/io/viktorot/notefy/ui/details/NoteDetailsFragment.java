@@ -100,7 +100,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
         tagRepo = NotefyApplication.get(requireContext()).getTagRepo();
 
-        Bundle args = getArguments();
+        Bundle args = savedInstanceState != null ? savedInstanceState : getArguments();
         Note note = null;
         if (args != null && args.containsKey(ARG_NOTE)) {
             note = args.getParcelable(ARG_NOTE);
@@ -366,10 +366,10 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
     private void showDeleteConfirmationDialog() {
         new MaterialDialog.Builder(requireContext())
-                .title("[delete]")
-                .content("[are you sure you want to delete this note?]")
-                .positiveText("[yes]")
-                .negativeText("[no]")
+                .title(R.string.dialog_delete_title)
+                .content(R.string.dialog_delete_content)
+                .positiveText(R.string.dialog_delete_confirm)
+                .negativeText(R.string.dialog_no)
                 .onPositive((dialog, which) -> {
                     vm.delete();
                 })
@@ -378,10 +378,10 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
     private void showSaveConfirmationDialog() {
         new MaterialDialog.Builder(requireContext())
-                .title("[save]")
-                .content("[do you want to save changes?]")
-                .positiveText("[yes]")
-                .negativeText("[no]")
+                .title(R.string.dialog_save_title)
+                .content(R.string.dialog_save_content)
+                .positiveText(R.string.dialog_save_confirm)
+                .negativeText(R.string.dialog_no)
                 .onPositive((dialog, which) -> {
                     vm.save();
                 })
@@ -397,7 +397,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         hideProgressDialog();
 
         progressDialog = new MaterialDialog.Builder(requireContext())
-                .title("[updating]")
+                .title(R.string.dialog_saving_title)
                 .progress(true, 0)
                 .show();
     }
@@ -406,6 +406,16 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         if (progressDialog != null) {
             progressDialog.hide();
             progressDialog = null;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Note note = vm.data();
+        if (note != null) {
+            outState.putParcelable(ARG_NOTE, note);
         }
     }
 
