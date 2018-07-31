@@ -4,6 +4,8 @@
     <string name="notes_notification_channel_id" translatable="false">note</string>
     <string name="notes_notification_channel_name">Notes</string>
 
+    <string name="no_notes_available">No notes available</string>
+
     <string-array name="tags">
         <item>ToDo</item>
         <item>Shopping</item>
