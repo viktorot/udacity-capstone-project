@@ -51,6 +51,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     private static final String ARG_EDITED = "arg_edited";
 
     private static final int PIN_ITEM_INDEX = 0;
+    private static final int DELETE_ITEM_INDEX = 3;
 
     private static final int FOCUS_NONE = 0;
     private static final int FOCUS_TITLE = 1;
@@ -85,6 +86,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     private View editorToolbar;
 
     private MenuItem pinMenuItem;
+    private MenuItem deleteMenuItem;
 
     private int focus = FOCUS_NONE;
 
@@ -178,6 +180,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         toolbar.setOnMenuItemClickListener(this::onMenuItemClick);
 
         pinMenuItem = toolbar.getMenu().getItem(PIN_ITEM_INDEX);
+        deleteMenuItem = toolbar.getMenu().getItem(DELETE_ITEM_INDEX);
 
         imgIcon = view.findViewById(R.id.icon);
         imgIcon.setColorFilter(Color.WHITE);
@@ -338,6 +341,8 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             hideProgressDialog();
         } else if (action == NoteDetailsViewModel.Action.ShowEmptyTitleError) {
             Toast.makeText(requireContext(), "[title must be set before saving note]", Toast.LENGTH_LONG).show();
+        } else if (action == NoteDetailsViewModel.Action.HideDelete) {
+            deleteMenuItem.setVisible(false);
         }
     }
 

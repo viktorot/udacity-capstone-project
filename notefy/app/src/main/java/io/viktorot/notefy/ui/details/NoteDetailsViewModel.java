@@ -1,17 +1,14 @@
 package io.viktorot.notefy.ui.details;
 
 import android.app.Application;
-import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.util.Pair;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.viktorot.notefy.Navigator;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.data.Note;
@@ -33,7 +30,9 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         ShowDeleteConfirmation,
 
         ShowProgress,
-        HideProgress
+        HideProgress,
+
+        HideDelete
     }
 
     enum Change {
@@ -70,9 +69,13 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
     void init(@Nullable Note note, boolean edited) {
         if (note == null) {
-            data.setValue(Note.empty());
-        } else {
-            data.setValue(note);
+            note = Note.empty();
+        }
+
+        this.data.setValue(note);
+
+        if (note.isNew()) {
+            dispatchAction(Action.HideDelete);
         }
 
         edited(edited);
