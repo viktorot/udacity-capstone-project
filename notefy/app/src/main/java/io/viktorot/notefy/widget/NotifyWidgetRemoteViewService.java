@@ -13,6 +13,8 @@ import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.repo.ColorRepo;
+import io.viktorot.notefy.ui.main.MainActivity;
+import io.viktorot.notefy.util.NotificationUtils;
 
 public class NotifyWidgetRemoteViewService extends RemoteViewsService {
 
@@ -55,6 +57,10 @@ public class NotifyWidgetRemoteViewService extends RemoteViewsService {
                 views.setInt(R.id.root, "setBackgroundColor", Color.parseColor(note.getColor()));
                 views.setTextViewText(R.id.title, note.getTitle());
                 views.setTextViewText(R.id.content, Html.fromHtml(note.getContent()));
+
+                Intent fillIntent = new Intent();
+                fillIntent.putExtra(NotificationUtils.NOTE_DATA, note);
+                views.setOnClickFillInIntent(R.id.root, fillIntent);
 
                 return views;
             }
