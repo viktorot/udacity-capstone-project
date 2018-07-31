@@ -4,5 +4,7 @@
     <dimen name="spacing_small">8dp</dimen>
     <dimen name="spacing_large">16dp</dimen>
 
+    <dimen name="list_padding">0dp</dimen>
+
     <dimen name="editor_toolbar_height">50dp</dimen>
 </resources>

@@ -4,7 +4,6 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_gray"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -22,12 +21,15 @@
         android:layout_below="@id/toolbar"
         android:background="@color/dark_gray"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:paddingStart="@dimen/list_padding"
+        android:paddingEnd="@dimen/list_padding">
 
         <LinearLayout
             android:id="@+id/holder"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/dark_gray"
             android:clickable="true"
             android:focusable="true"
             android:orientation="vertical"
@@ -61,6 +63,7 @@
                 android:layout_marginBottom="10dp"
                 android:drawableStart="@drawable/ic_tag"
                 android:drawablePadding="10dp"
+                android:paddingStart="@dimen/spacing_small"
                 android:gravity="center_vertical"
                 android:textColor="@color/white"
                 android:visibility="gone" />

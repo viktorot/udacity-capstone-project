@@ -46,7 +46,7 @@ public class ColorDialog extends NotefyBottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_icon_list, container, false);
+        View view = inflater.inflate(R.layout.dialog_color_list, container, false);
 
         GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), COLUMN_COUNT);
         layoutManager.setSpanSizeLookup(adapter.getSpanSizeLookup());
