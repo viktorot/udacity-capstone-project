@@ -219,29 +219,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showListFragment() {
-//        Fragment fragment = getSupportFragmentManager()
-//                .findFragmentByTag(NoteListFragment.TAG);
-//
-//        if (fragment == null) {
-//            return;
-//        }
-//
-//        getSupportFragmentManager().beginTransaction()
-//                .show(fragment)
-//                .commit();
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(NoteListFragment.TAG);
+
+        if (fragment == null) {
+            return;
+        }
+
+        getSupportFragmentManager().beginTransaction()
+                .show(fragment)
+                .commit();
     }
 
     private void hideListFragment() {
-//        Fragment fragment = getSupportFragmentManager()
-//                .findFragmentByTag(NoteListFragment.TAG);
-//
-//        if (fragment == null) {
-//            return;
-//        }
-//
-//        getSupportFragmentManager().beginTransaction()
-//                .hide(fragment)
-//                .commit();
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(NoteListFragment.TAG);
+
+        if (fragment == null) {
+            return;
+        }
+
+        getSupportFragmentManager().beginTransaction()
+                .hide(fragment)
+                .commit();
     }
 
     private void openLoginMenu() {

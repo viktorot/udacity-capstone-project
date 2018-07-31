@@ -160,7 +160,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back_white);
         toolbar.setNavigationOnClickListener(view1 -> {
-            vm.pop();
+            vm.close();
         });
 
         toolbar.inflateMenu(R.menu.details);
@@ -283,6 +283,8 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
         StatusBarUtils.setColor(requireActivity(),
                 ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark));
+
+        hideProgressDialog();
 
         super.onDestroyView();
     }

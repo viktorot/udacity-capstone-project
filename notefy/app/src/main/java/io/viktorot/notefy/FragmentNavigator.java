@@ -129,7 +129,13 @@ public abstract class FragmentNavigator {
             String tag = localStackCopy.getFirst();
             Fragment fragment = fragmentManager.findFragmentByTag(tag);
 
+            if (!command.isForce() && fragment instanceof Navigatable && !((Navigatable) fragment).onBackPressed()) {
+                return;
+            }
+
             fragmentManager.popBackStack();
+
+            Timber.d("poping => %s", tag);
 
             if (fragment != null) {
                 fragmentManager.beginTransaction()
@@ -138,8 +144,6 @@ public abstract class FragmentNavigator {
             } else {
                 Timber.v("fragment with tag => %s not found. skipping remove", tag);
             }
-
-            Timber.d("poping => %s", tag);
 
             localStackCopy.pop();
 

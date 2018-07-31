@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -119,10 +120,12 @@ public class Note implements Parcelable {
         this.pinned = pinned;
     }
 
+    @Exclude
     public boolean isNew() {
         return TextUtils.isEmpty(getKey());
     }
 
+    @Exclude
     public Map<String, Object> getUpdateMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("color", getColor());
@@ -135,6 +138,7 @@ public class Note implements Parcelable {
         return result;
     }
 
+    @Exclude
     public Map<String, Object> getPinUpdateMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("pinned", isPinned());

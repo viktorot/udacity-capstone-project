@@ -47,6 +47,10 @@ public class Navigator {
     }
 
     public void pop() {
-        relay.post(new Pop());
+        pop(false);
+    }
+
+    public void pop(boolean force) {
+        relay.post(new Pop(force));
     }
 }

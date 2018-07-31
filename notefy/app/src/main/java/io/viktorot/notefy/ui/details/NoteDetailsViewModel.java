@@ -86,11 +86,11 @@ public class NoteDetailsViewModel extends AndroidViewModel {
                         return;
                     }
 
-                    if (event instanceof NotesRepo.Event.Added && change == Change.Pin && n.isNew()) {
+                    if (event instanceof NotesRepo.Event.Added && change == Change.Content && n.isNew()) {
                         NoteDetailsViewModel.this.data.setValue(event.data());
                         notificationUtils.notify(event.data());
                         pop();
-                    } else if (event instanceof NotesRepo.Event.Changed && !n.isNew() && n.getKey().equals(event.data().getKey())) {
+                    } else if (event instanceof NotesRepo.Event.Changed && !n.isNew() && change != null && n.getKey().equals(event.data().getKey())) {
                         NoteDetailsViewModel.this.data.setValue(event.data());
                         notificationUtils.notify(event.data());
                         if (change == Change.Pin) {
@@ -220,8 +220,12 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         dispatchAction(Action.ShowDeleteConfirmation);
     }
 
-    void pop() {
+    void close() {
         navigator.pop();
+    }
+
+    void pop() {
+        navigator.pop(true);
     }
 
     void togglePinnedState() {
