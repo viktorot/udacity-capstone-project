@@ -30,7 +30,7 @@
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
-        <receiver android:name=".widget.NotifyWidget">
+        <receiver android:name=".widget.NotifyWidgetProvider">
 
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

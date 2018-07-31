@@ -17,7 +17,7 @@ import io.viktorot.notefy.repo.NotesRepo;
 import io.viktorot.notefy.repo.IconRepo;
 import io.viktorot.notefy.repo.TagRepo;
 import io.viktorot.notefy.util.NotificationUtils;
-import io.viktorot.notefy.widget.NotifyWidget;
+import io.viktorot.notefy.widget.NotifyWidgetProvider;
 import timber.log.Timber;
 
 public class NotefyApplication extends Application {
@@ -56,12 +56,12 @@ public class NotefyApplication extends Application {
     }
 
     public void updateWidgets() {
-        Intent intent = new Intent(this, NotifyWidget.class);
+        Intent intent = new Intent(this, NotifyWidgetProvider.class);
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 
         int[] ids = AppWidgetManager
                 .getInstance(this)
-                .getAppWidgetIds(new ComponentName(this, NotifyWidget.class));
+                .getAppWidgetIds(new ComponentName(this, NotifyWidgetProvider.class));
 
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         this.sendBroadcast(intent);

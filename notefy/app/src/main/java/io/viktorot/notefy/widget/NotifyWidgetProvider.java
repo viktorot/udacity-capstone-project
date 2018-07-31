@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import java.util.Collections;
 import java.util.List;
 
 import androidx.core.app.TaskStackBuilder;
@@ -18,7 +17,7 @@ import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.ui.main.MainActivity;
 
-public class NotifyWidget extends AppWidgetProvider {
+public class NotifyWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -58,7 +57,7 @@ public class NotifyWidget extends AppWidgetProvider {
     private void updateList(Context context) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         int appWidgetIds[] = appWidgetManager.getAppWidgetIds(
-                new ComponentName(context, NotifyWidget.class));
+                new ComponentName(context, NotifyWidgetProvider.class));
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.list);
     }
 
