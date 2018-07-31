@@ -1,5 +1,6 @@
 package io.viktorot.notefy.ui.main;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -73,9 +74,10 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
         ChipGroup colorGroup = view.findViewById(R.id.group_color);
         colorGroup.setSingleSelection(true);
 
+
         for (int i = 0; i < ColorRepo.COLORS.size(); i++) {
             String colorHash = ColorRepo.getColor(i);
-            Chip chip = (Chip) inflater.inflate(R.layout.item_color_filter, colorGroup, false);
+            final Chip chip = (Chip) inflater.inflate(R.layout.item_color_filter, colorGroup, false);
             chip.setId(i);
             chip.setText(colorHash, TextView.BufferType.NORMAL);
 
@@ -85,6 +87,17 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
             DrawableCompat.setTint(icon, Color.parseColor(colorHash));
             chip.setChipIcon(icon);
 
+            chip.setChipBackgroundColor(new ColorStateList(
+                    new int[][]{
+                            new int[]{android.R.attr.state_checked},
+                            new int[]{}
+                    },
+                    new int[]{
+                            Color.parseColor(colorHash),
+                            ContextCompat.getColor(requireContext(), R.color.chip)
+                    }
+            ));
+
             colorGroup.addView(chip);
         }
 
@@ -93,9 +106,6 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
             onColorClick(index);
         });
 
-
-
-        // TODO: set selected color
         ChipGroup tagGroup = view.findViewById(R.id.group_tag);
         tagGroup.setSingleSelection(true);
 
@@ -132,14 +142,12 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
         if (callback != null) {
             callback.onColorSelected(color);
         }
-        //dismiss();
     }
 
     private void onTagClick(int id) {
         if (callback != null) {
             callback.onTagSelected(id);
         }
-        //dismiss();
     }
 
     public static class Builder {
@@ -184,6 +192,7 @@ public class FilterDialog extends NotefyBottomSheetDialogFragment {
 
     public interface Callback {
         void onColorSelected(@NonNull String color);
+
         void onTagSelected(int id);
     }
 }
