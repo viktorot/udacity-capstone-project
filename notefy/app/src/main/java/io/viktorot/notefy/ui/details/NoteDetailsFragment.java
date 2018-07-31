@@ -200,9 +200,9 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             }
         });
 
-        scrollView.setOnClickListener(view16 -> {
-            Timber.v("scroll click");
-        });
+//        scrollView.setOnClickListener(view16 -> {
+//            Timber.v("scroll click");
+//        });
 
         holder.setOnClickListener(view15 -> {
             KeyboardUtils.hideKeyboard(requireActivity());

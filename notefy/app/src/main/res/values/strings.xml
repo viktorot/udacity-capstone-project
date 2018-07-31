@@ -10,6 +10,15 @@
     <string name="filter_title">FILTERS</string>
     <string name="tags_title">TAGS</string>
     <string name="colors_title">COLORS</string>
+    <string name="icons_title">ICONS</string>
+
+    <string name="title_hint">Title</string>
+    <string name="content_hint">Content</string>
+
+    <string name="action_pin">Pin note</string>
+    <string name="action_tag">Change note tag</string>
+    <string name="action_color">Change note color</string>
+    <string name="action_delete">Delete note</string>
 
     <string name="no_notes_available">No notes available</string>
 
