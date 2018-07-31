@@ -25,17 +25,22 @@ public class NotifyWidget extends AppWidgetProvider {
     private void update(Context context, AppWidgetManager manager, int widgetId) {
         List<Note> notes = Collections.emptyList();
 
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_note);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_note_list);
 
-        if (notes == null || notes.isEmpty()) {
-            views.setViewVisibility(R.id.empty, View.VISIBLE);
-            views.setTextViewText(R.id.empty, context.getString(R.string.no_notes_available));
-            views.setViewVisibility(R.id.list, View.GONE);
-        } else {
-            views.setViewVisibility(R.id.empty, View.GONE);
-            views.setViewVisibility(R.id.list, View.VISIBLE);
-            views.setRemoteAdapter(R.id.list, new Intent(context, NoteWidgetRemoteViewService.class));
-        }
+//        if (notes == null || notes.isEmpty()) {
+//            views.setViewVisibility(R.id.empty, View.VISIBLE);
+//            views.setTextViewText(R.id.empty, context.getString(R.string.no_notes_available));
+//            views.setViewVisibility(R.id.list, View.GONE);
+//        } else {
+//            views.setViewVisibility(R.id.empty, View.GONE);
+//            views.setViewVisibility(R.id.list, View.VISIBLE);
+//            views.setRemoteAdapter(R.id.list, new Intent(context, NotifyWidgetRemoteViewService.class));
+//        }
+
+        views.setViewVisibility(R.id.empty, View.GONE);
+        views.setViewVisibility(R.id.list, View.VISIBLE);
+        views.setViewVisibility(R.id.title, View.VISIBLE);
+        views.setRemoteAdapter(R.id.list, new Intent(context, NotifyWidgetRemoteViewService.class));
 
         manager.updateAppWidget(widgetId, views);
     }

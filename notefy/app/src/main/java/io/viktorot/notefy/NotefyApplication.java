@@ -1,7 +1,10 @@
 package io.viktorot.notefy;
 
 import android.app.Application;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -14,12 +17,26 @@ import io.viktorot.notefy.repo.NotesRepo;
 import io.viktorot.notefy.repo.IconRepo;
 import io.viktorot.notefy.repo.TagRepo;
 import io.viktorot.notefy.util.NotificationUtils;
+import io.viktorot.notefy.widget.NotifyWidget;
 import timber.log.Timber;
 
 public class NotefyApplication extends Application {
 
     public static NotefyApplication get(@NonNull Context context) {
         return (NotefyApplication) context.getApplicationContext();
+    }
+
+    public static void updateWidgets(Context context) {
+        Application app = (Application) context.getApplicationContext();
+        Intent intent = new Intent(app, NotifyWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
+        int[] ids = AppWidgetManager
+                .getInstance(app)
+                .getAppWidgetIds(new ComponentName(app, NotifyWidget.class));
+
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        app.sendBroadcast(intent);
     }
 
     private Navigator navigator;

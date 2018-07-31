@@ -1,15 +1,18 @@
 package io.viktorot.notefy.widget;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;
+import io.viktorot.notefy.repo.ColorRepo;
 
-public class NoteWidgetRemoteViewService extends RemoteViewsService {
+public class NotifyWidgetRemoteViewService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -25,7 +28,19 @@ public class NoteWidgetRemoteViewService extends RemoteViewsService {
             @Override
             public void onDataSetChanged() {
                 // TODO: get note list
-                //recipe = Prefs.getFavRecipe(getApplicationContext());
+                Note n1 = new Note();
+                n1.setTitle("11");
+                n1.setContent("22");
+                n1.setColor(ColorRepo.getColor(2));
+
+                Note n2 = new Note();
+                n2.setTitle("11");
+                n2.setContent("22");
+                n2.setColor(ColorRepo.getColor(3));
+
+                notes = new ArrayList<>();
+                notes.add(n1);
+                notes.add(n2);
             }
 
             @Override
