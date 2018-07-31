@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -51,6 +52,10 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
     private static final int PIN_ITEM_INDEX = 0;
 
+    private static final int FOCUS_NONE = 0;
+    private static final int FOCUS_TITLE = 1;
+    private static final int FOCUS_CONTENT = 2;
+
     public static NoteDetailsFragment newInstance(@NonNull Note note) {
         Bundle args = new Bundle();
         args.putParcelable(ARG_NOTE, note);
@@ -80,6 +85,8 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
     private View editorToolbar;
 
     private MenuItem pinMenuItem;
+
+    private int focus = FOCUS_NONE;
 
     private final Observer<NoteDetailsViewModel.Action> actionObserver = action -> {
         if (action == null) {
@@ -148,7 +155,11 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
                 .distinctUntilChanged()
                 .subscribe(visible -> {
                     Timber.v("keyboard visible => %b", visible);
-                    if (!visible) {
+                    if (visible) {
+                        if (focus == FOCUS_CONTENT) {
+                            ViewUtils.show(editorToolbar);
+                        }
+                    } else {
                         tvTitle.clearFocus();
                         tvContent.clearFocus();
                     }
@@ -206,10 +217,6 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
             }
         });
 
-//        scrollView.setOnClickListener(view16 -> {
-//            Timber.v("scroll click");
-//        });
-
         holder.setOnClickListener(view15 -> {
             KeyboardUtils.hideKeyboard(requireActivity());
         });
@@ -217,17 +224,28 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         tvTitle.setOnFocusChangeListener((view14, hasFocus) -> {
             if (!hasFocus) {
                 KeyboardUtils.hideKeyboard(requireActivity(), view14);
+                ViewUtils.hide(editorToolbar);
+                focus = FOCUS_NONE;
+            } else {
+                ViewUtils.hide(editorToolbar);
+                focus = FOCUS_TITLE;
             }
         });
 
         tvContent.setOnFocusChangeListener((view12, hasFocus) -> {
             if (!hasFocus) {
                 KeyboardUtils.hideKeyboard(requireActivity(), view12);
+                ViewUtils.hide(editorToolbar);
+                focus = FOCUS_NONE;
+            } else {
+                focus = FOCUS_CONTENT;
             }
         });
 
         tvTag = view.findViewById(R.id.tag);
+
         editorToolbar = view.findViewById(R.id.editor_toolbar);
+        ViewUtils.hide(editorToolbar);
 
         ImageButton btnBold = view.findViewById(R.id.bold);
         btnBold.setOnClickListener(view1 -> {
