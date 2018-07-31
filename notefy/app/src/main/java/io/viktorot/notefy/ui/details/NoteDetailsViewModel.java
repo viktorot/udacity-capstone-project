@@ -86,10 +86,10 @@ public class NoteDetailsViewModel extends AndroidViewModel {
                         return;
                     }
 
-                    if (event instanceof NotesRepo.Event.Added && n.isNew()) {
+                    if (event instanceof NotesRepo.Event.Added && change == Change.Pin && n.isNew()) {
                         NoteDetailsViewModel.this.data.setValue(event.data());
                         notificationUtils.notify(event.data());
-                        //pop();
+                        pop();
                     } else if (event instanceof NotesRepo.Event.Changed && !n.isNew() && n.getKey().equals(event.data().getKey())) {
                         NoteDetailsViewModel.this.data.setValue(event.data());
                         notificationUtils.notify(event.data());
