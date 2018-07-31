@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -28,7 +29,7 @@ import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.navigator.events.Login;
 import io.viktorot.notefy.navigator.events.NavEvent;
-import io.viktorot.notefy.ui.details.NoteDetailsFragment;
+import io.viktorot.notefy.repo.TagRepo;
 import io.viktorot.notefy.ui.list.NoteListFragment;
 import io.viktorot.notefy.util.NotificationUtils;
 import timber.log.Timber;
@@ -36,6 +37,9 @@ import timber.log.Timber;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
+
+    private static final String ARG_COLOR_FILTER = "arg_color_filter";
+    private static final String ARG_TAG_FILTER = "arg_tag_filter";
 
     public static final int RESULT_CODE_LOGIN = 1;
 
@@ -110,6 +114,12 @@ public class MainActivity extends AppCompatActivity {
                     .getNavigator()
                     .showNoteList();
         } else {
+            String color = savedInstanceState.getString(ARG_COLOR_FILTER, "");
+            vm.onColorFilterSelected(color);
+
+            int tag = savedInstanceState.getInt(ARG_TAG_FILTER, TagRepo.ID_NONE);
+            vm.onTagFilterSelected(tag);
+
 //            Fragment fragment = getSupportFragmentManager().findFragmentByTag(NoteDetailsFragment.TAG);
 //            if (fragment != null) {
 //                getSupportFragmentManager()
@@ -286,5 +296,14 @@ public class MainActivity extends AppCompatActivity {
                         .setAvailableProviders(providers)
                         .build(),
                 RESULT_CODE_LOGIN);
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(ARG_COLOR_FILTER, vm.getActiveColorFilter());
+        outState.putInt(ARG_TAG_FILTER, vm.getActiveTagFilter());
     }
 }
