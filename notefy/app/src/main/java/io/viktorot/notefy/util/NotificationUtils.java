@@ -60,8 +60,7 @@ public class NotificationUtils {
         builder.setSmallIcon(iconRepo.getIconRes(note.getIconId()));
         builder.setContentTitle(note.getTitle());
         if (!TextUtils.isEmpty(note.getContent())) {
-            //builder.setContentText(Html.fromHtml(note.getContent()));
-            builder.setContentText(note.getContent());
+            builder.setContentText(Html.fromHtml(note.getContent()).toString());
         }
         builder.setContentIntent(pendingIntent);
 
