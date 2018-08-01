@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -32,6 +33,7 @@ import io.viktorot.notefy.navigator.events.NavEvent;
 import io.viktorot.notefy.repo.TagRepo;
 import io.viktorot.notefy.ui.list.NoteListFragment;
 import io.viktorot.notefy.util.NotificationUtils;
+import io.viktorot.notefy.util.ViewUtils;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private FragmentNavigator fragmentNavigator;
 
     private MainViewModel vm;
+
+    private TextView tvBanner;
 
     private MenuItem filterMenuItem;
 
@@ -100,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(view -> {
             vm.newNote();
         });
+
+        tvBanner = findViewById(R.id.banner);
 
         vm = ViewModelProviders.of(this).get(MainViewModel.class);
         vm.state.observe(this, this.stateObserver);
@@ -201,8 +207,10 @@ public class MainActivity extends AppCompatActivity {
         if (state == MainViewModel.State.Authorized) {
             showListFragment();
             filterMenuItem.setVisible(true);
+            ViewUtils.hide(tvBanner);
         } else if (state == MainViewModel.State.Unauthorized) {
             hideListFragment();
+            ViewUtils.show(tvBanner);
             filterMenuItem.setVisible(false);
         }
     }

@@ -13,17 +13,27 @@
         tools:context=".ui.main.MainActivity">
 
         <!--<fragment-->
-            <!--android:id="@+id/note_list_fragment"-->
-            <!--android:name="io.viktorot.notefy.ui.list.NoteListFragment"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginBottom="?android:attr/actionBarSize" />-->
+        <!--android:id="@+id/note_list_fragment"-->
+        <!--android:name="io.viktorot.notefy.ui.list.NoteListFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginBottom="?android:attr/actionBarSize" />-->
 
         <FrameLayout
             android:id="@+id/base_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="?android:attr/actionBarSize" />
+
+        <TextView
+            android:id="@+id/banner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="?android:attr/actionBarSize"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textSize="32sp"
+            android:textStyle="bold" />
 
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/app_bar"
