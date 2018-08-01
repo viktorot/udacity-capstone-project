@@ -117,6 +117,8 @@ public abstract class FragmentNavigator {
         Timber.d("pushing => %s", command.getTag());
 
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.animator.enter, R.animator.exit,
+                        R.animator.enter, R.animator.exit)
                 .add(containerId, fragment, tag)
                 .addToBackStack(tag)
                 .commit();
