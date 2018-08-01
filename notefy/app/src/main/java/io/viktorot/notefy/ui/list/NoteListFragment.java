@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.xwray.groupie.Group;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.Item;
 import com.xwray.groupie.OnItemClickListener;
@@ -52,6 +53,7 @@ public class NoteListFragment extends Fragment {
         if (notes == null) {
             return;
         }
+
         onNoteListChanged(notes);
     };
 
@@ -66,6 +68,8 @@ public class NoteListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         vm = ViewModelProviders.of(this).get(NoteListViewModel.class);
+
+        section.setHideWhenEmpty(true);
 
         adapter.add(section);
         adapter.setOnItemClickListener((item, view) -> {
@@ -98,7 +102,7 @@ public class NoteListFragment extends Fragment {
             ViewUtils.hide(recycler);
             ViewUtils.show(progress);
         } else if (state == NoteListViewModel.State.Empty) {
-            ViewUtils.hide(recycler);
+            //ViewUtils.hide(recycler);
             ViewUtils.hide(progress);
             ViewUtils.show(tvEmpty);
         } else if (state == NoteListViewModel.State.Data) {
