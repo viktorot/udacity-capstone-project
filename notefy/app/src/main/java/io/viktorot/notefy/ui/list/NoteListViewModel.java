@@ -34,7 +34,7 @@ public class NoteListViewModel extends AndroidViewModel {
     private final NotesRepo notesRepo;
 
     private final ArrayList<Note> _notes = new ArrayList<>();
-    MutableLiveData<List<Note>> notes = new MutableLiveData<>();
+    MutableLiveData<List<NoteListViewItem>> notes = new MutableLiveData<>();
 
     private final FilterRelay filterRelay;
 
@@ -128,7 +128,34 @@ public class NoteListViewModel extends AndroidViewModel {
             setState(State.Data);
         }
 
-        this.notes.setValue(notes);
+        List<NoteListViewItem> oldItems = this.notes.getValue();
+
+        if (oldItems == null) {
+            ArrayList<NoteListViewItem> viewItems = new ArrayList<>();
+            for (Note note : notes) {
+                viewItems.add(new NoteListViewItem(getApplication(), note));
+            }
+            this.notes.setValue(viewItems);
+        } else {
+            ArrayList<NoteListViewItem> latestItems = new ArrayList<>();
+            for (Note note : notes) {
+                int found = -1;
+                for (int i = 0; i < oldItems.size(); i++) {
+                    NoteListViewItem oldItem = oldItems.get(0);
+                    if (oldItem.getData().equals(note)) {
+                        found = i;
+                        break;
+                    }
+                }
+
+                if (found > -1) {
+                    latestItems.add(oldItems.get(found));
+                } else {
+                    latestItems.add(new NoteListViewItem(getApplication(), note));
+                }
+            }
+            this.notes.setValue(latestItems);
+        }
     }
 
     private void onNoteEvent(NotesRepo.Event event) {
@@ -147,40 +174,40 @@ public class NoteListViewModel extends AndroidViewModel {
     }
 
     private void onNoteAdded(@NonNull Note note) {
-        _notes.add(note);
-        notes.setValue(_notes);
-
-        setState(State.Data);
+//        _notes.add(note);
+//        notes.setValue(_notes);
+//
+//        setState(State.Data);
     }
 
     private void onNoteChanged(@NonNull Note note) {
-        int index = _notes.indexOf(note);
-        if (index == -1) {
-            Timber.w("note not found");
-            return;
-        }
-
-        _notes.set(index, note);
-        notes.setValue(_notes);
-
-        setState(State.Data);
+//        int index = _notes.indexOf(note);
+//        if (index == -1) {
+//            Timber.w("note not found");
+//            return;
+//        }
+//
+//        _notes.set(index, note);
+//        notes.setValue(_notes);
+//
+//        setState(State.Data);
     }
 
     private void onNoteRemoved(@NonNull Note note) {
-        int index = _notes.indexOf(note);
-        if (index == -1) {
-            Timber.w("note not found");
-            return;
-        }
-
-        _notes.remove(index);
-        notes.setValue(_notes);
-
-        if (_notes.size() == 0) {
-            setState(State.Empty);
-        } else {
-            setState(State.Data);
-        }
+//        int index = _notes.indexOf(note);
+//        if (index == -1) {
+//            Timber.w("note not found");
+//            return;
+//        }
+//
+//        _notes.remove(index);
+//        notes.setValue(_notes);
+//
+//        if (_notes.size() == 0) {
+//            setState(State.Empty);
+//        } else {
+//            setState(State.Data);
+//        }
     }
 
     @Override

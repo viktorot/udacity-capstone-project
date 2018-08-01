@@ -48,7 +48,7 @@ public class NoteListFragment extends Fragment {
     private final GroupAdapter adapter = new GroupAdapter();
     private final Section section = new Section();
 
-    private final Observer<List<Note>> notesObserver = notes -> {
+    private final Observer<List<NoteListViewItem>> notesObserver = notes -> {
         if (notes == null) {
             return;
         }
@@ -108,12 +108,7 @@ public class NoteListFragment extends Fragment {
         }
     }
 
-    private void onNoteListChanged(@NonNull List<Note> notes) {
-        Timber.d("note list changed");
-        ArrayList<NoteListViewItem> viewItems = new ArrayList<>();
-        for (Note note : notes) {
-            viewItems.add(new NoteListViewItem(requireContext(), note));
-        }
-        section.update(viewItems);
+    private void onNoteListChanged(@NonNull List<NoteListViewItem> notes) {
+        section.update(notes);
     }
 }
