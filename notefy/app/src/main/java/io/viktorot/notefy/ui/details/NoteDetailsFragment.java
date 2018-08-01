@@ -340,7 +340,7 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         } else if (action == NoteDetailsViewModel.Action.HideProgress) {
             hideProgressDialog();
         } else if (action == NoteDetailsViewModel.Action.ShowEmptyTitleError) {
-            Toast.makeText(requireContext(), "[title must be set before saving note]", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireContext(), getResources().getString(R.string.title_required), Toast.LENGTH_LONG).show();
         } else if (action == NoteDetailsViewModel.Action.HideDelete) {
             deleteMenuItem.setVisible(false);
         }

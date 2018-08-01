@@ -31,7 +31,7 @@
         android:id="@+id/empty_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="[empty]"
+        android:text="@string/no_notes_available"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
