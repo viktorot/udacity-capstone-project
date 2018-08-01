@@ -291,7 +291,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             return;
         }
 
-        Timber.v("title => %s", title);
+        //Timber.v("title => %s", title);
 
         edited();
 
@@ -309,7 +309,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
             return;
         }
 
-        Timber.v("content => %s", content);
+        //Timber.v("content => %s", content);
 
         edited();
 

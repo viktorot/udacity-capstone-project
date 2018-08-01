@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;
 import io.viktorot.notefy.util.ViewUtils;
+import timber.log.Timber;
 
 public class NoteListFragment extends Fragment {
 
@@ -108,6 +109,7 @@ public class NoteListFragment extends Fragment {
     }
 
     private void onNoteListChanged(@NonNull List<Note> notes) {
+        Timber.d("note list changed");
         ArrayList<NoteListViewItem> viewItems = new ArrayList<>();
         for (Note note : notes) {
             viewItems.add(new NoteListViewItem(requireContext(), note));

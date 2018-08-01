@@ -82,6 +82,14 @@ class NoteListViewItem extends Item<NoteListViewItem.ViewHolder> {
         return R.layout.item_note_list;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NoteListViewItem iv = (NoteListViewItem) o;
+        return iv.data.equals(this.data);
+    }
+
     class ViewHolder extends com.xwray.groupie.ViewHolder {
         final TextView tvTitle;
         final KnifeTextView tvContent;

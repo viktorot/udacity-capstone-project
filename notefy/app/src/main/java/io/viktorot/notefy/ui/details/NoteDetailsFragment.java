@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -164,6 +165,9 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
                     } else {
                         tvTitle.clearFocus();
                         tvContent.clearFocus();
+
+                        focus = FOCUS_NONE;
+                        ViewUtils.hide(editorToolbar);
                     }
                 });
 
@@ -222,13 +226,12 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
         holder.setOnClickListener(view15 -> {
             KeyboardUtils.hideKeyboard(requireActivity());
+            ViewUtils.hide(editorToolbar);
         });
 
         tvTitle.setOnFocusChangeListener((view14, hasFocus) -> {
             if (!hasFocus) {
-                KeyboardUtils.hideKeyboard(requireActivity(), view14);
-                ViewUtils.hide(editorToolbar);
-                focus = FOCUS_NONE;
+                //focus = FOCUS_NONE;
             } else {
                 ViewUtils.hide(editorToolbar);
                 focus = FOCUS_TITLE;
@@ -237,10 +240,12 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
         tvContent.setOnFocusChangeListener((view12, hasFocus) -> {
             if (!hasFocus) {
-                KeyboardUtils.hideKeyboard(requireActivity(), view12);
-                ViewUtils.hide(editorToolbar);
-                focus = FOCUS_NONE;
+                //focus = FOCUS_NONE;
             } else {
+                // keyboard was already opened
+                if (focus != FOCUS_NONE) {
+                    ViewUtils.show(editorToolbar);
+                }
                 focus = FOCUS_CONTENT;
             }
         });
@@ -305,6 +310,8 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
         StatusBarUtils.setColor(requireActivity(),
                 ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark));
 
+        KeyboardUtils.hideKeyboard(requireActivity());
+
         hideProgressDialog();
 
         super.onDestroyView();
@@ -348,7 +355,9 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
     private void onDataChanged(@NonNull Note note) {
         tvTitle.setText(note.getTitle());
-        tvContent.fromHtml(note.getContent());
+        if (!TextUtils.isEmpty(note.getContent())) {
+            tvContent.fromHtml(note.getContent());
+        }
 
         if (tagRepo.isIdValid(note.getTagId())) {
             tvTag.setText(tagRepo.getTag(note.getTagId()));
@@ -366,10 +375,9 @@ public class NoteDetailsFragment extends Fragment implements Navigatable {
 
         StatusBarUtils.setColor(requireActivity(), color);
 
-        // TODO: cache drawables
         Drawable drawable;
         if (note.isPinned()) {
-            drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_pined);
+            drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_pin_active);
         } else {
             drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_pin);
         }
