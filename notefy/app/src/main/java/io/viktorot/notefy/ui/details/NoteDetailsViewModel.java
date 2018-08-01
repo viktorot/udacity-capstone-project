@@ -16,7 +16,6 @@ import io.viktorot.notefy.repo.ColorRepo;
 import io.viktorot.notefy.repo.IconRepo;
 import io.viktorot.notefy.repo.NotesRepo;
 import io.viktorot.notefy.repo.TagRepo;
-import io.viktorot.notefy.util.NotificationUtils;
 import io.viktorot.notefy.util.SingleLiveEvent;
 import timber.log.Timber;
 
@@ -45,8 +44,6 @@ public class NoteDetailsViewModel extends AndroidViewModel {
     private final ColorRepo colorRepo;
     private final NotesRepo notesRepo;
 
-    private final NotificationUtils notificationUtils;
-
     SingleLiveEvent<Action> action = new SingleLiveEvent<>();
     MutableLiveData<Note> data = new MutableLiveData<>();
 
@@ -63,8 +60,6 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         notesRepo = NotefyApplication.get(application).getNotesRepo();
         iconRepo = NotefyApplication.get(application).getIconRepo();
         colorRepo = NotefyApplication.get(application).getColorRepo();
-
-        notificationUtils = NotefyApplication.get(application).getNotificationUtils();
     }
 
     void init(@Nullable Note note, boolean edited) {
@@ -91,18 +86,15 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
                     if (event instanceof NotesRepo.Event.Added && change == Change.Content && n.isNew()) {
                         NoteDetailsViewModel.this.data.setValue(event.data());
-                        notificationUtils.notify(event.data());
                         pop();
                     } else if (event instanceof NotesRepo.Event.Changed && !n.isNew() && change != null && n.getKey().equals(event.data().getKey())) {
                         NoteDetailsViewModel.this.data.setValue(event.data());
-                        notificationUtils.notify(event.data());
                         if (change == Change.Pin) {
                             edited(false);
                         } else {
                             pop();
                         }
                     } else if (event instanceof NotesRepo.Event.Removed && !n.isNew() && n.getKey().equals(event.data().getKey())) {
-                        notificationUtils.remove(event.data());
                         pop();
                     }
 
