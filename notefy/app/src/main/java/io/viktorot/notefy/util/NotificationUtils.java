@@ -3,6 +3,9 @@ package io.viktorot.notefy.util;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.TextUtils;
 
@@ -12,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
+import androidx.core.content.ContextCompat;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;
@@ -58,6 +62,8 @@ public class NotificationUtils {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
         builder.setOngoing(true);
         builder.setSmallIcon(iconRepo.getIconRes(note.getIconId()));
+        builder.setColor(Color.parseColor(note.getColor()));
+        builder.setColorized(true);
         builder.setContentTitle(note.getTitle());
         if (!TextUtils.isEmpty(note.getContent())) {
             builder.setContentText(Html.fromHtml(note.getContent()).toString());
