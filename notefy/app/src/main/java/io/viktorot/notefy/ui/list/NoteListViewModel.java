@@ -4,6 +4,7 @@ import android.app.Application;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import io.viktorot.notefy.repo.AuthRepo;
 import io.viktorot.notefy.repo.FilterRelay;
 import io.viktorot.notefy.repo.NotesRepo;
 import io.viktorot.notefy.repo.TagRepo;
+import io.viktorot.notefy.util.NotificationUtils;
 import timber.log.Timber;
 
 public class NoteListViewModel extends AndroidViewModel {
@@ -32,6 +34,8 @@ public class NoteListViewModel extends AndroidViewModel {
 
     private final AuthRepo authRepo;
     private final NotesRepo notesRepo;
+
+    private final NotificationUtils notificationUtils;
 
     private final ArrayList<Note> _notes = new ArrayList<>();
     MutableLiveData<List<NoteListViewItem>> notes = new MutableLiveData<>();
@@ -52,6 +56,8 @@ public class NoteListViewModel extends AndroidViewModel {
 
         filterRelay = NotefyApplication.get(application).getFilterRelay();
 
+        notificationUtils = NotefyApplication.get(application).getNotificationUtils();
+
         dataDisposable = authRepo.getSessionObservable()
                 .doOnSubscribe(disposable -> {
                     setState(State.Loading);
@@ -59,8 +65,10 @@ public class NoteListViewModel extends AndroidViewModel {
                 .doOnNext(auth -> {
                     if (!auth) {
                         _notes.clear();
+                        notes.setValue(Collections.emptyList());
                         notesRepo.clearCache();
                         notesRepo.detachListener();
+                        notificationUtils.removeAll();
                         setState(State.Loading);
                     } else {
                         notesRepo.attachListener();
@@ -107,7 +115,10 @@ public class NoteListViewModel extends AndroidViewModel {
 //                                return notesRepo.notes;
 //                            }
 //                        }))
-                .subscribe(this::onNotesReceived);
+                .subscribe(notes -> {
+                    onNotesReceived(notes);
+                    updateNotifications(notes);
+                });
     }
 
     private void setState(State state) {
@@ -121,12 +132,6 @@ public class NoteListViewModel extends AndroidViewModel {
     private void onNotesReceived(@NonNull List<Note> notes) {
         _notes.clear();
         _notes.addAll(notes);
-
-        if (_notes.size() == 0) {
-            setState(State.Empty);
-        } else {
-            setState(State.Data);
-        }
 
         List<NoteListViewItem> oldItems = this.notes.getValue();
 
@@ -155,6 +160,18 @@ public class NoteListViewModel extends AndroidViewModel {
                 }
             }
             this.notes.setValue(latestItems);
+        }
+
+        if (_notes.size() == 0) {
+            setState(State.Empty);
+        } else {
+            setState(State.Data);
+        }
+    }
+
+    private void updateNotifications(@NonNull List<Note> notes) {
+        for (Note note : notes) {
+            notificationUtils.notify(note);
         }
     }
 

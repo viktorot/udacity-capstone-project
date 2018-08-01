@@ -64,7 +64,6 @@ public class NotificationUtils {
         }
         builder.setContentIntent(pendingIntent);
 
-
         int notificationId = Objects.hash(note.getKey());
 
         NotificationManagerCompat.from(context)
@@ -76,5 +75,9 @@ public class NotificationUtils {
 
         NotificationManagerCompat.from(context)
                 .cancel(notificationId);
+    }
+
+    public void removeAll() {
+        NotificationManagerCompat.from(context).cancelAll();
     }
 }
