@@ -80,7 +80,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
 
         edited(edited);
 
-        changesDisposable = notesRepo.noteChanges
+        changesDisposable = notesRepo.getNoteChangesObservable()
                 .subscribe(event -> {
                     dispatchAction(Action.HideProgress);
 
@@ -192,6 +192,7 @@ public class NoteDetailsViewModel extends AndroidViewModel {
         }
 
         notesRepo.delete(note);
+
 //        notesRepo.delete(note, new NotesRepo.TaskCallback() {
 //            @Override
 //            public void onSuccess() {

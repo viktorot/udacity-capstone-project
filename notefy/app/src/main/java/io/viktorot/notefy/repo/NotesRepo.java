@@ -21,9 +21,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.reactivex.Observable;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.data.Note;
 import timber.log.Timber;
@@ -56,6 +58,14 @@ public class NotesRepo {
                 return new AutoValue_NotesRepo_Event_Removed(data);
             }
         }
+
+        @Override
+        public boolean equals(Object o) {
+//            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Event event = (Event) o;
+            return event.data().equals(this.data());
+        }
     }
 
     private final Context context;
@@ -68,7 +78,9 @@ public class NotesRepo {
     private final ValueEventListener connectedEventListener;
     private final ChildEventListener childEventListener;
 
-    public PublishRelay<NotesRepo.Event> noteChanges = PublishRelay.create();
+    private AtomicBoolean attached = new AtomicBoolean(false);
+
+    private PublishRelay<NotesRepo.Event> noteChanges = PublishRelay.create();
     public BehaviorRelay<List<Note>> notes = BehaviorRelay.create();
 
     public NotesRepo(@NonNull Context context, @NonNull FirebaseDatabase db) {
@@ -152,21 +164,37 @@ public class NotesRepo {
         };
     }
 
+    public Observable<NotesRepo.Event> getNoteChangesObservable() {
+        return this.noteChanges; //.distinctUntilChanged();
+    }
+
     public void clearCache() {
         notes.accept(Collections.emptyList());
         NotefyApplication.get(context).updateWidgets();
     }
 
     public void attachListener() {
+        if (attached.get()) {
+            return;
+        }
+
         this.ref.addChildEventListener(this.childEventListener);
         this.ref.addValueEventListener(this.valueEventListener);
         //this.connectedRef.addValueEventListener(this.connectedEventListener);
+
+        attached.set(true);
     }
 
     public void detachListener() {
+        if (!attached.get()) {
+            return;
+        }
+
         this.ref.removeEventListener(this.childEventListener);
         this.ref.removeEventListener(this.valueEventListener);
         //this.connectedRef.removeEventListener(this.connectedEventListener);
+
+        attached.set(false);
     }
 
     @NonNull

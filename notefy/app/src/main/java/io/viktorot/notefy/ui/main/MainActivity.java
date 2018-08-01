@@ -119,14 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
             int tag = savedInstanceState.getInt(ARG_TAG_FILTER, TagRepo.ID_NONE);
             vm.onTagFilterSelected(tag);
-
-//            Fragment fragment = getSupportFragmentManager().findFragmentByTag(NoteDetailsFragment.TAG);
-//            if (fragment != null) {
-//                getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .show(fragment)
-//                        .commit();
-//            }
         }
 
         onNewIntent(getIntent());
@@ -161,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         fragmentNavigator.detach();
-        // TODO: test
         NotefyApplication.get(this).getAuthRepo().detachListener();
         super.onPause();
     }
