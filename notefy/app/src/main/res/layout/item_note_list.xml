@@ -93,7 +93,7 @@
                 android:ellipsize="end"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:textColor="@color/light_gray"
+                android:textColor="@color/tag"
                 app:layout_constraintBottom_toBottomOf="@id/tag_img"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tag_img"

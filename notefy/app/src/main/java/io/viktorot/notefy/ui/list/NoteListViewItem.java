@@ -115,7 +115,7 @@ class NoteListViewItem extends Item<NoteListViewItem.ViewHolder> {
             imgIcon = rootView.findViewById(R.id.icon);
 
             imgIcon.setColorFilter(Color.WHITE);
-            imgTag.setColorFilter(ContextCompat.getColor(context, R.color.light_gray));
+            imgTag.setColorFilter(ContextCompat.getColor(context, R.color.tag));
         }
     }
 }
