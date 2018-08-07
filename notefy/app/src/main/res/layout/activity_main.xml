@@ -12,13 +12,6 @@
         android:layout_height="match_parent"
         tools:context=".ui.main.MainActivity">
 
-        <!--<fragment-->
-        <!--android:id="@+id/note_list_fragment"-->
-        <!--android:name="io.viktorot.notefy.ui.list.NoteListFragment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_marginBottom="?android:attr/actionBarSize" />-->
-
         <FrameLayout
             android:id="@+id/base_fragment_container"
             android:layout_width="match_parent"

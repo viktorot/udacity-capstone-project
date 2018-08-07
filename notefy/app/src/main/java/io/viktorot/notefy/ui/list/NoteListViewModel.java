@@ -105,16 +105,6 @@ public class NoteListViewModel extends AndroidViewModel {
 
                             return step2;
                         }))
-
-
-//                .switchMap((Function<Boolean, ObservableSource<List<Note>>>) auth ->
-//                        // TODO: test switchMap vs flatMap
-//                        filterRelay.getColorFilterObservable().flatMap(new Function<String, ObservableSource<List<Note>>>() {
-//                            @Override
-//                            public ObservableSource<List<Note>> apply(String s) {
-//                                return notesRepo.notes;
-//                            }
-//                        }))
                 .subscribe(notes -> {
                     onNotesReceived(notes);
                     updateNotifications(notes);
@@ -173,58 +163,6 @@ public class NoteListViewModel extends AndroidViewModel {
         for (Note note : notes) {
             notificationUtils.notify(note);
         }
-    }
-
-    private void onNoteEvent(NotesRepo.Event event) {
-        if (event instanceof NotesRepo.Event.Added) {
-            Note note = ((NotesRepo.Event.Added) event).data();
-            onNoteAdded(note);
-        } else if (event instanceof NotesRepo.Event.Changed) {
-            Note note = ((NotesRepo.Event.Changed) event).data();
-            onNoteChanged(note);
-        } else if (event instanceof NotesRepo.Event.Removed) {
-            Note note = ((NotesRepo.Event.Removed) event).data();
-            onNoteRemoved(note);
-        } else {
-            Timber.w("unhandled note event => %s", event.getClass().getSimpleName());
-        }
-    }
-
-    private void onNoteAdded(@NonNull Note note) {
-//        _notes.add(note);
-//        notes.setValue(_notes);
-//
-//        setState(State.Data);
-    }
-
-    private void onNoteChanged(@NonNull Note note) {
-//        int index = _notes.indexOf(note);
-//        if (index == -1) {
-//            Timber.w("note not found");
-//            return;
-//        }
-//
-//        _notes.set(index, note);
-//        notes.setValue(_notes);
-//
-//        setState(State.Data);
-    }
-
-    private void onNoteRemoved(@NonNull Note note) {
-//        int index = _notes.indexOf(note);
-//        if (index == -1) {
-//            Timber.w("note not found");
-//            return;
-//        }
-//
-//        _notes.remove(index);
-//        notes.setValue(_notes);
-//
-//        if (_notes.size() == 0) {
-//            setState(State.Empty);
-//        } else {
-//            setState(State.Data);
-//        }
     }
 
     @Override
