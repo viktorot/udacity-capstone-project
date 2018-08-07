@@ -16,6 +16,7 @@ import io.viktorot.notefy.repo.FilterRelay;
 import io.viktorot.notefy.repo.NotesRepo;
 import io.viktorot.notefy.repo.IconRepo;
 import io.viktorot.notefy.repo.TagRepo;
+import io.viktorot.notefy.util.ConnectionRelay;
 import io.viktorot.notefy.util.NotificationUtils;
 import io.viktorot.notefy.widget.NotifyWidgetProvider;
 import timber.log.Timber;
@@ -29,6 +30,7 @@ public class NotefyApplication extends Application {
     private Navigator navigator;
 
     private FilterRelay filterRelay = new FilterRelay();
+    private ConnectionRelay connectionRelay = new ConnectionRelay();
 
     private AuthRepo authRepo;
     private NotesRepo notesRepo;
@@ -93,6 +95,10 @@ public class NotefyApplication extends Application {
 
     public FilterRelay getFilterRelay() {
         return filterRelay;
+    }
+
+    public ConnectionRelay getConnectionRelay() {
+        return connectionRelay;
     }
 
     public NotificationUtils getNotificationUtils() {

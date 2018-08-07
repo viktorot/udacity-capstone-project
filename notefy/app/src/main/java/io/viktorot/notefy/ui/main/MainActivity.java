@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import io.reactivex.disposables.Disposable;
+import io.viktorot.notefy.ConnectionService;
 import io.viktorot.notefy.FragmentNavigator;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private MenuItem filterMenuItem;
 
     private Disposable navigationDisposable;
+    private Disposable connectionDisposable;
 
     private final Observer<MainViewModel.State> stateObserver = state -> {
         if (state == null) {
@@ -115,6 +116,10 @@ public class MainActivity extends AppCompatActivity {
                 .getNavigator()
                 .observe(this::onNavEvent);
 
+        connectionDisposable = NotefyApplication.get(this)
+                .getConnectionRelay()
+                .observe(this::onConnectionStatusChanged);
+
         if (savedInstanceState == null) {
             NotefyApplication.get(this)
                     .getNavigator()
@@ -166,17 +171,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        startService(ConnectionService.intent(this));
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        stopService(ConnectionService.intent(this));
     }
 
     @Override
     protected void onDestroy() {
         if (navigationDisposable != null) {
             navigationDisposable.dispose();
+        }
+        if (connectionDisposable != null) {
+            connectionDisposable.dispose();
         }
         super.onDestroy();
     }
@@ -201,6 +211,17 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         fragmentNavigator.applyCommand(event);
+    }
+
+    private void onConnectionStatusChanged(boolean connected) {
+        String msg;
+        if (connected) {
+            msg = getString(R.string.online);
+        } else {
+            msg = getString(R.string.offline);
+        }
+
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
     private void onViewModelStateChanged(MainViewModel.State state) {

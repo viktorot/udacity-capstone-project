@@ -38,6 +38,23 @@
 
     <string name="unauthorized">You need to be logged in to create notes</string>
 
+    <string name="online">You are now online</string>
+    <string name="offline">You are currently offline</string>
+
+    <string name="content_description_profile_icon">Profile icon</string>
+    <string name="content_description_note_icon">Note icon</string>
+    <string name="content_description_note_tag">Note icon</string>
+    <string name="content_description_toolbar_bold">Make selected text bold</string>
+    <string name="content_description_toolbar_italic">Make selected text italic</string>
+    <string name="content_description_toolbar_underline">Underline selected text</string>
+    <string name="content_description_toolbar_strikethrough">Strike-through selected text</string>
+    <string name="content_description_toolbar_bullet">Set a bullet point on selected text</string>
+
+    <string name="content_description_icon">Icon</string>
+    <string name="content_description_pinned">Pinned</string>
+
+    <string name="content_description_fab">Add a new note</string>
+
     <string-array name="tags">
         <item>ToDo</item>
         <item>Shopping</item>

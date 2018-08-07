@@ -16,9 +16,9 @@ android {
     }
     signingConfigs {
         release {
+            storeFile file(keystoreProperties['storeFile'])
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
         }
     }
@@ -43,7 +43,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // ui
-    implementation ('androidx.appcompat:appcompat:1.0.0-beta01') {
+    implementation ('androidx.appcompat:appcompat:1.0.0-rc01') {
         exclude group: 'com.android.support', module: 'support-compat'
     }
     implementation 'com.google.android.material:material:1.0.0-beta01'
@@ -70,8 +70,8 @@ dependencies {
     implementation 'com.github.mthli:Knife:v1.1'
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
+    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
 }
 
 apply plugin: 'com.google.gms.google-services'
