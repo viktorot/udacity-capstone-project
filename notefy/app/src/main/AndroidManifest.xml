@@ -25,10 +25,12 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".widget.NotifyWidgetRemoteViewService"
+        <service
+            android:name=".widget.NotifyWidgetRemoteViewService"
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service android:name=".ConnectionService" />
 
         <receiver android:name=".widget.NotifyWidgetProvider">
 
