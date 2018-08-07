@@ -42,6 +42,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/spacing_large"
                 android:background="@null"
+                android:contentDescription="@string/content_description_note_icon"
                 android:padding="15dp"
                 android:scaleType="fitXY" />
 
@@ -63,8 +64,8 @@
                 android:layout_marginBottom="10dp"
                 android:drawableStart="@drawable/ic_tag"
                 android:drawablePadding="10dp"
-                android:paddingStart="@dimen/spacing_small"
                 android:gravity="center_vertical"
+                android:paddingStart="@dimen/spacing_small"
                 android:textColor="@color/white"
                 android:visibility="gone" />
 
@@ -96,6 +97,7 @@
         <ImageButton
             android:id="@+id/bold"
             style="@style/FormatIcon"
+            android:contentDescription="@string/content_description_toolbar_bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/italic"
             app:layout_constraintHorizontal_chainStyle="spread"
@@ -106,6 +108,7 @@
         <ImageButton
             android:id="@+id/italic"
             style="@style/FormatIcon"
+            android:contentDescription="@string/content_description_toolbar_italic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/underline"
             app:layout_constraintStart_toEndOf="@+id/bold"
@@ -115,6 +118,7 @@
         <ImageButton
             android:id="@+id/underline"
             style="@style/FormatIcon"
+            android:contentDescription="@string/content_description_toolbar_underline"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/strkethrough"
             app:layout_constraintStart_toEndOf="@+id/italic"
@@ -124,6 +128,7 @@
         <ImageButton
             android:id="@+id/strkethrough"
             style="@style/FormatIcon"
+            android:contentDescription="@string/content_description_toolbar_strikethrough"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/bullet"
             app:layout_constraintStart_toEndOf="@id/underline"
@@ -133,6 +138,7 @@
         <ImageButton
             android:id="@+id/bullet"
             style="@style/FormatIcon"
+            android:contentDescription="@string/content_description_toolbar_bullet"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/strkethrough"

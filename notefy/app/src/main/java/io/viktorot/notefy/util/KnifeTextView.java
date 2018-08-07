@@ -34,6 +34,7 @@ import android.util.AttributeSet;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatTextView;
 import io.github.mthli.knife.KnifeBulletSpan;
 import io.github.mthli.knife.KnifeParser;
 import io.github.mthli.knife.KnifePart;
@@ -45,7 +46,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class KnifeTextView extends TextView implements TextWatcher {
+public class KnifeTextView extends AppCompatTextView implements TextWatcher {
     public static final int FORMAT_BOLD = 0x01;
     public static final int FORMAT_ITALIC = 0x02;
     public static final int FORMAT_UNDERLINED = 0x03;
@@ -84,12 +85,6 @@ public class KnifeTextView extends TextView implements TextWatcher {
 
     public KnifeTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs);
-    }
-
-    @SuppressWarnings("NewApi")
-    public KnifeTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         init(attrs);
     }
 

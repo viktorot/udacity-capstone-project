@@ -10,6 +10,7 @@
         android:layout_height="40dp"
         android:layout_marginStart="@dimen/spacing_large"
         android:background="@drawable/ic_dot"
+        android:contentDescription="@string/content_description_profile_icon"
         android:padding="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

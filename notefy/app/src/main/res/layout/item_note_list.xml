@@ -17,6 +17,7 @@
             android:layout_height="65dp"
             android:layout_gravity="top|end"
             android:background="@null"
+            android:contentDescription="@null"
             app:srcCompat="@drawable/ic_triangle" />
 
         <ImageView
@@ -27,6 +28,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:background="@null"
+            android:contentDescription="@string/content_description_pinned"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_pin_active" />
 
@@ -39,6 +41,7 @@
                 android:id="@+id/icon"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:contentDescription="@string/content_description_note_icon"
                 android:padding="@dimen/spacing_small"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -81,6 +84,7 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_marginTop="5dp"
+                android:contentDescription="@string/content_description_note_tag"
                 app:layout_constraintEnd_toStartOf="@+id/tag_text"
                 app:layout_constraintStart_toEndOf="@id/icon"
                 app:layout_constraintTop_toBottomOf="@id/content"

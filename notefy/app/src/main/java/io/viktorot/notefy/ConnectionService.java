@@ -1,5 +1,6 @@
 package io.viktorot.notefy;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -62,6 +63,7 @@ public class ConnectionService extends Service {
         return null;
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class PingAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
         private static final String PING_URL = "http://www.google.com";
