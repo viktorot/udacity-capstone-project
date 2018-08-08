@@ -19,6 +19,7 @@ package io.viktorot.notefy.util;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -32,19 +33,17 @@ import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 
-import androidx.appcompat.widget.AppCompatTextView;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import io.github.mthli.knife.KnifeBulletSpan;
 import io.github.mthli.knife.KnifeParser;
 import io.github.mthli.knife.KnifePart;
 import io.github.mthli.knife.KnifeQuoteSpan;
 import io.github.mthli.knife.KnifeURLSpan;
 import io.github.mthli.knife.R;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public class KnifeTextView extends AppCompatTextView implements TextWatcher {
     public static final int FORMAT_BOLD = 0x01;

@@ -1,10 +1,11 @@
 package io.viktorot.notefy.repo;
 
+import android.support.annotation.Nullable;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.jakewharton.rxrelay2.BehaviorRelay;
 
-import androidx.annotation.Nullable;
 import io.reactivex.Observable;
 import timber.log.Timber;
 

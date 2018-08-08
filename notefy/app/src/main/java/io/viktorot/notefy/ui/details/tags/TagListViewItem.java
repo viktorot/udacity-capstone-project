@@ -1,12 +1,12 @@
 package io.viktorot.notefy.ui.details.tags;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.google.android.material.chip.Chip;
 import com.xwray.groupie.Item;
 
-import androidx.annotation.NonNull;
 import io.viktorot.notefy.R;
+import io.viktorot.notefy.ui.view.Chip;
 
 public class TagListViewItem extends Item<TagListViewItem.ViewHolder> {
 

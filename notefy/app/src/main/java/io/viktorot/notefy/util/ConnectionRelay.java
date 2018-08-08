@@ -1,12 +1,11 @@
 package io.viktorot.notefy.util;
 
+import android.support.annotation.NonNull;
+
 import com.jakewharton.rxrelay2.BehaviorRelay;
 
-import androidx.annotation.NonNull;
-import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.viktorot.notefy.BuildConfig;
 import timber.log.Timber;
 
 public class ConnectionRelay {
@@ -15,10 +14,6 @@ public class ConnectionRelay {
 
     @NonNull
     public Disposable observe(Consumer<Boolean> consumer) {
-//        if (BuildConfig.DEBUG) {
-//            return relay.subscribe(consumer);
-//        }
-
         return relay
                 .distinctUntilChanged()
                 .subscribe(consumer);

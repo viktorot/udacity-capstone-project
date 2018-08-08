@@ -3,16 +3,14 @@ package io.viktorot.notefy.ui.list;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.text.Html;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xwray.groupie.Item;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import io.github.mthli.knife.KnifeText;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.R;
 import io.viktorot.notefy.data.Note;

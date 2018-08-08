@@ -1,6 +1,7 @@
 package io.viktorot.notefy;
 
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
+
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.viktorot.notefy.data.Note;

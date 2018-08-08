@@ -6,13 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import androidx.annotation.NonNull;
 import io.viktorot.notefy.util.ConnectionRelay;
 import timber.log.Timber;
 
@@ -25,6 +25,8 @@ public class ConnectionService extends Service {
         return new Intent(context, ConnectionService.class);
     }
 
+    private boolean scheduled = false;
+
     private final Timer timer = new Timer();
     private final TimerTask task = new TimerTask() {
         @Override
@@ -36,12 +38,17 @@ public class ConnectionService extends Service {
     };
 
     private void startPingTask() {
+        if (scheduled) {
+            return;
+        }
         timer.schedule(task, PING_INITIAL_DELAY, PING_INTERVAL);
+        scheduled = true;
     }
 
     private void stopPingTask() {
         timer.purge();
         timer.cancel();
+        scheduled = false;
     }
 
     @Override

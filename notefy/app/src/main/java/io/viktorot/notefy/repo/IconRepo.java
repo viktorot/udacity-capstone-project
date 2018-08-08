@@ -1,8 +1,9 @@
 package io.viktorot.notefy.repo;
 
+import android.support.annotation.DrawableRes;
+
 import java.util.HashMap;
 
-import androidx.annotation.DrawableRes;
 import io.viktorot.notefy.R;
 
 public class IconRepo {

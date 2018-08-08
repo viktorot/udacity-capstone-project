@@ -4,27 +4,25 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
-
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.fragment.app.FragmentManager;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.NotefyBottomSheetDialogFragment;
 import io.viktorot.notefy.R;
 import io.viktorot.notefy.repo.ColorRepo;
 import io.viktorot.notefy.repo.TagRepo;
-import timber.log.Timber;
+import io.viktorot.notefy.ui.view.Chip;
+import io.viktorot.notefy.ui.view.ChipGroup;
 
 public class FilterDialog extends NotefyBottomSheetDialogFragment {
 

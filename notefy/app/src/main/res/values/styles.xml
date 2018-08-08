@@ -1,24 +1,23 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name ="android:windowBackground">@color/dark_gray</item>
+
     </style>
 
-    <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/menu_bg</item>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
-        <item name="android:windowIsFloating">false</item>
-        <item name="bottomSheetStyle">@style/BottomSheet</item>
-    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
-
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="TextViewSingleLine">
         <item name="android:maxLines">1</item>
@@ -53,5 +52,234 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/menu_bg</item>
+    </style>
+
+    <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/BottomSheet</item>
+    </style>
+
+    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!--<item name="android:navigationBarColor">@android:color/white</item>-->
+    </style>
+
+    <declare-styleable name="ThemeEnforcement">
+        <!-- Internal flag used to denote that a style uses new attributes defined by
+             Theme.MaterialComponents, and that the component should check via ThemeEnforcement that the
+             client's app theme inherits from Theme.MaterialComponents.
+             Not all usages of new attributes are problematic in the context of a legacy app theme. You
+             should only use this flag if a particular usage is known to cause a visual glitch or crash.
+             For example, tinting a vector drawable with a non-existent theme attribute is known to
+             crash on pre-21 devices. -->
+        <attr name="enforceMaterialTheme" format="boolean" />
+        <!-- Internal flag used to denote that a style requires that the textAppearance attribute is
+             specified and evaluates to a valid text appearance. -->
+        <attr name="enforceTextAppearance" format="boolean" />
+        <!-- Attribute used to check that a component has a TextAppearance specified on it. -->
+        <attr name="android:textAppearance" />
+    </declare-styleable>
+
+    <declare-styleable name="ChipGroup">
+
+        <!-- Horizontal and vertical spacing between chips in this group. -->
+        <attr name="chipSpacing" format="dimension" />
+        <!-- Horizontal spacing between chips in this group. -->
+        <attr name="chipSpacingHorizontal" format="dimension" />
+        <!-- Vertical spacing between chips in this group. -->
+        <attr name="chipSpacingVertical" format="dimension" />
+
+        <!-- Constrains the chips in this group to a single horizontal line. By default, this is false
+             and the chips in this group will reflow to multiple lines.
+             If you set this to true, you'll usually want to wrap this ChipGroup in a
+             HorizontalScrollView. -->
+        <attr name="singleLine" format="boolean" />
+
+        <!-- Whether only a single chip in this group is allowed to be checked at any time. By default,
+             this is false and multiple chips in this group are allowed to be checked at once. -->
+        <attr name="singleSelection" format="boolean" />
+        <!-- The id of the child chip that should be checked by default within this chip group. -->
+        <attr name="checkedChip" format="reference" />
+
+    </declare-styleable>
+
+    <declare-styleable name="Chip">
+        <!-- Background color to apply to the chip. -->
+        <attr name="chipBackgroundColor" format="color" />
+        <!-- Min height to apply to the chip. Total height includes stroke width. -->
+        <attr name="chipMinHeight" format="dimension" />
+        <!-- Corner radius to apply to the chip's shape. -->
+        <attr name="chipCornerRadius" format="dimension" />
+        <!-- Stroke color to apply to the chip's outline. -->
+        <attr name="chipStrokeColor" format="color" />
+        <!-- Stroke width to apply to the chip's outline. -->
+        <attr name="chipStrokeWidth" format="dimension" />
+        <!-- Ripple color to apply to the chip. -->
+        <attr name="rippleColor" />
+        <!-- Minimum size of chip's touch target, by default, Android recommended 48dp. -->
+        <attr name="chipMinTouchTargetSize" format="dimension" />
+        <!-- Reference to touch target delegate used to ensure that chip meets the minimum accessible
+         touch target size (48dp by default). Ignored if chip's hitRect already meets the minimum. -->
+        <attr name="chipTouchTargetDelegate" format="reference" />
+
+        <!-- Text to display on the chip. -->
+        <attr name="android:text" />
+        <!-- Default appearance of text: color, typeface, size, and style. -->
+        <attr name="android:textAppearance" />
+        <!-- If set, causes words that are longer than the view is wide to be ellipsized instead of
+             truncated at the end. -->
+        <attr name="android:ellipsize" />
+        <!-- Make the Chip to be at most this many pixels wide. -->
+        <attr name="android:maxWidth" />
+
+        <!-- Whether to show the chip icon. -->
+        <attr name="chipIconVisible" format="boolean" />
+        <!-- Deprecated. Use chipIconVisible instead. -->
+        <attr name="chipIconEnabled" format="boolean" />
+        <!-- Icon drawable to display at the start of the chip. -->
+        <attr name="chipIcon" format="reference" />
+        <!-- Tint to apply to the chip icon. -->
+        <attr name="chipIconTint" format="color" />
+        <!-- Size of the chip's icon and checked icon. -->
+        <attr name="chipIconSize" format="dimension" />
+
+        <!-- Whether to show the close icon. -->
+        <attr name="closeIconVisible" format="boolean" />
+        <!-- Deprecated. Use closeIconVisible instead. -->
+        <attr name="closeIconEnabled" format="boolean" />
+        <!-- Close icon drawable to display at the end of the chip. -->
+        <attr name="closeIcon" format="reference" />
+        <!-- Tint to apply to the chip's close icon. -->
+        <attr name="closeIconTint" format="color" />
+        <!-- Size of the chip's close icon. -->
+        <attr name="closeIconSize" format="dimension" />
+
+        <!-- Whether the chip can be checked. If false, the chip will act as a button. -->
+        <attr name="android:checkable" />
+        <!-- Whether to show the checked icon. -->
+        <attr name="checkedIconVisible" format="boolean" />
+        <!-- Deprecated. Use checkedIconVisible instead -->
+        <attr name="checkedIconEnabled" format="boolean" />
+        <!-- Check icon drawable to overlay the chip's icon. -->
+        <attr name="checkedIcon" format="reference" />
+
+        <!-- Motion spec for show animation. This should be a MotionSpec resource. -->
+        <attr name="showMotionSpec" />
+        <!-- Motion spec for hide animation. This should be a MotionSpec resource. -->
+        <attr name="hideMotionSpec" />
+
+        <!-- The following attributes are adjustable padding on the chip, listed from start to end. -->
+
+        <!-- Chip starts here. -->
+
+        <!-- Padding at the start of the chip, before the icon. -->
+        <attr name="chipStartPadding" format="dimension" />
+        <!-- Padding at the start of the icon, after the start of the chip. If icon exists. -->
+        <attr name="iconStartPadding" format="dimension" />
+
+        <!-- Icon is here. -->
+
+        <!-- Padding at the end of the icon, before the text. If icon exists. -->
+        <attr name="iconEndPadding" format="dimension" />
+        <!-- Padding at the start of the text, after the icon. -->
+        <attr name="textStartPadding" format="dimension" />
+
+        <!-- Text is here. -->
+
+        <!-- Padding at the end of the text, before the close icon. -->
+        <attr name="textEndPadding" format="dimension" />
+        <!-- Padding at the start of the close icon, after the text. If close icon exists. -->
+        <attr name="closeIconStartPadding" format="dimension" />
+
+        <!-- Close icon is here. -->
+
+        <!-- Padding at the end of the close icon, before the end of the chip. If close icon exists. -->
+        <attr name="closeIconEndPadding" format="dimension" />
+        <!-- Padding at the end of the chip, after the close icon. -->
+        <attr name="chipEndPadding" format="dimension" />
+
+        <!-- Chip ends here. -->
+    </declare-styleable>
+
+    <style name="Widget.MaterialComponents.Chip.Entry" parent="Base.Widget.MaterialComponents.Chip">
+        <item name="android:checkable">true</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.Chip.Filter" parent="Base.Widget.MaterialComponents.Chip">
+        <item name="android:checkable">true</item>
+
+        <item name="chipIconVisible">false</item>
+        <item name="closeIconVisible">false</item>
+
+        <item name="checkedIcon">@drawable/ic_mtrl_chip_checked_black</item>
+    </style>
+
+    <style name="Base.Widget.MaterialComponents.Chip" parent="android:Widget">
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:checkable">false</item>
+
+        <item name="chipIconVisible">true</item>
+        <item name="checkedIconVisible">true</item>
+        <item name="closeIconVisible">true</item>
+
+        <item name="chipIcon">@null</item>
+        <item name="checkedIcon">@drawable/ic_mtrl_chip_checked_circle</item>
+        <item name="closeIcon">@drawable/ic_mtrl_chip_close_circle</item>
+
+        <item name="android:text">@null</item>
+        <item name="enforceTextAppearance">true</item>
+        <!--<item name="android:textAppearance">?attr/textAppearanceBody2</item>-->
+        <item name="android:textColor">@color/mtrl_chip_text_color</item>
+        <item name="closeIconTint">@color/mtrl_chip_close_icon_tint</item>
+
+        <item name="chipBackgroundColor">@color/mtrl_chip_background_color</item>
+        <item name="chipStrokeColor">#00000000</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="rippleColor">@color/mtrl_chip_ripple_color</item>
+
+        <item name="chipMinTouchTargetSize">48dp</item>
+        <item name="chipMinHeight">32dp</item>
+        <item name="chipCornerRadius">16dp</item>
+        <item name="chipIconSize">24dp</item>
+        <item name="closeIconSize">18dp</item>
+
+        <item name="chipStartPadding">4dp</item>
+        <item name="iconStartPadding">0dp</item>
+        <item name="iconEndPadding">0dp</item>
+        <item name="textStartPadding">8dp</item>
+        <item name="textEndPadding">6dp</item>
+        <item name="closeIconStartPadding">2dp</item>
+        <item name="closeIconEndPadding">2dp</item>
+        <item name="chipEndPadding">6dp</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.Chip.Action" parent="Base.Widget.MaterialComponents.Chip">
+        <item name="closeIconVisible">false</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.ChipGroup" parent="android:Widget">
+        <item name="chipSpacing">4dp</item>
+        <item name="singleLine">false</item>
+        <item name="singleSelection">false</item>
+    </style>
+
+    <declare-styleable name="FlowLayout">
+        <!-- Horizontal spacing between two items being laid out. -->
+        <attr name="itemSpacing" format="dimension" />
+        <!-- Vertical Spacing between two lines of items being laid out. -->
+        <attr name="lineSpacing" format="dimension" />
+    </declare-styleable>
+
+    <!-- Style to use for ChipGroups in this theme. -->
+    <attr name="chipGroupStyle" format="reference" />
+    <!-- Style to use for Chips in this theme, usually to be used as a view. -->
+    <attr name="chipStyle" format="reference" />
+    <!-- Style to use for standalone Chips in this theme, usually to be used in an EditText. -->
+    <attr name="chipStandaloneStyle" format="reference" />
+
+    <attr name="isMaterialTheme" format="boolean" />
 
 </resources>

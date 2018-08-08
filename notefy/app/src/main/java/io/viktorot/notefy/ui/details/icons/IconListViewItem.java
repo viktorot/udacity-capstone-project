@@ -1,13 +1,13 @@
 package io.viktorot.notefy.ui.details.icons;
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.xwray.groupie.Item;
 
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
 import io.viktorot.notefy.R;
 
 public class IconListViewItem extends Item<IconListViewItem.ViewHolder> {

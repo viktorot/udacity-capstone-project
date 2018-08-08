@@ -1,11 +1,10 @@
 package io.viktorot.notefy.repo;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.Arrays;
 import java.util.List;
-
-import androidx.annotation.NonNull;
 
 public class ColorRepo {
 

@@ -63,4 +63,7 @@
         <item>School</item>
     </string-array>
 
+    <string name="mtrl_chip_close_icon_content_description">Remove %1$s</string>
+
 </resources>
+

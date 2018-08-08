@@ -1,9 +1,8 @@
 package io.viktorot.notefy.util;
 
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.view.Window;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 
 public class StatusBarUtils {
 

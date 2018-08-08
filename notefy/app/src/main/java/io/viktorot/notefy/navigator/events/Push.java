@@ -1,6 +1,6 @@
 package io.viktorot.notefy.navigator.events;
 
-import androidx.fragment.app.Fragment;
+import android.support.v4.app.Fragment;
 
 public class Push implements NavEvent {
 
