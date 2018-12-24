@@ -167,13 +167,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        startService(ConnectionService.intent(this));
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        stopService(ConnectionService.intent(this));
     }
 
     @Override
