@@ -2,12 +2,12 @@ package io.viktorot.notefy.ui.details.colors;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.View;
 
 import com.xwray.groupie.Item;
 
+import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
 import io.viktorot.notefy.R;
 
 public class ColorListViewItem extends Item<ColorListViewItem.ViewHolder> {

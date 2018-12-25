@@ -1,6 +1,6 @@
 package io.viktorot.notefy;
 
-import android.support.design.widget.BottomSheetDialogFragment;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class NotefyBottomSheetDialogFragment extends BottomSheetDialogFragment {
 

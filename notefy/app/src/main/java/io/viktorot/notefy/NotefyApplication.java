@@ -5,11 +5,11 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import androidx.annotation.NonNull;
 import io.viktorot.notefy.repo.AuthRepo;
 import io.viktorot.notefy.repo.ColorRepo;
 import io.viktorot.notefy.repo.FilterRelay;

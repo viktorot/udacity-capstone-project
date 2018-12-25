@@ -1,13 +1,12 @@
 package io.viktorot.notefy;
 
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-
 import java.util.LinkedList;
 import java.util.Objects;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import io.viktorot.notefy.navigator.events.NavEvent;
 import io.viktorot.notefy.navigator.events.Pop;
 import io.viktorot.notefy.navigator.events.Push;

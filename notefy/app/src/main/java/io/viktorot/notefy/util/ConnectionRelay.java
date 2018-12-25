@@ -1,9 +1,8 @@
 package io.viktorot.notefy.util;
 
-import android.support.annotation.NonNull;
-
 import com.jakewharton.rxrelay2.BehaviorRelay;
 
+import androidx.annotation.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import timber.log.Timber;

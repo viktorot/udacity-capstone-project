@@ -1,10 +1,10 @@
 package io.viktorot.notefy.repo;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.jakewharton.rxrelay2.BehaviorRelay;
 
+import androidx.annotation.NonNull;
 import io.reactivex.Observable;
 
 public class FilterRelay {

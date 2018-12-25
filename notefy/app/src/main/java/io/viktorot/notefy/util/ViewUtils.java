@@ -1,7 +1,8 @@
 package io.viktorot.notefy.util;
 
-import android.support.annotation.NonNull;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 public class ViewUtils {
 

@@ -1,8 +1,6 @@
 package io.viktorot.notefy.repo;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.android.gms.tasks.Task;
@@ -23,6 +21,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import io.reactivex.Observable;
 import io.viktorot.notefy.NotefyApplication;
 import io.viktorot.notefy.data.Note;

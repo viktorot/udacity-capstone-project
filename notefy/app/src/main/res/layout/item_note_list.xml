@@ -33,7 +33,7 @@
             android:visibility="gone"
             app:srcCompat="@drawable/ic_pin_active" />
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/spacing_small">
@@ -104,7 +104,7 @@
                 app:layout_constraintStart_toEndOf="@id/tag_img"
                 app:layout_constraintTop_toTopOf="@id/tag_img" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.ConstraintLayout>
 
     </FrameLayout>
 

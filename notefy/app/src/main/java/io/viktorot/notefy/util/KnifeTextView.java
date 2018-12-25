@@ -19,7 +19,6 @@ package io.viktorot.notefy.util;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -38,6 +37,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import androidx.appcompat.widget.AppCompatTextView;
 import io.github.mthli.knife.KnifeBulletSpan;
 import io.github.mthli.knife.KnifeParser;
 import io.github.mthli.knife.KnifePart;
